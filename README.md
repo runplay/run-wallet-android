@@ -3,23 +3,23 @@
 
 <h2>Features</h2>
 
-Full of features
-✅ Send and receive IOTA's
-✅ <b>Multi Seed Wallet</b> 🌿
-✅ Automatic Seed balance discovery
-✅ Automatic Address generating
-✅ Clear detail Address balance and Pending balance data
-✅ Address <b>Pigs</b> 🐷 <b>sticky addresses</b> 🐷 keep any address from being used 🐷
-✅ Transaction and address history
-✅ Currency data and Charts 💵 💴 💶 💷
-✅ Full Node control
-✅ Advanced configuration allowed, min weight and Address security
-✅ Simplified or Detailed layouts
-✅ QR Code support
-
+Full of features<br/>
+✅ Send and receive IOTA's<br/>
+✅ <b>Multi Seed Wallet</b> 🌿<br/>
+✅ Automatic Seed balance discovery<br/>
+✅ Automatic Address generating<br/>
+✅ Clear detail Address balance and Pending balance data<br/>
+✅ Address <b>Pigs</b> 🐷 <b>sticky addresses</b> 🐷 keep any address from being used 🐷<br/>
+✅ Transaction and address history<br/>
+✅ Currency data and Charts 💵 💴 💶 💷<br/>
+✅ Full Node control<br/>
+✅ Advanced configuration allowed, min weight and Address security<br/>
+✅ Simplified or Detailed layouts<br/>
+✅ QR Code support<br/>
+<br/><br/>
 Code originally based on the IOTA foundation wallet
 https://github.com/iotaledger/android-wallet-app
-
+<br/>
 
 <h2>Download</h2>
 
