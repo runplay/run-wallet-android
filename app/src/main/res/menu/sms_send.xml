@@ -1,0 +1,25 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    android:background="@color/colorLight"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    >
+    <item
+        android:id="@+id/action_sms_flip_layout"
+        android:orderInCategory="1"
+        app:showAsAction="collapseActionView"
+        android:title="@string/layout_bottom_up"/>
+    <!-- 
+    <item
+        android:id="@+id/action_sms_send"
+        android:orderInCategory="1"
+        android:showAsAction="always"
+        android:icon="@drawable/social_send_now"
+        android:title="@string/action_sms_send"/>
+    <item
+        android:id="@+id/action_sms_cancel"
+        android:orderInCategory="2"
+        android:showAsAction="always"
+        android:icon="@drawable/content_remove"
+        android:title="@string/action_sms_cancel"/>
+    
+-->
+</menu>

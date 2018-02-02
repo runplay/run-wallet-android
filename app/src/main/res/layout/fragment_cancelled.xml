@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <android.support.design.widget.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:theme="@style/AppTheme.AppBarOverlay">
+
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/cancelled_toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="?attr/colorPrimary"
+            app:popupTheme="@style/AppTheme.PopupOverlay"
+            app:title="@string/label_address_used" />
+
+    </android.support.design.widget.AppBarLayout>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/colorSecondary"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:clipToPadding="false"
+            android:orientation="vertical"
+            android:padding="@dimen/baseline_card">
+            <android.support.v7.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_margin="@dimen/baseline_card">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:background="@color/white"
+                    android:padding="10dp"
+                    android:layout_gravity="center">
+                    <TextView
+                        android:text="@string/label_address_used"
+                        android:layout_width="match_parent"
+                        android:textAppearance="@style/Base.TextAppearance.AppCompat.Headline"
+                        android:layout_height="wrap_content"
+                        android:paddingBottom="12dp"/>
+                    <TextView
+                        android:text="@string/text_cancelled_summary"
+                        android:layout_width="match_parent"
+                        android:textAppearance="@style/Base.TextAppearance.AppCompat.Body1"
+                        android:layout_height="wrap_content"
+                        android:paddingBottom="@dimen/baseline_card"/>
+                    <TextView
+                        android:text="@string/text_cancelled_summary_more"
+                        android:layout_width="match_parent"
+                        android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
+                        android:layout_height="wrap_content"
+                        android:paddingBottom="@dimen/baseline_card"/>
+                </LinearLayout>
+            </android.support.v7.widget.CardView>
+
+            <TextView
+                android:id="@+id/cancelled_copy_clip"
+                android:text="@string/copy_to_clip"
+                android:drawableRight="@drawable/ic_copy"
+                android:padding="10dp"
+                android:gravity="end"
+                android:textAppearance="@style/Base.TextAppearance.AppCompat.Subhead"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:padding="10dp"
+                >
+                <TextView
+                    android:text="@string/text_cancelled_click_www"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    />
+                <TextView
+                    android:id="@+id/cancelled_www"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+            </LinearLayout>
+
+            <TextView
+                android:text="@string/hash"
+                android:paddingLeft="10dp"
+                android:textAppearance="@style/Base.TextAppearance.AppCompat.Subhead"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                />
+            <TextView
+                android:id="@+id/cancelled_hash"
+                android:padding="6dp"
+                android:background="@color/colorLight"
+                android:layout_margin="10dp"
+                android:textAppearance="@style/Base.TextAppearance.AppCompat.Body1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+            <LinearLayout
+                android:id="@+id/cancelled_breakdown"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_margin="10dp"
+                >
+
+            </LinearLayout>
+            <include layout="@layout/card_wallet_transfer"/>
+            <android.support.v7.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_margin="@dimen/baseline_card">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:background="@color/white"
+                    android:padding="10dp"
+                    android:layout_gravity="center">
+                    <TextView
+                        android:text="@string/text_cancelled_settings"
+                        android:layout_width="match_parent"
+                        android:textAppearance="@style/Base.TextAppearance.AppCompat.Body1"
+                        android:layout_height="wrap_content" />
+                    <TextView
+                        android:text="@string/text_cancelled_what_next"
+                        android:layout_width="match_parent"
+                        android:textAppearance="@style/Base.TextAppearance.AppCompat.Body1"
+                        android:layout_height="wrap_content"
+                        android:paddingBottom="@dimen/baseline_card"/>
+
+                </LinearLayout>
+
+            </android.support.v7.widget.CardView>
+
+        </LinearLayout>
+
+    </ScrollView>
+
+
+</android.support.design.widget.CoordinatorLayout>

@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="listCurrencies">
+        <item>BTC</item>
+        <item>USD</item>
+        <item>EUR</item>
+        <item>ETH</item>
+    </string-array>
+
+    <string-array name="listValues">
+        <item>BTC</item>
+        <item>USD</item>
+        <item>EUR</item>
+        <item>ETH</item>
+    </string-array>
+    <string-array name="listSecurity">
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+    </string-array>
+    <string-array name="listMinWeight">
+        <item>14</item>
+        <item>15</item>
+    </string-array>
+    <string-array name="listAutoAttach">
+        <item>2</item>
+        <item>3</item>
+        <item>4</item>
+        <item>5</item>
+    </string-array>
+    <string-array name="nudgeAttempts">
+        <item>0</item>
+        <item>2</item>
+        <item>4</item>
+        <item>6</item>
+        <item>8</item>
+        <item>10</item>
+        <item>15</item>
+    </string-array>
+    <string-array name="autoLogout">
+        <item>0</item>
+        <item>2</item>
+        <item>4</item>
+        <item>6</item>
+        <item>8</item>
+        <item>10</item>
+        <item>15</item>
+    </string-array>
+    <string-array name="autoLogoutString">
+        <item>Immediately</item>
+        <item>2 minutes</item>
+        <item>4 minutes</item>
+        <item>6 minutes</item>
+        <item>8 minutes</item>
+        <item>10 minutes</item>
+        <item>15 minutes</item>
+    </string-array>
+    <string-array name="firstLoadAttempts">
+        <item>2</item>
+        <item>4</item>
+        <item>6</item>
+        <item>8</item>
+        <item>10</item>
+        <item>20</item>
+        <item>50</item>
+        <item>100</item>
+        <item>200</item>
+        <item>300</item>
+    </string-array>
+    <string-array name="firstLoadRange">
+        <item>5</item>
+        <item>10</item>
+        <item>15</item>
+        <item>20</item>
+        <item>40</item>
+        <item>60</item>
+        <item>80</item>
+        <item>100</item>
+    </string-array>
+    <string-array name="nudgeAttemptsString">
+        <item>@string/message_do_not_nudge</item>
+        <item>2</item>
+        <item>4</item>
+        <item>6</item>
+        <item>8</item>
+        <item>10</item>
+        <item>15</item>
+    </string-array>
+    <string-array name="listOnWalletTransfersRecyclerViewClickDialogCompleted">
+        <item>@string/copy_address</item>
+        <item>@string/copy_hash</item>
+    </string-array>
+    <string-array name="listOnWalletTransfersRecyclerViewClickDialog">
+        <item>@string/copy_address</item>
+        <item>@string/copy_hash</item>
+        <item>@string/replay_bundle</item>
+    </string-array>
+    <string-array name="listOnWalletTransfersRecyclerViewClickDialogCancelled">
+        <item>@string/copy_address</item>
+        <item>@string/copy_hash</item>
+        <item>@string/transfer_cancelled_why</item>
+    </string-array>
+
+    <string-array name="listOnWalletAddressesRecyclerViewClickDialogNoPig">
+        <item>@string/copy_address</item>
+        <item>@string/receive_to_address</item>
+        <item>@string/pig_set</item>
+        <item>@string/address_security_button</item>
+    </string-array>
+    <string-array name="listOnWalletAddressesRecyclerViewClickDialogPig">
+        <item>@string/copy_address</item>
+        <item>@string/receive_to_address</item>
+        <item>@string/pig_remove</item>
+        <item>@string/address_security_button</item>
+    </string-array>
+
+    <string-array name="listOnSeedClickDialog">
+        <item>@string/seed_use</item>
+        <item>@string/seed_edit</item>
+        <item>@string/seed_remove</item>
+    </string-array>
+    <string-array name="listIotaUnits">
+        <item>i</item>
+        <item>Ki</item>
+        <item>Mi</item>
+        <item>Gi</item>
+        <!--
+        <item>Ti</item>
+        <item>Pi</item>
+        -->
+    </string-array>
+
+</resources>

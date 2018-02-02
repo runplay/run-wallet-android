@@ -1,0 +1,133 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/home_layout"
+	android:clickable="true"
+	android:background="@color/colorSecondary"
+    >
+	<android.support.design.widget.AppBarLayout
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:theme="@style/AppTheme.AppBarOverlay">
+
+		<android.support.v7.widget.Toolbar
+			android:id="@+id/message_toolbar"
+			android:layout_width="match_parent"
+			android:layout_height="?attr/actionBarSize"
+			android:background="?attr/colorPrimary"
+
+			app:popupTheme="@style/AppTheme.PopupOverlay"
+			app:title="@string/menu_messaging" />
+
+	</android.support.design.widget.AppBarLayout>
+	<ListView android:id="@+id/sms_message_list"
+	   android:layout_width="match_parent"
+	   android:layout_height="match_parent"
+	   android:gravity="center_vertical"
+	   android:layout_marginTop="5dp"
+	   
+	   android:layout_alignParentTop="true"
+	   android:layout_alignParentBottom="true"
+
+	   android:layout_margin="0dp"
+	   android:padding="0dp"
+	   android:divider="@null"
+	   android:dividerHeight="0dp"
+	   />
+	<android.support.design.widget.FloatingActionButton
+		android:id="@+id/fab_new_message"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_alignParentBottom="true"
+		android:layout_alignParentRight="true"
+		android:layout_margin="@dimen/fab_margin"
+		android:padding="16dp"
+		android:src="@drawable/ic_fab_send"
+		app:fabSize="normal"
+		/>
+	<LinearLayout
+		android:id="@+id/msg_first_load"
+		android:layout_width="match_parent"
+		android:layout_height="match_parent"
+		android:gravity="center"
+		android:orientation="vertical"
+		android:visibility="gone"
+		>
+		<android.support.v4.widget.Space
+			android:layout_width="match_parent"
+			android:layout_height="0dp"
+			android:layout_weight="1"
+			/>
+		<TextView
+			android:drawableTop="@drawable/logo"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:gravity="center"
+			android:text="@string/msg_nickname_title"
+			android:textSize="12sp"
+			android:textColor="@color/white"
+			/>
+		<android.support.design.widget.TextInputLayout
+			android:id="@+id/msg_nickname_enter_layout"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:layout_marginTop="@dimen/baseline_typo"
+			app:errorEnabled="true"
+			app:hintTextAppearance="@style/TextLabel"
+			app:passwordToggleEnabled="true">
+
+			<android.support.design.widget.TextInputEditText
+				android:drawableLeft="@drawable/ic_website"
+				android:id="@+id/msg_nickname_enter"
+				android:textColor="@color/white"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:gravity="center"
+				android:hint="@string/msg_nickname_enter"
+				android:inputType="textEmailAddress" />
+		</android.support.design.widget.TextInputLayout>
+
+		<android.support.v7.widget.AppCompatButton
+			android:id="@+id/btn_msg_nickname"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:gravity="right"
+			android:text="@string/messages_first_load"
+			android:textSize="14sp"
+			android:textColor="@color/white"
+			android:visibility="gone" />
+		<android.support.v4.widget.Space
+			android:layout_width="match_parent"
+			android:layout_height="0dp"
+			android:layout_weight="1"
+			/>
+	</LinearLayout>
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center">
+        <TextView
+            android:drawableTop="@drawable/logo"
+            android:id="@+id/tv_empty"
+            android:textColor="@color/white"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="@string/messages_no_data_available"
+            android:textSize="14sp"
+            android:visibility="gone" />
+        <TextView
+            android:drawableTop="@drawable/logo"
+            android:id="@+id/tv_first_load"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="@string/messages_first_load"
+            android:textSize="14sp"
+            android:textColor="@color/white"
+            android:visibility="gone" />
+    </RelativeLayout>
+
+
+</RelativeLayout>

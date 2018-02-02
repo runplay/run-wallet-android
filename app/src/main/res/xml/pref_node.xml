@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <EditTextPreference
+        android:defaultValue="http"
+        android:hint="http"
+        android:key="preference_node_protocol"
+        android:summary="@string/settings_node_protocol_summary"
+        android:title="@string/settings_node_protocol_title" />
+<!-- node.iotawallet.info:14265    iota.pathin.net:14265   riota0.runplay.com -->
+    <EditTextPreference
+        android:defaultValue="riota1.runplay.com"
+        android:hint="riota1.runplay.com"
+        android:key="preference_node_ip"
+        android:summary="@string/settings_node_ip_summary"
+        android:title="@string/settings_node_ip_title" />
+
+    <EditTextPreference
+        android:defaultValue="15600"
+        android:hint="15600"
+        android:digits="0123456789"
+        android:inputType="number"
+        android:key="preference_node_port"
+        android:summary="@string/settings_node_port_summary"
+        android:title="@string/settings_node_port_title" />
+
+</PreferenceScreen>

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <Preference
+        android:key="preference_display_settings"
+        android:summary="@string/settings_display_summary"
+        android:title="@string/settings_display_title" />
+    <Preference
+        android:key="preference_screen_misc"
+        android:summary="@string/settings_header_misc_summary"
+        android:title="@string/settings_header_misc_title" />
+    <Preference
+        android:key="preference_screen_password_protection"
+        android:summary="@string/settings_password_protection_summary"
+        android:title="@string/settings_password_protection_title" />
+    <Preference
+        android:key="preference_screen_about"
+        android:summary="@string/menu_about_summary"
+        android:title="@string/menu_about" />
+</PreferenceScreen>

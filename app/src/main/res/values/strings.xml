@@ -1,0 +1,543 @@
+<resources  xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+    <string name="app_name">run IOTA</string>
+    <string name="app_settings">run IOTA</string>
+    <string name="app_issue_reporter">Issue Reporter</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="action_settings">Settings</string>
+    <string name="all_transactions">All:</string>
+    <string name="invalid_transactions">Invalid:</string>
+    <string name="new_transactions">New:</string>
+    <string name="random_transaction_requests">Random:</string>
+    <string name="sent_transactions">Sent:</string>
+    <string name="connection_type">type:</string>
+    <string name="na">N/A</string>
+    <string name="seed">Seed:</string>
+    <string name="password">Password:</string>
+    <string name="current_password">Current password:</string>
+    <string name="new_password">New password:</string>
+    <string name="forgot_password">Forgot your password ?</string>
+    <string name="confirm_password">Confirm password:</string>
+    <string name="copy_seed">Copy Seed?</string>
+    <string name="generate_seed">Create New Seed</string>
+    <string name="transactions_to_request">Processing</string>
+    <string name="tips">Tips (total)</string>
+    <string name="transactions">Transactions</string>
+    <string name="transfer">Transfer</string>
+    <string name="transfers">Actions</string>
+    <string name="addresses">Receive</string>
+    <string name="search">Search</string>
+    <string name="account_balance">Account Balance:</string>
+    <string name="account_balance_default">0 i</string>
+    <string name="generate_qr_code">Generate QR code</string>
+    <string name="address">Address</string>
+    <string name="hash">Hash</string>
+    <string name="amount">Amount</string>
+    <string name="message_optional">Message (optional, A-Z,a-z only)</string>
+    <string name="tag_optional">Tag (optional, A-Z,a-z and 9 only)</string>
+    <string name="neighbor_ip">Neighbor IP:</string>
+    <string name="next">Next</string>
+
+    <string name="info_transfer">Transfer</string>
+    <string name="info_nudge">Nudge</string>
+    <string name="info_audit">Audit</string>
+    <string name="info_refresh">Refresh</string>
+    <string name="info_new_address">Address</string>
+    <string name="info_new_attach">Attach</string>
+    <string name="info_first_load">First load</string>
+
+
+    <string name="volume">vol</string>
+    <string name="price">price</string>
+    <string name="from">From</string>
+    <string name="remainder">Balance</string>
+
+    <string name="title_seeds">Seeds</string>
+    <string name="wallet">Wallet</string>
+    <string name="used_address">Used address</string>
+    <string name="attached_address">Attached</string>
+
+    <!-- Buttons-->
+    <string name="buttons_ok">OK</string>
+    <string name="buttons_cancel">Cancel</string>
+    <string name="buttons_login">Use Seed</string>
+    <string name="buttons_login_password">Login</string>
+    <string name="buttons_save">Save</string>
+    <string name="buttons_show">Show</string>
+    <string name="buttons_again">Do not notify</string>
+    <string name="buttons_share">Share</string>
+    <string name="buttons_backup">Backup</string>
+    <string name="buttons_finished">Finished</string>
+    <string name="buttons_change">Change</string>
+
+    <!-- Messages-->
+    <string name="messages_shortcuts_not_available">Please login first.</string>
+    <string name="messages_invalid_search">Please enter a valid bundle, tag, address, approvees or transaction.</string>
+    <string name="messages_enter_neighbor_address">Valid IOTA node required (ip/www):(port)</string>
+    <string name="messages_neighbor_address_forgiven">IP-Address already added.</string>
+    <string name="messages_network_remote_error">Node issue, trying again / switching to a new node.</string>
+    <string name="messages_network_access_error">Sorry, command is not available on this node, try switching.</string>
+
+    <string name="messages_network_error">Network issue, could not establish a connection.</string>
+    <string name="messages_invalid_hash_error">Invalid hash search error, could not found transaction</string>
+    <string name="messages_exchange_rate_error">No exchange rate data available.</string>
+    <string name="messages_no_chart_data">Loading...</string>
+    <string name="messages_copy_seed">Seed generated... copy to clipboard?</string>
+    <string name="messages_remove_seed">Remove Seed, are you sure?, please make sure you have a backup of the seed</string>
+
+    <string name="snackbar_balance_live">Live balance, only completed transfers</string>
+    <string name="snackbar_balance_out">Available balance, less pending out</string>
+    <string name="snackbar_balance_pending">Future balance, includes all pending</string>
+
+    <string name="messages_empty_seed">Enter IOTA seed</string>
+    <string name="messages_seed_to_short">Seed is too short</string>
+    <string name="messages_seed_to_long">Seed is too long</string>
+    <string name="messages_mixed_seed">Seed has mixed case characters. Lowercase will be converted to uppercase</string>
+    <string name="messages_invalid_characters_seed">Seed contains invalid characters. Only uppercase characters from A-Z and the number 9 are accepted</string>
+    <string name="messages_to_long_seed">Seed should not contain more than 81 characters. Extra characters are ignored</string>
+    <string name="messages_to_short_seed">Seed does not contain enough characters. Insecure seed</string>
+    <string name="messages_not_fully_synced_yet">Node is not fully synced</string>
+    <string name="messages_wait_for_transfer">Please wait for the current Transfer process to finish</string>
+
+    <string name="messages_not_yet_implemented">Not yet implemented</string>
+    <string name="messages_enter_txaddress_with_checksum">Please valid address required</string>
+    <string name="messages_enter_amount">Please enter an IOTA amount</string>
+    <string name="messages_not_enough_balance">Not enough IOTA</string>
+    <string name="messages_invalid_characters">Only uppercase characters from A-Z and the number 9 are accepted.</string>
+    <string name="messages_tag_to_long">Please enter a valid tag. Max. 27</string>
+    <string name="messages_trx_not_found">Bundle or address not found</string>
+    <string name="messages_bundle_not_found">Bundle not found</string>
+    <string name="messages_permission_camera">Reading QR code requires the camera permission. click to allow</string>
+    <string name="messages_invalid_password">Invalid password</string>
+    <string name="messages_match_password">Passwords do not match</string>
+    <string name="messages_empty_password">Password is empty</string>
+    <string name="messages_minmax_password">Min 4, Max 20 numbers</string>
+    <string name="message_open_licenses_error">Can not open WebView.</string>
+    <string name="message_seed_duplicate">Seed is already in the wallet</string>
+    <string name="message_install_web_view">Install WebView</string>
+    <string name="messages_iota_donation">Address copied to clipboard</string>
+    <string name="messages_address_used">The address is already used. Please generate a new one or choose a non-used address.</string>
+    <string name="messages_transaction_already_confirmed">The transaction is already confirmed.</string>
+    <string name="messages_create_new_msgaddress">Creating new contact link</string>
+    <string name="messages_first_load">First load, please wait a minute</string>
+    <string name="first_load_predict">Balance</string>
+    <string name="first_load_addresses">Addresses</string>
+    <string name="first_load_transfers">Transfers</string>
+
+    <string name="first_load_relax">Take a seat, this might take a little while</string>
+
+
+    <string name="messages_feature_coming_soon">Coming soon, will detail why double spend transfer</string>
+
+    <string name="messages_no_data_available">Nothing to show</string>
+    <string name="messages_no_neighbours">This Node likes to keep its neighbours private</string>
+
+    <string name="addresses_empty_title">Addresses empty</string>
+    <string name="addresses_empty_settings">Addresses are created automatically, you can change how many empty addresses you see in the settings</string>
+    <string name="addresses_empty_create">Generating address now, please wait</string>
+
+    <string name="transfers_empty_title">Transfers empty</string>
+    <string name="transfers_empty_settings">See the Receive area for IOTA adresseses to receive coins on</string>
+    <string name="transfers_empty_create">You can control how you view Tranfers in the settings area</string>
+
+
+    <string name="messages_invalid_address">Address not valid</string>
+
+    <!-- Menu-->
+    <string name="menu_group_misc">Misc</string>
+    <string name="menu_wallet">Active Wallet</string>
+    <string name="menu_choose_wallet">All Wallets</string>
+    <string name="menu_neighbors">Neighbors</string>
+    <string name="menu_node_info">Active Node</string>
+    <string name="menu_settings">@string/action_settings</string>
+    <string name="menu_about">App Details</string>
+    <string name="menu_about_summary">Details about run IOTA app</string>
+
+    <string name="menu_logout">Delete data</string>
+    <string name="menu_logout_summary">Log out of app and delete all stored data, you should backup all seeds before performing this action.</string>
+    <string name="menu_search">Search</string>
+    <string name="menu_messaging">Messaging</string>
+    <string name="menu_group_network">Network</string>
+    <string name="menu_all_nodes">All Nodes</string>
+
+    <string name="menu_node_connect">Connect to Node</string>
+    <string name="menu_node_move_top">Move to Top</string>
+    <string name="menu_node_move_one">Move up One</string>
+    <string name="menu_node_remove">Remove node</string>
+    <string name="menu_node_title">Node options</string>
+    <string name="menu_node_dead">Node no longer active on IOTA</string>
+    <string name="menu_node_add">Add Node</string>
+    <string name="menu_node_summary">Enter your own node details or select from the list</string>
+    <string name="menu_node_list_summary">App will connect descending order to the first Node that is in Sync, move nodes to the top to be first connect priority</string>
+    <string name="menu_node_no_remove">At last one node required, add one, then delete this node</string>
+
+
+
+    <string name="xchange_last">Last</string>
+    <string name="xchange_high">High</string>
+    <string name="xchange_low">Low</string>
+
+    <!-- messages -->
+    <string name="menu_reply">Reply</string>
+    <string name="menu_msg_delete">Delete message</string>
+    <string name="copy_to_clip">Copy to clipboard</string>
+    <string name="label_cancel">Cancel</string>
+    <string name="label_cancelled">Double</string>
+    <string name="label_address_used">No complete</string>
+    <string name="contacts_unknown">Unknown</string>
+    <string name="sms_hint_search">Enter number or name</string>
+    <string name="sms_alert_no_message">Enter a message to send</string>
+    <string name="sms_alert_no_person">Choose someone to send to</string>
+    <string name="layout_bottom_up">Layout Bottom up</string>
+    <string name="layout_top_down">Layout Top down</string>
+    <string name="msg_add_person">Add Person</string>
+    <string name="msg_adding_address">Creating new message address</string>
+    <string name="msg_send_hint">Enter message</string>
+    <string name="msg_nickname_title">Start by typing an identifying name of your choice</string>
+    <string name="msg_nickname_enter">Enter Nickname, email, anything really...</string>
+    <string name="btn_msg_nickname">Create Messaging</string>
+    <string name="msg_nickname_error">must be 5&#8211;20 characters, no spaces</string>
+    <string name="min_seed_req">Cannot remove minimum of 1 Seed required, See Settings Delete data to remove</string>
+    <string name="text_cancelled_summary">This pending transfer has been marked as no complete as one or more of the pay from addresses have a zero balance so the transfer cannot currently complete</string>
+    <string name="text_cancelled_summary_more">With IOTA transfers, Addresses are generally only used to make payments from only once as out-going payments lessen the security of the Address</string>
+    <string name="text_cancelled_settings">You can change how the app handles these No complete pending payments in the setting area</string>
+    <string name="text_cancelled_what_next">You should contact the sender of the payment to discuss about how to settle this transfer</string>
+    <string name="text_cancelled_click_www">Click any item below to see it on: </string>
+    <string name="text_cancelled_copy">Copy all details to Clipboard</string>
+    <string name="text_cancelled_copied">Copied to Clipboard</string>
+    <string name="text_filtered">Filtered</string>
+
+    <!-- transfer -->
+    <string name="transfer_available">Available</string>
+    <string name="transfer_pending_in">Pending in</string>
+
+    <string name="message_messy_view">View Messy? see the settings to tidy it</string>
+    <string name="message_tap_balance">tap me</string>
+
+
+    <string name="address_security_default_is">Default is</string>
+    <string name="address_security_prefered">You can set the prefered Address security value, default is 2</string>
+    <string name="address_security_button">Change Address Security</string>
+    <string name="address_security_back">Click back to continue</string>
+    <string name="address_security_finished">Finished, after the refresh any new balance will appear</string>
+    <string name="address_security_gen">Generating Address with the new security setting</string>
+    <string name="address_security_non_zero">Sorry, you can only use this feature on non-zero, non-used addresses</string>
+    <string name="address_security_summary">Change the address security value. This will also change the address shown. Do not perform this if you are expecting a payment onto this address, if you ever want to get the original address back after changing, you will need to Delete and restart the Wallet.</string>
+    <string name="address_security_summary_small">If you were expecting a non-zero balance on this address, you can try changing to a different security setting.</string>
+
+
+    <string name="message_do_not_nudge">Do not nudge</string>
+    <string name="seed_use">Make Active Wallet</string>
+    <string name="seed_add">Add Seed</string>
+    <string name="seed_edit">View Wallet Seed</string>
+    <string name="seed_remove">Remove Seed</string>
+    <string name="seed_add_wallet">Add Seed Wallet</string>
+    <string name="node_add">Add Node</string>
+    <string name="pig_set">Make Piggy bank address</string>
+    <string name="pig_remove">Break Piggy bank address</string>
+    <string name="max_seeds">Sorry, Maximum of 4 Seeds allowed</string>
+    <string name="pig_locked">Locked</string>
+
+    <!-- Notification-->
+    <string name="notification_no_messaging_setup">No messaging seed available, go to message area to create one</string>
+
+    <string name="notification_send_transfer_request_title">Sending transfer</string>
+    <string name="notification_generate_new_address_request_title">Generating new address</string>
+    <string name="notification_attaching_new_address_request_title">Attaching address</string>
+    <string name="notification_replay_bundle_request_title">Nudge (promote) transfer</string>
+
+    <string name="notification_generating_new_address_response_succeeded_title">New address generated</string>
+
+    <string name="notification_send_transfer_response_succeeded_title">Transfer executed</string>
+    <string name="notification_send_transfer_response_failed_title">Transfer failed</string>
+
+    <string name="notification_attaching_new_address_response_succeeded_title">Attach address executed</string>
+    <string name="notification_attaching_new_address_response_failed_title">Attach address failed</string>
+    ´
+    <string name="notification_replay_bundle_response_succeeded_title">Nudged</string>
+    <string name="notification_replay_bundle_response_failed_title">Nudging failed</string>
+
+    <string name="notification_address_attach_to_tangle_blocked_title">Attach failed, try another node or enable local PoW</string>
+    <string name="notification_transfer_attach_to_tangle_blocked_title">Transaction failed, try another node or enable local PoW</string>
+
+    <!-- About-->
+    <string name="about_version">Version %1$s</string>
+    <string name="about_version_unknown">Version unknown</string>
+
+    <string name="confirm_message">Does this seed have a non Zero balance?</string>
+    <string name="confirm_message_yes">Yes, find my IOTA</string>
+    <string name="confirm_message_no">No, it is empty</string>
+
+
+    <string name="about_terms">Terms of use</string>
+    <string name="about_privacy">Privacy Policy</string>
+    <string name="about_licenses">Licenses</string>
+    <string name="about_support">Thanks if you do</string>
+    <string name="about_buildchain">Build chain</string>
+    <string name="about_faq">Help and FAQ</string>
+    <string name="about_donation_website">Website</string>
+    <string name="about_buildchain_github">Show last commit at Github</string>
+    <string name="about_donation_btc">BTC donation</string>
+    <string name="about_buildchain_travis">Show build at Travis CI</string>
+    <string name="about_donation_iota">IOTA donation</string>
+    <string name="about_iota_support">go to iota.runplay.com/help</string>
+
+    <!-- Settings-->
+    <string name="settings_header_node_title">Node</string>
+    <string name="settings_header_node_summary">Node settings</string>
+
+    <string name="settings_node_protocol_title">Node protocol</string>
+    <string name="settings_node_protocol_summary">The protocol of the node you would like to connect</string>
+
+    <string name="settings_node_ip_title">Node IP or www domain</string>
+    <string name="settings_node_ip_summary">The IP address of the node you would like to connect</string>
+
+    <string name="settings_node_port_title">Node port</string>
+    <string name="settings_node_port_summary">The port of the node you would like to connect</string>
+
+    <string name="settings_password_protection_title">Security</string>
+    <string name="settings_password_protection_summary">Seed and password settings</string>
+
+    <string name="settings_show_seed_title">Show seed</string>
+
+    <string name="settings_show_seed_summary">Display current seed</string>
+
+    <string name="settings_show_msgseed_title">Show messaging seed</string>
+    <string name="settings_show_msgseed_summary">Display the IOTA seed used for messaging</string>
+
+
+
+
+    <string name="settings_change_password_title">Change Password</string>
+    <string name="settings_change_password_summary">Change current password</string>
+
+    <string name="settings_encrypt_seed_title">Protect seed</string>
+    <string name="settings_encrypt_seed_summary">Set-up password protection</string>
+
+    <string name="settings_header_misc_title">App Settings</string>
+    <string name="settings_header_misc_summary">Nudge attempts, PoW, First load</string>
+
+    <string name="settings_display_title">Display Settings</string>
+    <string name="settings_display_summary">Options to set how you view your wallet</string>
+
+    <string name="settings_auto_attach">Address auto attach</string>
+    <string name="settings_auto_attach_summary">Minimum number of Empty value pooled addresses</string>
+
+    <string name="settings_auto_nudge">Nudge attempts</string>
+    <string name="settings_auto_nudge_summary">Number of times the app will Nudge (promote) a transfer before giving up</string>
+
+    <string name="settings_first_load">First Load Addresses</string>
+    <string name="settings_first_load_summary">Number of Addresses the app will check up to when performing the First load of a seed</string>
+
+    <string name="settings_first_range">First Load Range</string>
+    <string name="settings_first_range_summary">Number of empty Addresses the app will check after finding a balance before stopping</string>
+
+    <string name="settings_local_pow_title">Local PoW</string>
+    <string name="settings_local_pow_summary">Do the Proof of work locally.</string>
+
+    <string name="settings_cancelled">Double and No complete Transfers</string>
+    <string name="settings_cancelled_summary">Show Double spend and No complete transfers in the \'Actions\' section</string>
+
+    <string name="settings_used">Used Addresses</string>
+    <string name="settings_used_summary">Show used Addresses in the \'Receive\' section</string>
+
+    <string name="settings_attachments">Addresses attached</string>
+    <string name="settings_attachments_summary">Show new Address attachments in the \'Actions\' section</string>
+
+
+    <string name="settings_issue_reporter_title">Report issue</string>
+    <string name="settings_issue_reporter_summary">Report issue or submit feedback</string>
+
+    <string name="settings_wallet_currency_title">Currency</string>
+    <string name="settings_wallet_currency_summary">The currency in which the wallet value is displayed</string>
+
+    <string name="settings_address_security">Address security</string>
+    <string name="settings_address_security_summary">Default address security setting when generating new addresses</string>
+
+    <string name="settings_auto_logout">Auto Logout</string>
+    <string name="settings_auto_logout_summary">Logout app after inactive use</string>
+
+    <string name="settings_min_weight">Min Weight</string>
+    <string name="settings_min_weight_summary">Min Weight value to use for transfers</string>
+
+    <string name="settings_messages_empty_node_protocol">Empty node protocol not allowed.</string>
+    <string name="settings_messages_wrong_node_protocol">Node protocol not allowed.</string>
+    <string name="settings_messages_empty_node_ip">Empty node IP not allowed.</string>
+    <string name="settings_messages_empty_node_port">Empty node port not allowed.</string>
+
+    <!-- Info -->
+    <string name="info_app_name">App name:</string>
+    <string name="info_app_version">App version:</string>
+    <string name="info_jre_version">JRE version:</string>
+    <string name="info_max_processors">Available processors:</string>
+    <string name="info_free_memory">JRE free memory:</string>
+    <string name="info_max_memory">JRE max memory:</string>
+    <string name="info_total_memory">JRE total memory:</string>
+    <string name="info_latest_milestone">Latest milestone:</string>
+    <string name="info_latest_milestone_index">Latest milestone index:</string>
+    <string name="info_latest_milestone_solid_subtangle">Latest solid subtangle:</string>
+    <string name="info_latest_milestone_solid_subtangle_index">Latest solid subtangle index:</string>
+    <string name="info_neighbors">Neighbors:</string>
+    <string name="info_packets_queue_size">Package queue size:</string>
+    <string name="info_time">Time:</string>
+    <string name="info_tips">Tips:</string>
+    <string name="info_transactions_to_request">Processing:</string>
+
+    <!-- bluetooth -->
+    <string name="send">Send</string>
+    <string name="not_connected">You are not connected to a device</string>
+    <string name="bt_not_enabled_leaving">Bluetooth was not enabled. Leaving Bluetooth Chat.</string>
+    <string name="title_connecting">connecting...</string>
+    <string name="title_connected_to">connected to <xliff:g id="device_name">%1$s</xliff:g></string>
+    <string name="title_not_connected">not connected</string>
+    <string name="scanning">scanning for devices...</string>
+    <string name="select_device">select a device to connect</string>
+    <string name="none_paired">No devices have been paired</string>
+    <string name="none_found">No devices found</string>
+    <string name="title_paired_devices">Paired Devices</string>
+    <string name="title_other_devices">Other Available Devices</string>
+    <string name="button_scan">Scan for devices</string>
+    <string name="secure_connect">Connect a device - Secure</string>
+    <string name="insecure_connect">Connect a device - Insecure</string>
+    <string name="discoverable">Make discoverable</string>
+    <string name="sample_show_log">Show Log</string>
+    <string name="sample_hide_log">Hide Log</string>
+
+
+    <!-- Alert Dialog-->
+    <string name="copy_address">Copy address</string>
+    <string name="copy_hash">Copy hash</string>
+
+    <string name="receive_to_address">Request to this address</string>
+    <string name="replay_bundle">Nudge (promote) transfer</string>
+    <string name="transfer_cancelled_why">Why No complete?</string>
+    <string name="toast_wrongPW">Wrong password</string>
+    <string name="title_current_seed">Current Seed:</string>
+    <string name="title_enter_password">Set App password</string>
+    <string name="message_enter_password">Set your login password</string>
+    <string name="title_new_password">Enter new password</string>
+    <string name="message_new_password">Set your new login password</string>
+    <string name="title_forgot_password">Forgot your password?</string>
+    <string name="message_forgot_password">Sorry, there is no recover option. Please delete app and re-install to remove the current setup</string>
+    <string name="title_root_detected">Root check</string>
+    <string name="message_root_detected">Device failed one or more root checks and is assumed to be rooted. Continue at your own risk?</string>
+    <string name="title_spend_to_used_address">Sending to a used address!</string>
+    <string name="message_spend_to_used_address">You are attempting to send a transaction to an address that has already been used. Please ask recipient for a new address.</string>
+    <string name="title_key_reuse_detect">Private Key Reuse Detected!</string>
+    <string name="message_key_reuse_detect">Used Address found. IOTA Addresses should not be used to send more than once. Wait for previous transaction to confirm, by Nudging, before sending another transaction.</string>
+
+    <!-- Confirm transfer dialog -->
+    <string name="message_confirm_transfer">Confirm send transfer?</string>
+
+    <!-- Confirm logout dialog -->
+    <string name="message_confirm_logout">Confirm Delete all data and logout?\nYou will lose all seeds if you don\'t have a full backup!</string>
+
+
+    <string name="message_confirm_seed_summary">Click cancel, then choose Show seed to copy this Seed</string>
+
+    <!-- Fragment title -->
+    <string name="fragment_about_title">About</string>
+    <string name="fragment_neighbors_title">Neighbors</string>
+    <string name="fragment_node_info_title">Active Node</string>
+    <string name="fragment_login_title">Login</string>
+    <string name="fragment_new_transfer_title">New Transfer</string>
+    <string name="fragment_wallet_title">Wallet</string>
+
+    <string name="title_remove_seed">Remove Seed</string>
+
+    <string name="fragment_generate_qr_code_title">QR Code</string>
+
+    <!-- App Shortcuts -->
+    <string name="shortcut_generate_qr_code">Generate QR code</string>
+    <string name="shortcut_send_transfer">Send transfer</string>
+
+    <!-- Cards -->
+    <string name="card_label_time">Time:</string>
+    <string name="card_label_persistence">Status:</string>
+    <string name="card_label_persistence_yes">Confirmed</string>
+    <string name="card_label_internal">Internal</string>
+    <string name="card_label_pending_in">Pending in</string>
+    <string name="card_label_pending_out">Pending out</string>
+    <string name="card_label_persistence_no">Pending</string>
+    <string name="card_label_message">Message:</string>
+    <string name="card_label_actions">Address actions:</string>
+    <string name="card_label_address">Address:</string>
+    <string name="card_label_tag">Tag:</string>
+    <string name="card_label_hash">Hash:</string>
+    <string name="card_label_signature">Signature:</string>
+    <string name="card_label_current_index">Current index:</string>
+    <string name="card_label_last_index">Last index:</string>
+    <string name="card_label_bundle">Bundle:</string>
+    <string name="card_label_trunk_transaction">Trunk transaction:</string>
+    <string name="card_label_branch_transaction">Branch transaction:</string>
+    <string name="card_label_nonce">Nonce:</string>
+
+    <string name="help">Help and FAQ</string>
+    <string name="help_aw_head">Active Wallet Area</string>
+    <string name="help_aw_actions">Actions</string>
+    <string name="help_aw_actions_text">Show all actions on Addresses for the active Wallet</string>
+    <string name="help_aw_nudge">Nudge Transfer</string>
+    <string name="help_aw_nudge_text">If a transfer is pending for a while, try Nudging (Promoting / re-attaching) it</string>
+    <string name="help_aw_cancelled">No complete</string>
+    <string name="help_aw_cancelled_txt">No complete transfers are when the app detects a transfer that will (most likely) never complete, these are then marked No complete and depending on your settings are defaulted to be not included in Address balances</string>
+    <string name="help_aw_receive">Receive</string>
+    <string name="help_aw_receive_text">Lists all active Addresses with balances for the active Wallet</string>
+
+    <string name="help_aw_pigadd">Piggy Bank Addresses 🐷</string>
+    <string name="help_aw_pigadd_text">Mark an address as a Piggy Bank to ensure the app will not use that address when making transfers, you need to remove the pig before spending with the Address</string>
+    <string name="help_aw_piglock">Pig Locked</string>
+    <string name="help_aw_piglock_no_unlock">Pig can only be broken when pending balances are completed</string>
+    <string name="help_aw_piglock_text">If an Address has pending transfers, the address will be locked from outgoing payments</string>
+    <string name="help_aw_security">Change Address Security option</string>
+    <string name="help_aw_security_text">Use this to get Specific with the way your Wallet Addresses are created, by default the security value is 2 unless changed. If you have changed the address, but want the original address back, you will need to remove the Wallet Seed and Re-load again</string>
+
+    <string name="help_key_head">Key</string>
+    <string name="help_key_receive">Positive balance transfer (receive IOTA)</string>
+    <string name="help_key_send">Negative balance transfer (send IOTA)</string>
+    <string name="help_key_internal">Internal (inter-wallet) transfer</string>
+    <string name="help_key_attach">Address attachment to IOTA</string>
+    <string name="help_key_complete">Transfer completed</string>
+    <string name="help_key_nudge">Nudge (promote) count</string>
+    <string name="help_key_address">Address name</string>
+    <string name="help_key_security">Address security value</string>
+
+
+    <string name="help_allw_head">All Wallets Area</string>
+    <string name="help_allw_text">The all wallets area provides management of your Seeds, you can also see latest currency data</string>
+    <string name="help_allw_addseed">Add Seed</string>
+    <string name="help_allw_addseed_text">Add a new Wallet Seed by click the + plus button</string>
+    <string name="help_allw_remove">Remove Seed</string>
+    <string name="help_allw_remove_text">This will remove the Seed from the wallet, make sure you have backed up the Seed before doing this</string>
+
+
+
+    <string name="help_net_head">Network Area</string>
+    <string name="help_net_text">View and Manage the Iota node your connected to</string>
+    <string name="help_net_allnodes">All Nodes</string>
+    <string name="help_net_allnodes_text">In the All Nodes area you can see the current connected node and manage other nodes, the order of connecting, and which ones you want to use, Select from the list or provide your own</string>
+
+
+    <string name="help_set_head">Settings ⚙️</string>
+    <string name="help_set_text">Control how run Iota works for you</string>
+    <string name="help_set_password">Change Password 🔐</string>
+    <string name="help_set_password_text">Change the password used to access the app</string>
+    <string name="help_set_address">Address Security 🔐</string>
+    <string name="help_set_address_text">Change the default Security value to use when generating addresses</string>
+    <string name="help_set_address_auto">Automatic Addresses 🎚</string>
+    <string name="help_set_address_auto_text">Change the number of empty zero balance addresses to keep</string>
+    <string name="help_set_nudge_auto">Nudge Attempts 🎚</string>
+    <string name="help_set_nudge_auto_text">If auto nudge is turned on, the app will wait 25 IOTA milestones (~60 minutes) for a pending out Transfer, then Nudge promote the Transfer</string>
+    <string name="help_set_weight">Min Weight 🔐</string>
+    <string name="help_set_weight_text">Change the Min Weight value to use for transfers</string>
+    <string name="help_set_delete">Delete data ❌</string>
+    <string name="help_set_delete_text">Wipe all data and log out of the app, make sure you have a full backup of all Seeds before doing</string>
+    <string name="help_set_pow">Local POW 💪🏾</string>
+    <string name="help_set_pow_text">Do calculations for Transfers on this device, on mobile phones this usually makes Iota transfers slower</string>
+    <string name="help_set_currency">Currency 💵</string>
+    <string name="help_set_currency_text">Change the default currency to compare your IOTA to</string>
+
+    <string name="help_beta">Beta 🔨🔧</string>
+    <string name="help_beta_text">run IOTA is considered still under development, this is the first release and has only been tested with a limited number of devices internally</string>
+    <string name="help_beta_contact">If you have any issues, get in contact, 🐞 bugs can be fixed 🔧</string>
+
+</resources>

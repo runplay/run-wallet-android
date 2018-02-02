@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_wallet"
+            android:icon="@drawable/menu_wallet"
+            android:title="@string/menu_wallet" />
+        <item
+            android:id="@+id/nav_choose_wallet"
+            android:icon="@drawable/menu_wallet"
+            android:title="@string/menu_choose_wallet" />
+        <!--
+        <item
+            android:id="@+id/nav_messaging"
+            android:icon="@drawable/ic_chat_bubble"
+            android:title="@string/menu_messaging" />
+        -->
+        <!--menu_messaging
+        <item
+            android:id="@+id/nav_tangle_explorer"
+            android:icon="@drawable/menu_list"
+            android:title="@string/menu_tangle_explorer" /> -->
+
+        <item android:title="@string/menu_group_misc">
+            <menu>
+                <group android:checkableBehavior="single">
+                    <item
+                        android:id="@+id/nav_node_info"
+                        android:icon="@drawable/logo"
+                        android:title="@string/menu_group_network" />
+                    <item
+                        android:id="@+id/nav_help"
+                        android:icon="@drawable/ic_faq"
+                        android:title="@string/help" />
+                    <item
+                        android:id="@+id/nav_settings"
+                        android:icon="@drawable/menu_settings"
+                        android:title="@string/menu_settings" />
+
+                </group>
+            </menu>
+        </item>
+
+
+
+
+    </group>
+</menu>

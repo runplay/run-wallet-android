@@ -1,0 +1,184 @@
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorSecondary">
+
+    <android.support.design.widget.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:theme="@style/AppTheme.AppBarOverlay">
+
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/wallet_toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="?attr/colorPrimary"
+            app:popupTheme="@style/AppTheme.PopupOverlay"
+            app:title="@string/fragment_wallet_title" />
+
+        <LinearLayout
+            android:id="@+id/toolbar_title_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+
+            >
+            <ImageView
+                android:layout_width="wrap_content"
+                android:src="@drawable/logo"
+                android:layout_height="wrap_content"
+                android:layout_margin="6dp"
+                android:paddingLeft="24dp"
+                />
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_weight="3"
+                android:layout_height="wrap_content"
+                android:paddingLeft="6dp"
+                android:orientation="vertical"
+                >
+                <LinearLayout
+                    android:id="@+id/balance_flipper"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+                    <TextView
+                        android:id="@+id/toolbar_title_layout_balance"
+                        android:layout_width="wrap_content"
+                        android:layout_height="35dp"
+                        android:text="0"
+                        android:textAppearance="@style/Base.TextAppearance.AppCompat.Headline"
+                        android:textColor="@android:color/white"
+                        android:paddingRight="2dp"
+                        android:textStyle="bold" />
+                    <TextView
+                        android:id="@+id/toolbar_title_layout_balance_third"
+                        android:layout_width="wrap_content"
+                        android:layout_height="35dp"
+                        android:text=""
+                        android:alpha="0.7"
+                        android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
+                        android:textColor="@android:color/white"
+                        android:paddingRight="6dp"
+                        android:textStyle="bold" />
+                    <TextView
+                        android:id="@+id/toolbar_title_layout_balance_unit"
+                        android:layout_width="wrap_content"
+                        android:layout_height="35dp"
+                        android:text="i"
+                        android:textAppearance="@style/Base.TextAppearance.AppCompat.Headline"
+                        android:textColor="@android:color/white"
+                        android:textStyle="bold" />
+                    <TextView
+                        android:id="@+id/tap_balance"
+                        android:text="@string/message_tap_balance"
+                        android:layout_width="wrap_content"
+                        android:layout_height="35dp"
+                        android:background="@color/whiteAlpha"
+                        android:layout_marginTop="-5dp"
+                        android:layout_marginStart="4dp"
+                        android:paddingEnd="4dp"
+                        android:paddingStart="4dp"
+                        android:alpha="0.3"
+                        android:gravity="center_horizontal|center_vertical"
+                        />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/toolbar_title_layout_pending"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:padding="2dp"
+                    android:background="@color/whiteAlpha"
+                    >
+                    <TextView
+                        android:id="@+id/toolbar_title_layout_pending_out"
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:layout_height="wrap_content"
+                        android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
+                        android:textColor="@color/flatRed"
+                        android:gravity="end"
+                        />
+                    <ImageView
+                        android:layout_width="12dp"
+                        android:src="@drawable/navigation_refresh"
+                        android:layout_height="12dp"
+                        android:scaleType="fitCenter"
+                        android:layout_margin="3dp"/>
+                    <TextView
+                        android:id="@+id/toolbar_title_layout_pending_in"
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:layout_height="wrap_content"
+                        android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
+                        android:textColor="@color/green"
+                        android:gravity="start"
+                        />
+                </LinearLayout>
+
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_weight="2"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:layout_gravity="center_vertical"
+                >
+                <TextView
+                    android:id="@+id/toolbar_title_layout_alternate_balance"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:textAppearance="@style/Base.TextAppearance.AppCompat.Body2"
+                    android:gravity="center_horizontal"
+                    tools:text="34,38 €" />
+                <TextView
+                    android:id="@+id/toolbar_title_layout_alternate_currency"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:textAppearance="@style/Base.TextAppearance.AppCompat.Body2"
+                    android:textColor="@color/colorLight"
+                    android:gravity="center_horizontal"
+                    />
+
+            </LinearLayout>
+            <android.support.design.widget.TabLayout
+                android:id="@+id/wallet_tabs"
+                android:layout_width="0dp"
+                android:layout_weight="5"
+                android:layout_height="48dp"
+                android:background="?colorPrimary"
+                android:fillViewport="true"
+                app:tabGravity="fill"
+                app:tabMaxWidth="0dp"
+                app:tabMode="fixed" />
+
+        </LinearLayout>
+
+
+    </android.support.design.widget.AppBarLayout>
+
+    <android.support.v4.view.ViewPager
+        android:id="@+id/wallet_tab_viewpager"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fab_wallet"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end|bottom"
+        android:layout_margin="@dimen/fab_margin"
+        android:padding="16dp"
+        android:src="@drawable/ic_add"
+        android:visibility="gone"
+        app:fabSize="normal"
+        />
+
+</android.support.design.widget.CoordinatorLayout>

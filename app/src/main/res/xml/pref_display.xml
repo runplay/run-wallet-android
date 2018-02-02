@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <ListPreference
+        android:defaultValue="USD"
+        android:entries="@array/listCurrencies"
+        android:entryValues="@array/listValues"
+        android:key="preference_wallet_currency"
+        android:summary="@string/settings_wallet_currency_summary"
+        android:title="@string/settings_wallet_currency_title" />
+
+    <CheckBoxPreference
+        android:defaultValue="true"
+        android:key="preference_show_cancelled"
+        android:summary="@string/settings_cancelled_summary"
+        android:title="@string/settings_cancelled" />
+    <CheckBoxPreference
+        android:defaultValue="true"
+        android:key="preference_show_attach"
+        android:summary="@string/settings_attachments_summary"
+        android:title="@string/settings_attachments" />
+    <CheckBoxPreference
+        android:defaultValue="true"
+        android:key="preference_show_used"
+        android:summary="@string/settings_used_summary"
+        android:title="@string/settings_used" />
+    <ListPreference
+        android:defaultValue="2"
+        android:entries="@array/listAutoAttach"
+        android:entryValues="@array/listAutoAttach"
+        android:key="preference_min_addresses"
+        android:summary="@string/settings_auto_attach_summary"
+        android:title="@string/settings_auto_attach" />
+
+</PreferenceScreen>

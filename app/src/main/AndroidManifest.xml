@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    package="run.wallet">
+
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.VIBRATE" />
+
+    <uses-permission android:required="false" android:name="android.permission.BLUETOOTH" />
+    <uses-permission android:required="false" android:name="android.permission.BLUETOOTH_ADMIN" />
+    <uses-permission android:required="false" android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:required="false" android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:required="false" android:name="android.permission.CAMERA" />
+
+    <!--
+        <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    -->
+
+    <application
+        android:name="run.wallet.iota.IOTA"
+        android:allowBackup="true"
+        android:fullBackupContent="true"
+        android:hardwareAccelerated="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:supportsRtl="true"
+        android:theme="@style/AppTheme"
+        tools:ignore="GoogleAppIndexingWarning">
+
+        <!-- Activities -->
+        <activity
+            android:name="run.wallet.iota.ui.activity.SplashActivity"
+            android:theme="@style/SplashTheme"
+            android:launchMode="singleTask">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name="run.wallet.iota.ui.activity.MainActivity"
+            android:label="@string/app_name"
+            android:launchMode="singleTask"
+            android:theme="@style/AppTheme.NoActionBar"
+
+            android:windowSoftInputMode="adjustResize">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <action android:name="android.intent.action.MAIN" />
+                <action android:name="android.intent.action.SENDTO" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data
+                    android:host="send"
+                    android:scheme="iota" />
+                <data
+                    android:host="runwallet.me"
+                    android:scheme="http" />
+                <data
+                    android:host="iota.runplay.com"
+                    android:scheme="http" />
+            </intent-filter>
+        </activity>
+        <service
+            android:name="run.wallet.iota.service.AppService"
+            android:exported="true"
+            >
+            <intent-filter>
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </service>
+        <activity
+            android:name="run.wallet.iota.ui.activity.SettingsActivity"
+            android:label="@string/app_settings"
+            android:theme="@style/AppTheme"
+            >
+
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="run.wallet.iota.ui.activity.MainActivity" />
+        </activity>
+
+    </application>
+</manifest>

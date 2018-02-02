@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorSecondary">
+    <LinearLayout
+        android:id="@+id/addresses_empty"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:visibility="gone">
+        <TextView
+            android:drawableTop="@drawable/logo"
+            android:id="@+id/addresses_empty_title"
+            android:textColor="@color/white"
+            android:drawablePadding="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="@string/addresses_empty_title"
+            android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
+            android:textSize="14sp"
+            />
+        <TextView
+            android:padding="20dp"
+            android:id="@+id/addresses_empty_settings"
+            android:textColor="@color/grey"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
+            android:text="@string/addresses_empty_settings"
+            android:textSize="14sp"
+            />
+        <TextView
+            android:drawableBottom="@drawable/tran_orange"
+            android:id="@+id/addresses_empty_create"
+            android:textColor="@color/white"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:drawablePadding="10dp"
+            android:text="@string/addresses_empty_create"
+            android:textSize="14sp"
+            android:visibility="gone"
+            />
+
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+        <run.wallet.common.ui.SwipeRefreshLayout
+            android:id="@+id/wallet_addresses_swipe_container"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1">
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/wallet_addresses_recycler_view"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:clipToPadding="false"
+                android:paddingBottom="10dp">
+
+            </android.support.v7.widget.RecyclerView>
+
+        </run.wallet.common.ui.SwipeRefreshLayout>
+        <LinearLayout
+            android:id="@+id/info_bar_addresses"
+            android:background="@color/colorPrimaryDarker"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+
+            android:isScrollContainer="true">
+
+        </LinearLayout>
+    </LinearLayout>
+    <include layout="@layout/first_load_pod"/>
+    <RelativeLayout
+        android:id="@+id/first_load_pod_confirm"
+        android:layout_width="match_parent"
+        android:gravity="center_vertical|center_horizontal"
+        android:layout_height="match_parent"
+        android:visibility="gone"
+        >
+        <TextView
+            android:id="@+id/confirm_user_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/whiteAlpha"
+            android:text="@string/confirm_message"
+            android:paddingRight="10dp"
+            android:gravity="center"/>
+
+        <android.support.v7.widget.AppCompatButton
+            android:id="@+id/fl_confirm_yes"
+            android:layout_below="@id/confirm_user_text"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/confirm_message_yes"
+            android:layout_margin="@dimen/baseline"
+            android:textColor="@android:color/white" />
+        <android.support.v7.widget.AppCompatButton
+            android:id="@+id/fl_confirm_no"
+            android:layout_below="@id/fl_confirm_yes"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/confirm_message_no"
+            android:layout_margin="@dimen/baseline"
+            android:textColor="@android:color/white" />
+    </RelativeLayout>
+</RelativeLayout>
+

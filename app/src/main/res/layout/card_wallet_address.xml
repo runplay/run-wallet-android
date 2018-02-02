@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout  xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    >
+<android.support.v7.widget.CardView
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginLeft="@dimen/baseline_card"
+    android:layout_marginRight="@dimen/baseline_card"
+    android:layout_marginTop="@dimen/baseline_card"
+    app:cardCornerRadius="@dimen/card_corner_radius"
+    app:contentPadding="@dimen/baseline_small"
+    android:id="@+id/card_address"
+    tools:ignore="contentDescription">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:clipChildren="false"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        >
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_gravity="center_vertical|center_horizontal">
+            <ImageView
+                android:id="@+id/item_wa_address_image"
+                android:layout_width="wrap_content"
+
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_address" />
+            <ProgressBar
+                android:id="@+id/item_wa_address_attaching"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:visibility="gone"
+                />
+            <TextView
+                android:id="@+id/item_wa_address_id"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
+                android:textColor="@color/white"
+                android:background="@color/colorPrimary"
+                android:paddingLeft="2dp"
+                android:paddingRight="2dp"
+                android:layout_alignParentBottom="true"/>
+        </RelativeLayout>
+
+        <android.support.v4.widget.Space
+            android:layout_width="@dimen/baseline_typo"
+            android:layout_height="wrap_content" />
+        <RelativeLayout
+            android:layout_width="0dp"
+            android:layout_weight="3"
+            android:layout_height="match_parent">
+            <TextView
+                android:id="@+id/item_wa_address"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="14sp"
+                android:paddingBottom="2dp"
+                android:paddingTop="2dp"
+                android:textColor="@color/greyDark"
+                android:typeface="monospace"
+
+                />
+        </RelativeLayout>
+
+
+        <TextView
+            android:id="@+id/item_wa_address_security"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:background="@color/colorPrimary"
+            android:text="s2"
+            android:padding="2dp"
+            android:textColor="@color/white"
+            android:layout_alignParentBottom="true"
+            android:alpha="0.5"
+            android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
+            />
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_weight="2"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            >
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="end">
+                <TextView
+                    android:id="@+id/item_wa_address_balance"
+                    android:layout_width="wrap_content"
+                    android:layout_height="35dp"
+                    android:text="0"
+                    android:textAppearance="@style/Base.TextAppearance.AppCompat.Headline"
+                    android:textColor="@color/greyDark"
+                    android:paddingRight="0dp"
+                    android:textStyle="bold" />
+                <TextView
+                    android:id="@+id/item_wa_address_third"
+                    android:layout_width="wrap_content"
+                    android:layout_height="35dp"
+                    android:text=""
+                    android:alpha="0.7"
+                    android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
+                    android:textColor="@color/greyDark"
+                    android:paddingRight="6dp"
+                    android:textStyle="bold" />
+                <TextView
+                    android:id="@+id/item_wa_address_unit"
+                    android:layout_width="wrap_content"
+                    android:layout_height="35dp"
+                    android:text="i"
+                    android:textAppearance="@style/Base.TextAppearance.AppCompat.Headline"
+                    android:textColor="@color/colorPrimary"
+                    android:textStyle="bold" />
+            </LinearLayout>
+            <TextView
+                android:id="@+id/item_wa_address_rawvalue"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="right"
+
+                android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
+                />
+        </LinearLayout>
+        <android.support.v4.widget.Space
+            android:layout_width="@dimen/baseline_typo"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+
+</android.support.v7.widget.CardView>
+</RelativeLayout>

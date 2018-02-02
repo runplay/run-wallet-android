@@ -1,0 +1,372 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:clickable="true"
+    tools:ignore="contentDescription">
+
+    <android.support.design.widget.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:theme="@style/AppTheme.AppBarOverlay">
+
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/new_transfer_toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="?attr/colorPrimary"
+            app:popupTheme="@style/AppTheme.PopupOverlay"
+            app:title="@string/fragment_new_transfer_title" />
+
+    </android.support.design.widget.AppBarLayout>
+
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/colorSecondary"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        >
+        <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            >
+            <LinearLayout
+                android:id="@+id/new_transfer_to"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:orientation="vertical"
+                android:padding="@dimen/baseline_typo">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:paddingBottom="10dp">
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_weight="3"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:paddingLeft="20dp">
+                        <TextView
+                            android:text="@string/transfer_available"
+                            android:layout_width="match_parent"
+                            android:layout_height="30dp"
+                            android:gravity="center_vertical"
+                            android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                            />
+                        <TextView
+                            android:id="@+id/new_transfer_available_balance"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:textStyle="bold"
+                            android:drawableLeft="@drawable/logo_green"
+                            android:drawablePadding="12dp"
+                            android:textAppearance="@style/TextAppearance.AppCompat.Headline"
+                            />
+                    </LinearLayout>
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_weight="2"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:paddingLeft="10dp"
+                        >
+                        <TextView
+                            android:id="@+id/pig_locked"
+                            android:text="@string/transfer_pending_in"
+                            android:drawablePadding="6dp"
+                            android:alpha="0.4"
+                            android:layout_width="match_parent"
+                            android:layout_height="30dp"
+                            android:gravity="center_vertical"
+                            android:drawableLeft="@drawable/pig"
+                            android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                            />
+                        <TextView
+                            android:id="@+id/new_transfer_pending_balance"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:textStyle="bold"
+                            android:paddingLeft="20dp"
+                            android:alpha="0.6"
+                            android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
+                            />
+                    </LinearLayout>
+
+
+                </LinearLayout>
+                <!--  Address Label -->
+                <android.support.design.widget.TextInputLayout
+                    android:id="@+id/new_transfer_address_text_input_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingTop="5dp"
+                    app:errorEnabled="true"
+                    app:hintTextAppearance="@style/TextLabel">
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+                        <android.support.design.widget.TextInputEditText
+                            android:id="@+id/new_transfer_address_input"
+                            android:layout_width="0dp"
+                            android:layout_weight="1"
+                            android:layout_height="wrap_content"
+                            android:hint="@string/address"
+                            android:digits="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ9"
+                            android:maxLength="90"
+                            android:inputType="text" />
+
+                        <RelativeLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:background="@color/colorPrimary"
+                            android:padding="3dp"
+                            >
+                            <ImageView
+                                android:id="@+id/new_transfer_get_qr"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:src="@drawable/ic_fab_qr"
+                                />
+                        </RelativeLayout>
+                    </LinearLayout>
+                </android.support.design.widget.TextInputLayout>
+
+                <!--  Amount Label -->
+                <android.support.design.widget.TextInputLayout
+                    android:id="@+id/new_transfer_amount_text_input_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/baseline_typo"
+                    app:errorEnabled="true"
+                    app:hintTextAppearance="@style/TextLabel">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+
+                        <android.support.design.widget.TextInputEditText
+                            android:id="@+id/new_transfer_amount_input"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:hint="@string/amount"
+                            android:maxLength="16"
+                            android:inputType="numberSigned" />
+                        <Spinner
+                            android:id="@+id/new_transfer_units_spinner"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textAppearance="@style/Base.TextAppearance.AppCompat.Headline"
+                            android:textStyle="bold"
+                            style="@style/SpinnerIota"
+                            />
+                        <ImageView
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
+                            android:src="@drawable/logo_primary"
+                            />
+
+
+                    </LinearLayout>
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal"
+                        android:paddingTop="12dp">
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_weight="1"
+                            android:layout_height="wrap_content">
+
+                        </LinearLayout>
+                        <android.support.v7.widget.AppCompatButton
+                            android:id="@+id/new_transfer_next"
+                            android:text="@string/next"
+                            android:layout_width="0dp"
+                            android:layout_weight="1"
+                            android:layout_height="wrap_content"
+                            android:padding="3dp"
+                            android:paddingLeft="5dp"
+                            android:paddingRight="5dp"
+                            android:textColor="@android:color/white"/>
+                    </LinearLayout>
+
+
+                </android.support.design.widget.TextInputLayout>
+            </LinearLayout>
+            <LinearLayout
+                android:id="@+id/new_transfer_message"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:orientation="vertical"
+                android:visibility="gone"
+                android:padding="@dimen/baseline_typo">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:paddingBottom="@dimen/baseline_small">
+                    <ImageView
+                        android:src="@drawable/logo_primary"
+                        android:layout_width="0dp"
+                        android:layout_weight="2"
+                        android:layout_height="wrap_content" />
+                    <TextView
+                        android:id="@+id/new_transfer_summary_value"
+                        android:layout_width="0dp"
+                        android:layout_weight="2"
+                        android:textAppearance="@style/Base.TextAppearance.AppCompat.Headline"
+                        android:textStyle="bold"
+                        android:layout_height="wrap_content" />
+                    <TextView
+                        android:id="@+id/new_transfer_summary_address"
+                        android:layout_width="0dp"
+                        android:layout_weight="4"
+                        android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
+                        android:layout_height="wrap_content" />
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:background="@color/colorMiddle"
+                    android:padding="2dp"
+                    android:paddingBottom="@dimen/baseline_small">
+                    <TextView
+                        android:text="@string/from"
+                        android:layout_width="0dp"
+                        android:layout_weight="2"
+                        android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
+                        android:textColor="@color/colorPrimaryDark"
+                        android:layout_height="wrap_content" />
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_weight="6"
+                        android:layout_height="wrap_content"
+
+                        android:orientation="vertical">
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal">
+                            <TextView
+                                android:id="@+id/new_transfer_seed_name"
+                                android:layout_width="0dp"
+                                android:layout_weight="2"
+                                android:layout_height="wrap_content"
+                                android:textStyle="bold"
+                                android:background="@color/colorPrimary"
+                                android:textColor="@color/white"
+                                android:paddingLeft="3dp"
+                                android:paddingRight="3dp"
+                                />
+                            <TextView
+                                android:id="@+id/new_transfer_seed_quip"
+                                android:layout_width="0dp"
+                                android:layout_weight="4"
+                                android:layout_height="wrap_content"
+                                android:paddingLeft="@dimen/baseline_typo"/>
+                        </LinearLayout>
+                        <LinearLayout
+                            android:id="@+id/new_transfer_from_addresses"
+                            android:layout_width="match_parent"
+                            android:layout_height="30dp"
+                            android:orientation="horizontal"
+                            android:paddingTop="3dp">
+
+                        </LinearLayout>
+                    </LinearLayout>
+
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:background="@color/colorLight"
+                    android:padding="2dp">
+                    <TextView
+                        android:text="@string/remainder"
+                        android:layout_width="0dp"
+                        android:layout_weight="2"
+                        android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
+                        android:textColor="@color/colorPrimaryDark"
+                        android:layout_height="wrap_content" />
+                    <LinearLayout
+                        android:id="@+id/new_transfer_remainder_address"
+                        android:layout_width="0dp"
+                        android:layout_weight="6"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:padding="2dp">
+
+                    </LinearLayout>
+                </LinearLayout>
+                <!--  Message Label -->
+                <android.support.design.widget.TextInputLayout
+                    android:id="@+id/new_transfer_message_text_input_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/baseline_typo"
+                    app:hintTextAppearance="@style/TextLabel">
+
+                    <android.support.design.widget.TextInputEditText
+                        android:id="@+id/new_transfer_message_input"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:maxLength="500"
+                        android:hint="@string/message_optional"
+                        android:inputType="textMultiLine|text"
+                        android:digits="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ "/>
+                </android.support.design.widget.TextInputLayout>
+
+                <!--  Tag Label -->
+                <android.support.design.widget.TextInputLayout
+                    android:id="@+id/new_transfer_tag_input_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/baseline_typo"
+                    android:layout_marginEnd="50dp"
+                    app:hintTextAppearance="@style/TextLabel">
+
+                    <android.support.design.widget.TextInputEditText
+                        android:id="@+id/new_transfer_tag_input"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="@string/tag_optional"
+                        android:maxLength="27"
+                        android:inputType="text"
+                        android:digits="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ9"  />
+                </android.support.design.widget.TextInputLayout>
+            </LinearLayout>
+        </android.support.v7.widget.CardView>
+
+
+    </ScrollView>
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/new_transfer_send_fab_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end|bottom"
+        android:layout_margin="@dimen/fab_margin"
+        android:padding="16dp"
+        android:src="@drawable/ic_fab_send"
+        app:fabSize="normal" />
+
+</android.support.design.widget.CoordinatorLayout>

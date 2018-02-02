@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <ListPreference
+        android:defaultValue="0"
+        android:entries="@array/nudgeAttemptsString"
+        android:entryValues="@array/nudgeAttempts"
+        android:key="preference_nudge_attempts"
+        android:summary="@string/settings_auto_nudge_summary"
+        android:title="@string/settings_auto_nudge" />
+    <ListPreference
+        android:defaultValue="50"
+        android:entries="@array/firstLoadAttempts"
+        android:entryValues="@array/firstLoadAttempts"
+        android:key="preference_fl_attempts"
+        android:summary="@string/settings_first_load_summary"
+        android:title="@string/settings_first_load" />
+    <ListPreference
+        android:defaultValue="5"
+        android:entries="@array/firstLoadRange"
+        android:entryValues="@array/firstLoadRange"
+        android:key="preference_fl_range"
+        android:summary="@string/settings_first_range_summary"
+        android:title="@string/settings_first_range" />
+    <CheckBoxPreference
+        android:defaultValue="false"
+        android:key="preference_local_pow"
+        android:summary="@string/settings_local_pow_summary"
+        android:title="@string/settings_local_pow_title" />
+    <!--
+    <CheckBoxPreference
+        android:defaultValue="true"
+        android:key="preference_attach_tangle"
+        android:summary="@string/settings_attach_tangle_summary"
+        android:title="@string/settings_attach_tangle_title" />
+
+    <Preference
+        android:key="preference_issue_reporter"
+        android:summary="@string/settings_issue_reporter_summary"
+        android:title="@string/settings_issue_reporter_title" />
+-->
+
+
+</PreferenceScreen>
