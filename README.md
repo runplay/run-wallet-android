@@ -1,4 +1,6 @@
 # run IOTA wallet
+![alt tag](http://iota.runplay.com/img/icon.png "run IOTA wallet Logo")
+
 <b>run Iota</b> provides a fast, efficient and easy to manage Wallet for the IOTA currency
 
 <h2>Features</h2>
@@ -21,6 +23,7 @@ Code originally based on the IOTA foundation wallet
 https://github.com/iotaledger/android-wallet-app
 <br/>
 
+
 <h2>Download</h2>
 
 <a href='https://play.google.com/store/apps/details?id=run.wallet'><img alt='Get it on Google Play' src='https://play.google.com/intl/en_us/badges/images/generic/en_badge_web_generic.png' width="323" height="125"/></a></a>
@@ -40,3 +43,13 @@ Available only on Github and Google Play, do not download run IOTA wallet anywhe
 If you find the app useful, donations are accepted here
 
 IOTA: 9PPMLVNEGQEZLCKTPDSCMKNKNDPMHUTC9PMOAKHGNGOVVTXOTRA99JFPVAAXHPUM99DGLUHOYLMWOL9YCSGRZJIYSW
+
+
+
+<h2>Screens</h2>
+Here are some screenshots of the app
+
+![alt tag](http://iota.runplay.com/img/wallet-screen2s.png "Transfers screenshot detailing all actions and status")
+![alt tag](http://iota.runplay.com/img/wallet-screen1s.png "Addresses screenshot with balances and pending balances")
+![alt tag](http://iota.runplay.com/img/wallet-screen3s.png "All wallets (seed) screenshot")
+![alt tag](http://iota.runplay.com/img/wallet-screen4s.png "Send new transfer screenshot")
