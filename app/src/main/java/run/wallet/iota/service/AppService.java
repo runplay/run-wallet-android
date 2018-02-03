@@ -222,8 +222,9 @@ public final class AppService extends Service {
 		registerReceiver(breceiver, bfilter);
 		registerReceiver(ubreceiver, ubfilter);
 
-		ContactsObserver contentObserver = new ContactsObserver();
-		this.getContentResolver().registerContentObserver (ContactsContract.Contacts.CONTENT_URI, true, contentObserver);
+		// removed for now, will be coming back with future Friend transfers feature
+		//ContactsObserver contentObserver = new ContactsObserver();
+		//this.getContentResolver().registerContentObserver (ContactsContract.Contacts.CONTENT_URI, true, contentObserver);
 
         startSyncsHandler.postDelayed(new Runnable() {
             public void run() {

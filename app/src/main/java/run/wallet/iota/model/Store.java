@@ -136,10 +136,17 @@ public class Store {
 
     public static void loadDefaults(Context context) {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
-        store.autoAttach= Sf.toInt(prefs.getString(Constants.PREFERENCES_MIN_ADDRESSES, ""+Constants.PREFERENCES_MIN_ADDRESSES_DEFAULT));
-        store.addressSecurity= Sf.toInt(prefs.getString(Constants.PREF_ADDRESS_SECURITY, ""+Constants.PREF_ADDRESS_SECURITY_DEFAULT));
-        store.minWeight= Sf.toInt(prefs.getString(Constants.PREF_MIN_WEIGHT, ""+Constants.PREF_MIN_WEIGHT_DEFAULT));
-        store.balanceDisplayType =prefs.getInt(Constants.PREF_BALANCE_DISPLAY, 0);
+        try {
+            store.autoAttach = Sf.toInt(prefs.getString(Constants.PREFERENCES_MIN_ADDRESSES, "" + Constants.PREFERENCES_MIN_ADDRESSES_DEFAULT));
+            store.addressSecurity = Sf.toInt(prefs.getString(Constants.PREF_ADDRESS_SECURITY, "" + Constants.PREF_ADDRESS_SECURITY_DEFAULT));
+            store.minWeight = Sf.toInt(prefs.getString(Constants.PREF_MIN_WEIGHT, "" + Constants.PREF_MIN_WEIGHT_DEFAULT));
+            store.balanceDisplayType = prefs.getInt(Constants.PREF_BALANCE_DISPLAY, 0);
+        } catch(Exception e){
+            store.autoAttach = Constants.PREFERENCES_MIN_ADDRESSES_DEFAULT;
+            store.addressSecurity = Constants.PREF_ADDRESS_SECURITY_DEFAULT;
+            store.minWeight = Constants.PREF_MIN_WEIGHT_DEFAULT;
+            store.balanceDisplayType = 0;
+        }
     }
 
     public static void setCacheAddress(Address address) {

@@ -27,6 +27,9 @@ import android.preference.PreferenceFragment;
 import android.preference.PreferenceScreen;
 import android.support.design.widget.Snackbar;
 import android.support.v7.preference.PreferenceManager;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 
 import run.wallet.R;
 import run.wallet.iota.api.TaskManager;
@@ -50,7 +53,14 @@ public class SettingsPasswordFragment extends PreferenceFragment {
         addPreferencesFromResource(R.xml.pref_password_protection);
         checkPreferencesDependencies();
     }
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle
+            savedInstanceState) {
+        View view = super.onCreateView(inflater, container, savedInstanceState);
+        view.setBackgroundColor(getResources().getColor(android.R.color.white));
 
+        return view;
+    }
     @Override
     public boolean onPreferenceTreeClick(PreferenceScreen preferenceScreen, Preference preference) {
         switch (preference.getKey()) {

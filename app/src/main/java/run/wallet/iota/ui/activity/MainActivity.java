@@ -53,6 +53,7 @@ import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 
 import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.EventBusException;
 import org.greenrobot.eventbus.Subscribe;
 
 import run.wallet.R;
@@ -560,8 +561,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     @Override
     public void onResume() {
         super.onResume();
-        EventBus.getDefault().register(this);
-        //Log.e("ACT","ACTIVITY onResume()");
+        try {
+            EventBus.getDefault().register(this);
+        } catch (EventBusException e) {}
+
         showLogoutNavigationItem();
         updateDynamicShortcuts();
         AppService.setIsAppStarted(this, true);
