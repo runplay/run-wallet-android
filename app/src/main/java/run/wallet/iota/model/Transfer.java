@@ -51,14 +51,23 @@ public class Transfer implements Parcelable, Comparable<Transfer> {
     private long value;
     private String message;
     private String tag;
+
     private boolean markDoubleSpend=false;
     private boolean markDoubleAddress=false;
     private long lastDoubleCheck;
     private long milestone;
-    private int nudgeCount;
+    private long milestoneCreated;
+    private List<String> nudgeHashes=new ArrayList<>();
     private long timestampConfirmed;
     private List<TransferTransaction> transactions=new ArrayList<>();
     private List<TransferTransaction> othertransactions=new ArrayList<>();
+
+    public boolean isAttachment() {
+        if(value==0 && transactions.isEmpty())
+            return true;
+        else
+            return false;
+    }
 
     public boolean isCompleted() {
         return getPersistence()!=null?getPersistence():false;
@@ -73,10 +82,10 @@ public class Transfer implements Parcelable, Comparable<Transfer> {
         job.put("msg",message);
         job.put("tag",tag);
         job.put("mil", getMilestone());
+
         job.put("dbl", isMarkDoubleSpend());
         job.put("dba", markDoubleAddress);
         job.put("ldb",lastDoubleCheck);
-        job.put("nc",nudgeCount);
         job.put("tsc", getTimestampConfirmed());
         JSONArray jar = new JSONArray();
         for(TransferTransaction t: getTransactions()) {
@@ -88,6 +97,12 @@ public class Transfer implements Parcelable, Comparable<Transfer> {
             ojar.put(t.toJson());
         }
         job.put("tro",ojar);
+        JSONArray njar = new JSONArray();
+        for(String hash: nudgeHashes) {
+            njar.put(hash);
+        }
+        job.put("nudge",njar);
+        job.put("milc", milestoneCreated);
         return job;
     }
     public Transfer(JSONObject job) {
@@ -97,9 +112,9 @@ public class Transfer implements Parcelable, Comparable<Transfer> {
         hash=job.optString("hash");
         persistence=job.optBoolean("ps");
         value=job.optLong("val");
-        nudgeCount=job.optInt("nc");
         message=job.optString("msg");
-        setMilestone(job.optInt("mil"));
+
+        setMilestone(job.optLong("mil"));
         tag=job.optString("tag");
         setMarkDoubleSpend(job.optBoolean("dbl"));
         markDoubleAddress=job.optBoolean("dba");
@@ -107,14 +122,19 @@ public class Transfer implements Parcelable, Comparable<Transfer> {
         setTimestampConfirmed(job.optLong("tsc"));
         JSONArray jar = job.optJSONArray("tra");
         for(int i=0; i<jar.length(); i++) {
-            TransferTransaction t= new TransferTransaction(jar.getJSONObject(i));
+            TransferTransaction t= new TransferTransaction(jar.optJSONObject(i));
             getTransactions().add(t);
         }
         JSONArray ojar = job.optJSONArray("tro");
         for(int i=0; i<ojar.length(); i++) {
-            TransferTransaction t= new TransferTransaction(ojar.getJSONObject(i));
+            TransferTransaction t= new TransferTransaction(ojar.optJSONObject(i));
             othertransactions.add(t);
         }
+        JSONArray njar = job.optJSONArray("nudge");
+        for(int i=0; i<njar.length(); i++) {
+            nudgeHashes.add(njar.optString(i));
+        }
+        milestoneCreated=job.optLong("milc");
     }
     public Transfer(String address, long value, String message, String tag) {
         this.address = address;
@@ -145,12 +165,8 @@ public class Transfer implements Parcelable, Comparable<Transfer> {
         tag = in.readString();
     }
 
-    public long getInternalTotal() {
-        long internalTotal=0L;
-        for(TransferTransaction tran: getTransactions()) {
-            internalTotal+=tran.getValue();
-        }
-        return internalTotal;
+    public boolean isInternal() {
+        return (getValue()==0 && !getTransactions().isEmpty() && !isMarkDoubleSpend() && !isMarkDoubleAddress());
     }
     public String getHashShort() {
         return hash.substring(0,16);
@@ -281,12 +297,9 @@ public class Transfer implements Parcelable, Comparable<Transfer> {
     }
 
     public int getNudgeCount() {
-        return nudgeCount;
+        return getNudgeHashes().size();
     }
 
-    public void setNudgeCount(int nudgeCount) {
-        this.nudgeCount = nudgeCount;
-    }
 
     public long getTimestampConfirmed() {
         return timestampConfirmed;
@@ -294,5 +307,29 @@ public class Transfer implements Parcelable, Comparable<Transfer> {
 
     public void setTimestampConfirmed(long timestampConfirmed) {
         this.timestampConfirmed = timestampConfirmed;
+    }
+
+    public boolean isMarkNudged() {
+        return !getNudgeHashes().isEmpty();
+    }
+
+    public void addNudgeHash(String hash) {
+        getNudgeHashes().add(hash);
+    }
+
+    public List<String> getNudgeHashes() {
+        return nudgeHashes;
+    }
+
+    public void setNudgeHashes(List<String> nudgeHashes) {
+        this.nudgeHashes = nudgeHashes;
+    }
+
+    public long getMilestoneCreated() {
+        return milestoneCreated;
+    }
+
+    public void setMilestoneCreated(long milestoneCreated) {
+        this.milestoneCreated = milestoneCreated;
     }
 }

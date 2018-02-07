@@ -62,6 +62,8 @@ public class TransferViewManager {
 
     public static  class ViewHolder extends RecyclerView.ViewHolder {
 
+
+        Transfer transfer;
         boolean isConfirmed;
         boolean isCancelled;
         boolean isAddressDouble;
@@ -123,12 +125,8 @@ public class TransferViewManager {
             expandableLayout.collapse();
             itemView.setOnClickListener(v -> {
                 Bundle bundle = new Bundle();
-                bundle.putString("address", addressLabel.getText().toString());
-                bundle.putInt("isConfirmed", isConfirmed ? 1 : 0);
-                bundle.putInt("isCancelled", isCancelled ? 1 : 0);
-                bundle.putInt("isAttachment", value==0 ? 1 : 0);
-                bundle.putInt("isAddressDouble", isAddressDouble ? 1 : 0);
-                bundle.putString("hash", hashLabel.getText().toString());
+
+                bundle.putString("hash", transfer.getHash());
 
                 WalletTransfersItemDialog dialog = new WalletTransfersItemDialog();
                 dialog.setArguments(bundle);
@@ -137,13 +135,7 @@ public class TransferViewManager {
 
             itemView.setOnLongClickListener(v -> {
                 Bundle bundle = new Bundle();
-                bundle.putString("address", addressLabel.getText().toString());
-                bundle.putInt("isConfirmed", isConfirmed ? 1 : 0);
-                bundle.putInt("isCancelled", isCancelled ? 1 : 0);
-                bundle.putInt("isAttachment", value==0 ? 1 : 0);
-                bundle.putInt("isAddressDouble", isAddressDouble ? 1 : 0);
-                bundle.putString("hash", hashLabel.getText().toString());
-
+                bundle.putString("hash", transfer.getHash());
                 WalletTransfersItemDialog dialog = new WalletTransfersItemDialog();
                 dialog.setArguments(bundle);
                 dialog.show(((Activity) context).getFragmentManager(), null);
@@ -200,9 +192,9 @@ public class TransferViewManager {
                 holder.fUnit.setText(fdata.unit);
                 holder.fThird.setText(fdata.thirdDecimal);
                 holder.fUnit.setTextColor(ContextCompat.getColor(context, R.color.colorPrimary));
-                if (value >= 0) {
-                    holder.fBalance.setTextColor(ContextCompat.getColor(context, R.color.white));
-                    holder.fThird.setTextColor(ContextCompat.getColor(context, R.color.white));
+                if (value > 0) {
+                    holder.fBalance.setTextColor(ContextCompat.getColor(context, R.color.green));
+                    holder.fThird.setTextColor(ContextCompat.getColor(context, R.color.green));
                 } else {
                     holder.fBalance.setTextColor(ContextCompat.getColor(context, R.color.flatRed));
                     holder.fThird.setTextColor(ContextCompat.getColor(context, R.color.flatRed));
@@ -212,11 +204,12 @@ public class TransferViewManager {
             holder.filtered.setVisibility(View.GONE);
         }
         IotaToText.IotaDisplayData data = IotaToText.getIotaDisplayData(transfer.getValue());
+        holder.transfer=transfer;
         holder.balance.setText(data.value);
         holder.balanceThird.setText(data.thirdDecimal);
         holder.balanceUnit.setText(data.unit);
         holder.addressLabel.setText(transfer.getAddress());
-        holder.messageLabel.setText(TextUtils.isEmpty(transfer.getMessage()) ? "" : transfer.getMessage());
+        holder.messageLabel.setText(TextUtils.isEmpty(transfer.getMessage()) ? "" : formatMessage(context,transfer.getMessage()));
         holder.tagLabel.setText(transfer.getTag());
         holder.timeLabel.setText(Utils.timeStampToDate(transfer.getTimestamp()));
         holder.hashLabel.setText(transfer.getHash());
@@ -254,9 +247,14 @@ public class TransferViewManager {
         holder.getAlternativeValueTime.setText(Cal.friendlyReadDate(new Cal(transfer.getTimestamp())));
         holder.getAlternativeValueTime.setCompoundDrawables(null,null,null,null);
         if (transfer.getValue() == 0 && transfer.getTransactions().isEmpty()) {
-            holder.alternativeValueLabel.setText(context.getString(R.string.attached_address));
-            holder.imgTran.setImageResource(R.drawable.tran_orange);
 
+            if(transfer.getTag().endsWith("NUDGE9")) {
+                holder.alternativeValueLabel.setText(context.getString(R.string.info_nudge));
+                holder.imgTran.setImageResource(R.drawable.nudge_orange);
+            } else {
+                holder.alternativeValueLabel.setText(context.getString(R.string.attached_address));
+                holder.imgTran.setImageResource(R.drawable.tran_orange);
+            }
         } else if (!transfer.isCompleted()) {
             if(isAutoNudge) {
                 holder.imgTran.setImageResource(R.drawable.ic_replay_orange);
@@ -268,7 +266,7 @@ public class TransferViewManager {
                 holder.balance.setTextColor(ContextCompat.getColor(context, R.color.flatRed));
                 holder.balanceThird.setTextColor(ContextCompat.getColor(context, R.color.flatRed));
                 holder.balanceUnit.setTextColor(ContextCompat.getColor(context, R.color.colorPrimary));
-            } else if(transfer.getValue()==0) {
+            } else if(transfer.isInternal()) {
                 holder.alternativeValueLabel.setText(context.getString(R.string.card_label_internal));
                 holder.imgTran.setImageResource(R.drawable.tran_green);
             }
@@ -283,27 +281,17 @@ public class TransferViewManager {
                 holder.balance.setPaintFlags(holder.addressLabel.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
             } else {
 
-                holder.confirmCheck.setVisibility(View.VISIBLE);
-                if(isAutoNudge) {
-                    holder.confirmCheck.setBackgroundResource(R.drawable.ic_replay_orange_alpha);
-                } else {
-                    holder.confirmCheck.setBackgroundResource(R.drawable.ic_replay_grey);
-                }
-                long mstones = 0;
-                NodeInfoResponse nir=Store.getNodeInfo();
-                if(nir!=null) {
-                    mstones=transfer.getMilestone()-(nir.getLatestMilestoneIndex()- Constants.PREF_TRANSFER_NUDGE_MILESTONES_VALUE);
-                }
-
-                if(mstones<3) {
-                    if(mstones<0)
-                        mstones=0;
-                    holder.mstoneCount.setVisibility(View.VISIBLE);
-                    holder.mstoneCount.setText("" + mstones);
-                }
                 if(transfer.getValue()<0) {
+                    if(isAutoNudge) {
+                        holder.confirmCheck.setVisibility(View.VISIBLE);
+                        holder.confirmCheck.setBackgroundResource(R.drawable.ic_replay_orange_alpha);
+                    }
                     holder.alternativeValueLabel.setText(context.getString(R.string.card_label_pending_out));
                 } else {
+                    if(isAutoNudge && transfer.getNudgeCount()>0) {
+                        holder.confirmCheck.setVisibility(View.VISIBLE);
+                        holder.confirmCheck.setBackgroundResource(R.drawable.ic_replay_orange_alpha);
+                    }
                     holder.alternativeValueLabel.setText(context.getString(R.string.card_label_pending_in));
                 }
 
@@ -349,7 +337,18 @@ public class TransferViewManager {
 
     }
 
+    private static final String TXT_NUDGE_START="RUN9NUDGE9HASH9";
+    private static final String TXT_NUDGE_END="9END";
+    public static String formatMessage(Context context,String message) {
+        if(message!=null) {
+            if(message.startsWith(TXT_NUDGE_START)) {
+                message=message.replace(TXT_NUDGE_START,"");
+                message=context.getString(R.string.info_nudge)+" ("+context.getString(R.string.hash)+"):\n"+message.substring(0,message.length()-TXT_NUDGE_END.length());
 
+            }
+        }
+        return message;
+    }
 
     private static void populateTransferTransactions(Context context, LinearLayout uselayout, Transfer transfer) {
         uselayout.removeAllViews();

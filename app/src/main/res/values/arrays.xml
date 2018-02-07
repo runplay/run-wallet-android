@@ -81,10 +81,6 @@
         <item>@string/message_do_not_nudge</item>
         <item>2</item>
         <item>4</item>
-        <item>6</item>
-        <item>8</item>
-        <item>10</item>
-        <item>15</item>
     </string-array>
     <string-array name="listOnWalletTransfersRecyclerViewClickDialogCompleted">
         <item>@string/copy_address</item>
@@ -94,6 +90,12 @@
         <item>@string/copy_address</item>
         <item>@string/copy_hash</item>
         <item>@string/replay_bundle</item>
+    </string-array>
+    <string-array name="listOnWalletTransfersRecyclerViewClickDialogResend">
+        <item>@string/copy_address</item>
+        <item>@string/copy_hash</item>
+        <item>@string/replay_bundle</item>
+        <item>@string/resend_bundle</item>
     </string-array>
     <string-array name="listOnWalletTransfersRecyclerViewClickDialogCancelled">
         <item>@string/copy_address</item>

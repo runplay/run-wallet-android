@@ -44,12 +44,15 @@ public class NodeInfoRequestHandler extends IotaRequestHandler {
 
     @Override
     public ApiResponse handle(ApiRequest request) {
+        return getNodeInfo(apiProxy,context);
+    }
+    public static NodeInfoResponse getNodeInfo(RunIotaAPI apiProxy, Context context) {
         NodeInfoResponse info=null;
         Nodes.Node cnode=Store.getNode();
         boolean trynew=false;
         try {
             //Log.e("GETNODE",cnode.ip);
-            info=new NodeInfoResponse(this.apiProxy.getNodeInfo());
+            info=new NodeInfoResponse(apiProxy.getNodeInfo());
         } catch(Exception e) {}
         if(info==null) {
             cnode.deadcount+=1;

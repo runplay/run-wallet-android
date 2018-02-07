@@ -24,9 +24,12 @@ import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.util.Log;
 
+import org.greenrobot.eventbus.EventBus;
+
 import java.util.ArrayList;
 import java.util.List;
 
+import jota.dto.response.GetBalancesResponse;
 import jota.dto.response.GetTransferResponse;
 import jota.model.Bundle;
 
@@ -36,6 +39,7 @@ import run.wallet.iota.api.requests.GetAccountDataRequest;
 import run.wallet.iota.api.responses.ApiResponse;
 import run.wallet.iota.api.responses.GetAccountDataResponse;
 import run.wallet.iota.api.responses.NodeInfoResponse;
+import run.wallet.iota.api.responses.RefreshEventResponse;
 import run.wallet.iota.api.responses.error.NetworkError;
 
 import jota.RunIotaAPI;
@@ -50,6 +54,8 @@ import run.wallet.iota.model.Wallet;
 import run.wallet.iota.service.AppService;
 import run.wallet.iota.ui.adapter.WalletAddressCardAdapter;
 import run.wallet.iota.ui.adapter.WalletTransfersCardAdapter;
+import run.wallet.iota.ui.fragment.WalletAddressesFragment;
+import run.wallet.iota.ui.fragment.WalletTransfersFragment;
 
 public class GetAccountDataRequestHandler extends IotaRequestHandler {
     public GetAccountDataRequestHandler(RunIotaAPI iotaApi, Context context) {
@@ -73,18 +79,22 @@ public class GetAccountDataRequestHandler extends IotaRequestHandler {
         Wallet wallet = Store.getWallet(context,request.getSeed());
         if(wallet!=null && nodeInfo!=null) {
             List<Address> alreadyAddress = Store.getAddresses(context, request.getSeed());
+            List<Address> usingAddress = Store.getDisplayAddresses(alreadyAddress);
 
-            List<String> checkAddressString = new ArrayList<>();
+            //List<String> checkAddressString = new ArrayList<>();
             List<Address> checkAddress = new ArrayList<>();
 
             if(request.getIfSingleAddressOrNull()!=null) {
-
-                checkAddressString.add(request.getIfSingleAddressOrNull());
+                //Log.e("GO","SINGLE CALLED ADDRESS.......");
+                Address address= Store.isAlreadyAddress(request.getIfSingleAddressOrNull(),alreadyAddress);
+                if(address!=null) {
+                    checkAddress.add(address);
+                }
             } else {
-                for(Address add: alreadyAddress) {
+                for(Address add: usingAddress) {
                     if (!add.isUsed()||(add.isUsed()&&(add.getPendingValue()!=0||add.getValue()!=0))) {
                         if(request.isForce() || nodeInfo.getLatestMilestoneIndex()!=add.getLastMilestone()) {
-                            checkAddressString.add(add.getAddress());
+                            //checkAddressString.add(add.getAddress());
                             checkAddress.add(add);
                             //Log.e("GET-ACC", "check address: " + add.getAddress());
                         }
@@ -94,15 +104,31 @@ public class GetAccountDataRequestHandler extends IotaRequestHandler {
             if(!checkAddress.isEmpty()) {
 
                 try {
-                    Bundle[] bundles = apiProxy.bundlesFromAddresses(checkAddressString.toArray(new String[checkAddressString.size()]), true);
-                    gtr = GetTransferResponse.create(bundles, stopWatch.getElapsedTimeMili());
-                } catch (Exception e) {
-                    Log.e("ERR066","ERROR: "+e.getMessage());
-                }
-                List<Transfer> transfers=new ArrayList<>();
 
-                if(gtr!=null) {
-                    if (gtr.getTransfers().length > 0) {
+                    List<String> checkAddressString = new ArrayList<>();
+                    List<String> checkAddressBal = new ArrayList<>();
+                    for(Address addr: checkAddress) {
+                        checkAddressBal.add(addr.getAddress());
+                    }
+                    GetBalancesResponse gbal = apiProxy.getBalances(100,checkAddressBal);
+                    for(int i=0; i<gbal.getBalances().length; i++) {
+                        Address addr=checkAddress.get(i);
+                        long gotBalance=Sf.toLong(gbal.getBalances()[i]);
+
+                        if(addr.getValue()!=gotBalance || addr.getPendingValue()!=0) {
+                            addr.setValue(gotBalance);
+                            checkAddressString.add(addr.getAddress());
+                        }
+                    }
+
+                    if(!checkAddressString.isEmpty()) {
+
+                        Bundle[] bundles = apiProxy.bundlesFromAddresses(checkAddressString.toArray(new String[checkAddressString.size()]), true);
+                        gtr = GetTransferResponse.create(bundles, stopWatch.getElapsedTimeMili());
+                    }
+                    List<Transfer> transfers=new ArrayList<>();
+
+                    if (gtr!=null && gtr.getTransfers().length > 0) {
 
                         List<Transfer> alreadyTransfer=Store.getTransfers(context, request.getSeed());
                         Audit.bundlePopulateTransfers(gtr.getTransfers(),transfers,alreadyAddress);
@@ -117,8 +143,47 @@ public class GetAccountDataRequestHandler extends IotaRequestHandler {
                         Store.updateAccountData(context, request.getSeed(), wallet, transfers, alreadyAddress);
 
                     }
+
+                    if(request.getIfSingleAddressOrNull() == null ) {
+                        //EventBus.getDefault().post(new RefreshEventResponse());
+                        WalletAddressesFragment.setShouldRefresh(true);
+                        WalletTransfersFragment.setShouldRefresh(true);
+
+
+                        List<String> checkOthersString = new ArrayList<>();
+                        for(Address address: checkAddress) {
+                            if(!checkAddressString.contains(address.getAddress()))
+                                checkOthersString.add(address.getAddress());
+                        }
+                        if(!checkOthersString.isEmpty()) {
+
+                            Bundle[] bundles = apiProxy.bundlesFromAddresses(checkOthersString.toArray(new String[checkOthersString.size()]), true);
+                            gtr = GetTransferResponse.create(bundles, stopWatch.getElapsedTimeMili());
+                        }
+
+                        if (gtr!=null && gtr.getTransfers().length > 0) {
+                            transfers=new ArrayList<>();
+                            List<Transfer> alreadyTransfer=Store.getTransfers(context, request.getSeed());
+                            Audit.bundlePopulateTransfers(gtr.getTransfers(),transfers,alreadyAddress);
+
+                            if (request.getIfSingleAddressOrNull() != null) {
+                                Audit.setTransfersToAddresses(request.getSeed(), transfers, alreadyAddress, wallet, alreadyTransfer);
+                            } else {
+                                Audit.setTransfersToAddresses(request.getSeed(), transfers, alreadyAddress, wallet, alreadyTransfer);
+                            }
+
+                            Audit.processNudgeAttempts(context,request.getSeed(),transfers);
+                            Store.updateAccountData(context, request.getSeed(), wallet, transfers, alreadyAddress);
+                            //EventBus.getDefault().post(new RefreshEventResponse());
+                        }
+                    }
+
+
+                } catch (Exception e) {
+                    Log.e("ERR066","ERROR: "+e.getMessage());
                 }
-                AppService.AuditAddresses(context, request.getSeed());
+
+
             }
 
             return new GetAccountDataResponse();

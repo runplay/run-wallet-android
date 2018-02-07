@@ -19,13 +19,36 @@
 
 package run.wallet.iota.api.responses;
 
+import android.content.Context;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import run.wallet.iota.helper.Audit;
+import run.wallet.iota.model.Address;
+import run.wallet.iota.model.Seeds;
+import run.wallet.iota.model.Store;
+import run.wallet.iota.model.Transfer;
+import run.wallet.iota.model.Wallet;
+
 public class ReplayBundleResponse extends ApiResponse {
 
     private Boolean[] successfully;
 
-    public ReplayBundleResponse(jota.dto.response.ReplayBundleResponse apiResponse) {
+    public ReplayBundleResponse(Context context, Seeds.Seed seed, jota.dto.response.RunReplayBundleResponse apiResponse) {
         successfully = apiResponse.getSuccessfully();
         setDuration(apiResponse.getDuration());
+        List<Address> alreadyAddress = Store.getAddresses(context,seed);
+        List<Transfer> transfers = new ArrayList<>();
+        List<Transfer> alreadyTransfers=Store.getTransfers(context,seed);
+        Wallet wallet=Store.getWallet(context,seed);
+
+
+
+        Audit.populateTxToTransfers(apiResponse.getTrxs(),Store.getNodeInfo(),transfers,alreadyAddress);
+        Audit.setTransfersToAddresses(seed, transfers, alreadyAddress, wallet, alreadyTransfers);
+        Audit.processNudgeAttempts(context, seed, transfers);
+        Store.updateAccountData(context, seed, wallet, transfers, alreadyAddress);
     }
 
     public Boolean[] getSuccessfully() {

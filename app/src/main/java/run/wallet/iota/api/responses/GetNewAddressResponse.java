@@ -46,7 +46,7 @@ public class GetNewAddressResponse extends ApiResponse {
             try {
                 addresses.add(address);
             } catch(Exception e) {
-                Log.e("GNA","new addres exec: "+e.getMessage());
+                Log.e("GNA001","error: "+e.getMessage());
             }
         }
 

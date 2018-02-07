@@ -4,6 +4,7 @@ import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.zip.Checksum;
 
 /**
  * Created by coops on 13/01/18.
@@ -24,6 +25,11 @@ public class PayPacket {
 
     public static boolean createPayPacket(long value, String payto) {
         List<String> to=new ArrayList<String>();
+        try {
+            if(jota.utils.Checksum.isAddressWithChecksum(payto)) {
+                payto= jota.utils.Checksum.removeChecksum(payto);
+            }
+        } catch(Exception e) {}
         to.add(payto);
         return createPayPacket(value,to);
     }
@@ -178,15 +184,16 @@ public class PayPacket {
         }
         // find remainder
         for(Address address: stored) {
-            if(Store.isAlreadyAddress(address,use)==null) {
-                if(address.isAttached() && !address.isUsed() && address.getValue()==0 && address.getPendingValue()==0) {
+            if(Store.isAlreadyAddress(address,getPayFrom())==null) {
+                if(address.isAttached() && !address.isUsed() && !address.isPig() && address.getValue()==0 && address.getPendingValue()==0) {
                     boolean okgo=true;
                     for(String addstr: getPayTo()) {
-                        if(address.getAddress().startsWith(addstr)) {
+                        if(address.getAddress().equals(addstr)) {
                             okgo=false;
                             break;
                         }
                     }
+
                     //Log.e("ADD","use remainder ok");
                     if(okgo) {
                         packet.remainer = address;
@@ -196,6 +203,30 @@ public class PayPacket {
             }
         }
         /*
+
+                for(Address address: stored) {
+            if(Store.isAlreadyAddress(address,use)==null) {
+                if(address.isAttached() && !address.isUsed() && !address.isPig() && address.getValue()==0 && address.getPendingValue()==0) {
+                    boolean okgo=true;
+                    for(String addstr: getPayTo()) {
+                        if(address.getAddress().equals(addstr)) {
+                            okgo=false;
+                            break;
+                        }
+                    }
+
+                    //Log.e("ADD","use remainder ok");
+                    if(okgo) {
+                        packet.remainer = address;
+                        break;
+                    }
+                }
+            }
+        }
+
+
+
+
         if(packet.remainer==null) {
             for(Address address: stored) {
                 if(Store.isAlreadyAddress(address,use)==null) {

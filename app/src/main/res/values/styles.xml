@@ -78,16 +78,20 @@
         <item name="android:textSize">16sp</item>
         <item name="android:textStyle">bold</item>
     </style>
-    <style name="head_area_sms">
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:background">@drawable/head_area_sms</item>
-        <item name="android:textColor">#333333</item>
-    </style>
-    <style name="brief_pod" parent="@android:style/TextAppearance.Medium">
-        <item name="android:textColor">#FFFF0000</item>
-        <item name="android:paddingBottom">2dp</item>
-        <item name="android:paddingRight">6dp</item>
-        <item name="android:background">@color/white</item>
+
+
+
+    <style name="AppThemeLightBlue" parent="Theme.AppCompat.Light.NoActionBar">
+        <!-- Customize your theme here. -->
+        <item name="windowActionBar">false</item>
+        <item name="android:windowBackground">@color/colorPrimaryLightBlue</item>
+        <item name="android:colorBackground">@color/colorPrimaryLightBlue</item>
+        <item name="colorPrimary">@color/colorPrimaryLightBlue</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDarkLightBlue</item>
+        <item name="colorAccent">@color/colorAccent</item>
+        <item name="colorButtonNormal">@color/colorPrimaryDarkLightBlue</item>
+        <item name="preferenceTheme">@style/PreferenceThemeOverlay</item>
+        <item name="android:textColorPrimary">@color/textColorPrimary</item>
+        <item name="android:textColorSecondary">@color/textColorSecondary</item>
     </style>
 </resources>

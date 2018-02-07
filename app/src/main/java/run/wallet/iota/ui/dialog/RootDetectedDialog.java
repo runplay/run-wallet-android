@@ -59,7 +59,7 @@ public class RootDetectedDialog extends DialogFragment implements DialogInterfac
                 break;
             case AlertDialog.BUTTON_NEUTRAL:
                 SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
-                prefs.edit().putBoolean(Constants.PREFERENCE_RUN_WITH_ROOT, true).apply();
+                prefs.edit().putBoolean(Constants.PREFERENCE_RUN_WITH_ROOT, true).commit();
                 getDialog().dismiss();
                 break;
         }

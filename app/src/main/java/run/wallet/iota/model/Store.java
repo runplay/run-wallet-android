@@ -89,10 +89,14 @@ public class Store {
     private Transfer tmpCacheTransfer;
 
     private Store() {}
-
     public static void init(Context context) {
-        if(store.currentSeed==null) {
+        init(context,false);
+    }
+    public static void init(Context context,boolean force) {
+        if(force || store.currentSeed==null) {
             //Log.e("INIT","Store init()");
+            WalletAddressCardAdapter.clear();
+            WalletTransfersCardAdapter.clear();
             store.seeds = new Seeds(context);
             store.seeds = new Seeds(context);
             store.currentSeed = Store.getDefaultSeed();
@@ -130,22 +134,33 @@ public class Store {
 
 
 
+
+
     public static int getAutoAttach() {
         return store.autoAttach;
     }
 
     public static void loadDefaults(Context context) {
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+
         try {
+            SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+
             store.autoAttach = Sf.toInt(prefs.getString(Constants.PREFERENCES_MIN_ADDRESSES, "" + Constants.PREFERENCES_MIN_ADDRESSES_DEFAULT));
+            //Log.e("SP",store.autoAttach+"--"+prefs.getString(Constants.PREFERENCES_MIN_ADDRESSES, "" + 0));
             store.addressSecurity = Sf.toInt(prefs.getString(Constants.PREF_ADDRESS_SECURITY, "" + Constants.PREF_ADDRESS_SECURITY_DEFAULT));
             store.minWeight = Sf.toInt(prefs.getString(Constants.PREF_MIN_WEIGHT, "" + Constants.PREF_MIN_WEIGHT_DEFAULT));
+            //Log.e("EXC",e.getMessage());
             store.balanceDisplayType = prefs.getInt(Constants.PREF_BALANCE_DISPLAY, 0);
         } catch(Exception e){
+            Log.e("EXC",e.getMessage());
             store.autoAttach = Constants.PREFERENCES_MIN_ADDRESSES_DEFAULT;
             store.addressSecurity = Constants.PREF_ADDRESS_SECURITY_DEFAULT;
             store.minWeight = Constants.PREF_MIN_WEIGHT_DEFAULT;
             store.balanceDisplayType = 0;
+            setAddressSecurity(context,store.addressSecurity);
+            setMinWeight(context,store.minWeight);
+            setBalanceDisplayType(context,store.balanceDisplayType);
+
         }
     }
 
@@ -191,6 +206,13 @@ public class Store {
         store.nodeInfo=nodeInfo;
 
     }
+    public static Transfer getCurrentTransferFromHash(String hash) {
+        for(Transfer transfer: store.transfers) {
+            if(transfer.getHash().equals(hash))
+                return transfer;
+        }
+        return null;
+    }
     public static final NodeInfoResponse getNodeInfo() {
         return store.nodeInfo;
     }
@@ -221,7 +243,7 @@ public class Store {
         try {
             JSONArray already = new JSONArray(strJson);
             already.put(message);
-            sp.edit().putString("msglist",already.toString());
+            sp.edit().putString("msglist",already.toString()).commit();
         } catch(Exception e) {}
     }
     public static void setAddressSecurity(Context context, int security) {
@@ -263,7 +285,7 @@ public class Store {
             for(int i=0; i<jar.length(); i++) {
                 JSONObject ob = null;
                 try {
-                    ob = jar.getJSONObject(i);
+                    ob = jar.optJSONObject(i);
                 } catch (Exception e) {
                 }
                 if(ob!=null) {
@@ -289,7 +311,7 @@ public class Store {
                 for(int i=0; i<jar.length(); i++) {
                     JSONObject ob = null;
                     try {
-                        ob=jar.getJSONObject(i);
+                        ob=jar.optJSONObject(i);
                     } catch(Exception e) {
                         Log.e("EXCH","e2: "+e.getMessage());
                     }
@@ -558,6 +580,32 @@ public class Store {
         }
 
     }
+    public static List<Address> getEmptyAttached(List<Address> addresses) {
+        List<Address> getAddresses=new ArrayList<>();
+        for(Address address: addresses) {
+            if(!address.isUsed() && !address.isPig() && address.getValue()==0 && address.getPendingValue()==0)
+                getAddresses.add(address);
+        }
+        return getAddresses;
+    }
+    public static List<Address> getDisplayAddresses(List<Address> addresses) {
+        List<Address> getAddresses=new ArrayList<>();
+        int count=0;
+        int max=Store.getAutoAttach();
+        //Log.e("MAX",":::: "+max);
+        for(Address address: addresses) {
+            if (!address.isUsed() && !address.isPig() && address.getValue() == 0 && address.getPendingValue() == 0) {
+                if(count++<max) {
+                    getAddresses.add(address);
+                }
+            } else {
+                getAddresses.add(address);
+            }
+
+        }
+        return getAddresses;
+    }
+
     public static Transfer isAlreadyTransfer(Transfer check, List<Transfer> inlist) {
         for(Transfer compare: inlist) {
             if(compare.getHashShort().equals(check.getHashShort()))
@@ -572,6 +620,7 @@ public class Store {
         }
         return null;
     }
+
     public static Address isAlreadyAddress(Address check, List<Address> inlist) {
         for(Address compare: inlist) {
             if(compare.getAddress().startsWith(check.getAddress()))
@@ -878,7 +927,7 @@ public class Store {
             try {
                 JSONArray jar = new JSONArray(jarrayString);
                 for (int i = 0; i < jar.length(); i++) {
-                    JSONObject job = jar.getJSONObject(i);
+                    JSONObject job = jar.optJSONObject(i);
                     Address add = new Address(job);
                     store.addresses.add(add);
                 }
@@ -1015,6 +1064,23 @@ public class Store {
         }
     }
 
+    public static Transfer getTrunkTransaction(Context context, String hash, long currentMilestone) {
+        if(store.seeds!=null) {
+            for(Seeds.Seed seed: store.seeds.getSeeds()) {
+                List<Transfer> transfers= Store.getTransfers(context,seed);
+                for(Transfer transfer: transfers) {
+                    if(!transfer.isCompleted() && !transfer.isAttachment() && !transfer.isMarkDoubleAddress() && !transfer.isMarkDoubleSpend()) {
+                        if(currentMilestone-transfer.getMilestoneCreated()<18
+                                && !transfer.getHash().equals(hash)) {
+                            Log.e("TRUCK","Found a not completed transfer that could be for trunk");
+                            return transfer;
+                        }
+                    }
+                }
+            }
+        }
+        return null;
+    }
 
     public static List<Transfer> addTransfers(Context context, Seeds.Seed seed, List<Transfer> transfers) {
         List<Transfer> ntransfers = new ArrayList<>();
@@ -1039,6 +1105,9 @@ public class Store {
             trans.put(t.toJson());
         }
         SpManager.setEncryptedPreference(sp, PREF_TRANSFERS, trans.toString());
+        if(store.currentSeed.id.equals(seed.id)) {
+            loadTransfers(context);
+        }
         return transfers;
     }
     public static List<Transfer> getTransfers(Context context, Seeds.Seed seed) {
@@ -1093,16 +1162,19 @@ public class Store {
         }
 
     }
-    public synchronized static void removeNudgeTransfer(Context context, NudgeTransfer transfer) {
+    public synchronized static void removeNudgeTransfer(Context context, List<NudgeTransfer> transfers) {
         int remove=-1;
         //Log.e("REM-NT",store.nudgeTransfers.size()+"");
-        for(int i=0; i<store.nudgeTransfers.size(); i++) {
-            NudgeTransfer nt= store.nudgeTransfers.get(i);
-            if(nt.transfer.getHash().equals(transfer.transfer.getHash())) {
-                //Log.e("REM-NT",store.nudgeTransfers.size()+"--"+nt.transfer.getHash()+"--"+transfer.transfer.getHash());
-                remove = i;
+        for(NudgeTransfer transfer: transfers) {
+            for(int i=0; i<store.nudgeTransfers.size(); i++) {
+                NudgeTransfer nt= store.nudgeTransfers.get(i);
+                if(nt.transfer.getHash().equals(transfer.transfer.getHash())) {
+                    //Log.e("REM-NT",store.nudgeTransfers.size()+"--"+nt.transfer.getHash()+"--"+transfer.transfer.getHash());
+                    remove = i;
+                }
             }
         }
+
         store.nudgeTransfers.remove(remove);
         saveNudgeTransfers(context);
 

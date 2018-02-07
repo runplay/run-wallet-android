@@ -44,8 +44,8 @@ public class SignatureCheck {
                 // SHA1 the signature
                 //Log.e("SIG", String.valueOf(signature.toByteArray()));
                 String sha1 = getSHA1(signature.toByteArray());
-                Log.e("SIG", sha1);
-                Log.e("SIG", getCertificateSHA1Fingerprint(context));
+                //Log.e("SIG", sha1);
+                //Log.e("SIG", getCertificateSHA1Fingerprint(context));
 
                 // check is matches hardcoded value
                 return APP_SIGNATURE.equals(sha1);

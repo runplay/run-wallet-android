@@ -121,7 +121,7 @@ public class ChangeNoDescDialog extends DialogFragment {
                 aesOld.decrypt(encSeed);
                 try {
                     AESCrypt aesNew = new AESCrypt(passwordNew);
-                    prefs.edit().putString(Constants.PREFERENCE_ENC_PASS, aesNew.encrypt(Utils.getPasswordId())).apply();
+                    prefs.edit().putString(Constants.PREFERENCE_ENC_PASS, aesNew.encrypt(Utils.getPasswordId())).commit();
                     getDialog().dismiss();
                 } catch (Exception e) {
                     e.getStackTrace();

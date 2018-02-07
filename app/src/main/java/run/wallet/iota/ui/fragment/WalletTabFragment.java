@@ -31,9 +31,11 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -41,8 +43,10 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 
 import run.wallet.R;
+import run.wallet.common.B;
 import run.wallet.common.Currency;
 import run.wallet.iota.api.responses.ApiResponse;
+import run.wallet.iota.api.responses.GetAccountDataResponse;
 import run.wallet.iota.api.responses.NodeInfoResponse;
 import run.wallet.iota.api.responses.SendTransferResponse;
 import run.wallet.iota.api.responses.WebGetExchangeRatesResponse;
@@ -105,6 +109,8 @@ public class WalletTabFragment extends LoggedInFragment {
     @BindView(R.id.tap_balance)
     TextView tapBalance;
 
+    @BindView(R.id.tap_balance_type)
+    ImageView balanceType;
 
     private int tapCount=0;
     private static final int TAP_MAX=3;
@@ -148,12 +154,17 @@ public class WalletTabFragment extends LoggedInFragment {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
                 Fragment currentFragment = adapter.getItem(tab.getPosition());
+                if(tab.getPosition()==1 && viewPager.getCurrentItem()==0) {
+                    WalletTransfersCardAdapter.setFilterAddress(null, null);
+                    WalletTransfersCardAdapter.load(getActivity(),true);
+                }
                 if (currentFragment != null && currentFragment instanceof DataRefreshListener) {
                     if(WalletTransfersCardAdapter.getFilterAddress()!=null) {
                         ((DataRefreshListener) currentFragment).refreshData();
 
                     }
                 }
+
             }
 
             @Override
@@ -183,7 +194,6 @@ public class WalletTabFragment extends LoggedInFragment {
                     Store.setBalanceDisplayType(getActivity(), Store.getBalanceDisplayType() + 1);
                     updateBalance();
                     int msg=R.string.snackbar_balance_live;
-
                     switch(Store.getBalanceDisplayType()) {
                         case 1:
                             msg=R.string.snackbar_balance_out;
@@ -201,6 +211,9 @@ public class WalletTabFragment extends LoggedInFragment {
                         prefs.edit().putInt(Constants.PREF_MSG_TAP_BALANCE,++tapCount).commit();
                     } else {
                         tapBalance.setVisibility(View.GONE);
+
+                        balanceType.setVisibility(View.VISIBLE);
+
                     }
                 }
             }
@@ -256,14 +269,14 @@ public class WalletTabFragment extends LoggedInFragment {
             pendingOut.setVisibility(View.GONE);
             pendingOut.setText(" ");
         } else {
-            pendingOut.setText(IotaToText.convertRawIotaAmountToDisplayText(pendingIotaOut, false));
+            pendingOut.setText(IotaToText.convertRawIotaAmountToDisplayText(pendingIotaOut, true));
             pendingOut.setVisibility(View.VISIBLE);
         }
         if(pendingIotaIn==0) {
             pendingIn.setVisibility(View.GONE);
             pendingIn.setText(" ");
         } else {
-            pendingIn.setText(IotaToText.convertRawIotaAmountToDisplayText(pendingIotaIn, false));
+            pendingIn.setText(IotaToText.convertRawIotaAmountToDisplayText(pendingIotaIn, true));
             pendingIn.setVisibility(View.VISIBLE);
         }
         if(pendingIotaOut==0 && pendingIotaIn==0) {
@@ -279,12 +292,33 @@ public class WalletTabFragment extends LoggedInFragment {
         }
         updateAlternateBalance();
         updateFab();
+
+        if(pendingIotaIn!=0 || pendingIotaOut!=0) {
+            balanceType.setVisibility(View.VISIBLE);
+            balanceType.setImageResource(R.drawable.bal_live);
+
+            switch (Store.getBalanceDisplayType()) {
+                case 1:
+                    balanceType.setImageResource(R.drawable.bal_avail);
+                    break;
+                case 2:
+                    balanceType.setImageResource(R.drawable.bal_future);
+                    break;
+            }
+        } else {
+            balanceType.setVisibility(View.GONE);
+        }
     }
     @Subscribe
     public void onEvent(ApiResponse str) {
         isConnected = true;
         updateFab();
         updateBalance();
+    }
+
+    @Subscribe
+    public void onEvent(GetAccountDataResponse str) {
+        AppService.auditAddressesWithDelay(getActivity(), Store.getCurrentSeed());
     }
 
 

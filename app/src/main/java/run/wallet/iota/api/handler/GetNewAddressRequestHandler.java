@@ -20,8 +20,6 @@
 package run.wallet.iota.api.handler;
 
 import android.content.Context;
-import android.content.SharedPreferences;
-import android.support.v7.preference.PreferenceManager;
 
 import java.util.List;
 
@@ -33,7 +31,6 @@ import run.wallet.iota.api.responses.error.NetworkError;
 
 import jota.RunIotaAPI;
 import jota.error.ArgumentException;
-import run.wallet.iota.helper.Constants;
 import run.wallet.iota.model.Address;
 import run.wallet.iota.model.Store;
 import run.wallet.iota.service.AppService;
@@ -74,7 +71,7 @@ public class GetNewAddressRequestHandler extends IotaRequestHandler {
 
             Store.addAddress(context,gnr,(GetNewAddressResponse)response);
 
-            AppService.AuditAddresses(context, gnr.getSeed());
+            AppService.auditAddresses(context, gnr.getSeed());
 
             //SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context.getApplicationContext());
             //if (prefs.getBoolean(Constants.PREFERENCES_LOCAL_POW, true)

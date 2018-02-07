@@ -23,6 +23,8 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
+import jota.dto.response.GetNodeInfoResponse;
+import jota.dto.response.RunReplayBundleResponse;
 import run.wallet.R;
 import run.wallet.iota.api.requests.ApiRequest;
 import run.wallet.iota.api.requests.ReplayBundleRequest;
@@ -59,13 +61,17 @@ public class ReplayBundleRequestHandler extends IotaRequestHandler {
         int notificationId = Utils.createNewID();
 
         //NotificationHelper.requestNotification(context, R.drawable.send_white, context.getString(R.string.notification_replay_bundle_request_title), notificationId);
+        if(Store.getNodeInfo()==null) {
+            NodeInfoRequestHandler.getNodeInfo(apiProxy,context);
 
+        }
         try {
-            response = new ReplayBundleResponse(apiProxy.replayBundle(((ReplayBundleRequest) request).getHash(),
+            RunReplayBundleResponse jresponse = apiProxy.replayBundle(((ReplayBundleRequest) request).getHash(),
                     ((ReplayBundleRequest) request).getDepth(),
-                    ((ReplayBundleRequest) request).getMinWeightMagnitude()));
+                    ((ReplayBundleRequest) request).getMinWeightMagnitude());
+            response = new ReplayBundleResponse(context,((ReplayBundleRequest) request).getSeed(),jresponse);
 
-            AppService.getAccountDataSingleAddress(context,((ReplayBundleRequest) request).getSeed(),((ReplayBundleRequest) request).getRefreshCallAddress());
+
 
         } catch (ArgumentException e) {
             NetworkError error = new NetworkError();
@@ -73,10 +79,14 @@ public class ReplayBundleRequestHandler extends IotaRequestHandler {
             response = error;
         }
 
-        if (response instanceof ReplayBundleResponse && Arrays.asList(((ReplayBundleResponse) response).getSuccessfully()).contains(true)) {
-            NotificationHelper.responseNotification(context, R.drawable.ic_replay, context.getString(R.string.notification_replay_bundle_response_succeeded_title), notificationId);
-        } else if (response instanceof NetworkError) {
-            NotificationHelper.responseNotification(context, R.drawable.ic_replay, context.getString(R.string.notification_replay_bundle_response_failed_title), notificationId);
+        if(!AppService.isAppStarted()) {
+            if (response instanceof ReplayBundleResponse && Arrays.asList(((ReplayBundleResponse) response).getSuccessfully()).contains(true)) {
+                NotificationHelper.responseNotification(context, R.drawable.ic_replay, context.getString(R.string.notification_replay_bundle_response_succeeded_title), notificationId);
+            } else if (response instanceof NetworkError) {
+                NotificationHelper.responseNotification(context, R.drawable.ic_replay, context.getString(R.string.notification_replay_bundle_response_failed_title), notificationId);
+            }
+        } else {
+            NotificationHelper.vibrate(context);
         }
         return response;
     }

@@ -1,8 +1,5 @@
 package run.wallet.iota.service;
 
-import android.net.Proxy;
-import android.net.wifi.hotspot2.pps.Credential;
-
 import jota.IotaAPIService;
 import jota.IotaLocalPoW;
 import jota.dto.request.*;

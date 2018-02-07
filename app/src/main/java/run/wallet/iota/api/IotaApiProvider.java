@@ -28,7 +28,9 @@ import run.wallet.iota.api.handler.AddNeighborsRequestHandler;
 import run.wallet.iota.api.handler.AddressSecurityChangeRequestHandler;
 import run.wallet.iota.api.handler.AuditAddressesRequestHandler;
 import run.wallet.iota.api.handler.AuditSeedRequestHandler;
+import run.wallet.iota.api.handler.AutoNudgeHandler;
 import run.wallet.iota.api.handler.GetFirstLoadRequestHandler;
+import run.wallet.iota.api.handler.NudgeRequestHandler;
 import run.wallet.iota.api.handler.WebGetExchangeRatesHistoryRequestHandler;
 import run.wallet.iota.api.handler.WebGetExchangeRatesRequestHandler;
 import run.wallet.iota.api.handler.FindTransactionsRequestHandler;
@@ -80,6 +82,7 @@ public class IotaApiProvider implements ApiProvider {
         AddressSecurityChangeRequestHandler addressSecurity = new AddressSecurityChangeRequestHandler(iotaApi,context);
         AddNeighborsRequestHandler addNeighborsAction = new AddNeighborsRequestHandler(iotaApi, context);
         AuditAddressesRequestHandler auditAddresses = new AuditAddressesRequestHandler(iotaApi, context);
+        AutoNudgeHandler autoNudge = new AutoNudgeHandler(iotaApi, context);
 
         FindTransactionsRequestHandler findTransactionsAction = new FindTransactionsRequestHandler(iotaApi, context);
         GetBundleRequestHandler getBundleAction = new GetBundleRequestHandler(iotaApi, context);
@@ -92,9 +95,12 @@ public class IotaApiProvider implements ApiProvider {
         NodeInfoRequestHandler nodeInfoAction = new NodeInfoRequestHandler(iotaApi, context);
         GetFirstLoadRequestHandler firstLoad = new GetFirstLoadRequestHandler(iotaApi,context);
         AuditSeedRequestHandler auditRequest = new AuditSeedRequestHandler(iotaApi,context);
+        NudgeRequestHandler nudgeRequest = new NudgeRequestHandler(iotaApi,context);
         //MessageSendRequestHandler sendMessageAction = new MessageSendRequestHandler(iotaApi, context);
         GetBalanceAndFormatRequestHandler getBalanceAndFormatRequest = new GetBalanceAndFormatRequestHandler(iotaApi,context);
 
+        requestHandlerMap.put(autoNudge.getType(),autoNudge);
+        requestHandlerMap.put(nudgeRequest.getType(),nudgeRequest);
         requestHandlerMap.put(addressSecurity.getType(),addressSecurity);
         requestHandlerMap.put(auditAddresses.getType(), auditAddresses);
         requestHandlerMap.put(auditRequest.getType(), auditRequest);

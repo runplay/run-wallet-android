@@ -43,9 +43,11 @@ import run.wallet.common.Cal;
 import run.wallet.common.delete.SecureDeleteFile;
 import run.wallet.iota.api.RefreshEventTask;
 import run.wallet.iota.api.TaskManager;
+import run.wallet.iota.api.handler.NudgeRequestHandler;
 import run.wallet.iota.api.requests.AddressSecurityChangeRequest;
 import run.wallet.iota.api.requests.ApiRequest;
 import run.wallet.iota.api.requests.AuditAddressesRequest;
+import run.wallet.iota.api.requests.AutoNudgeRequest;
 import run.wallet.iota.api.requests.GetAccountDataRequest;
 import run.wallet.iota.api.requests.GetFirstLoadRequest;
 import run.wallet.iota.api.requests.GetNewAddressRequest;
@@ -53,13 +55,16 @@ import run.wallet.iota.api.requests.MessageFirstLoadRequest;
 import run.wallet.iota.api.requests.MessageNewAddressRequest;
 import run.wallet.iota.api.requests.NodeInfoRequest;
 import run.wallet.iota.api.requests.MessageSendRequest;
+import run.wallet.iota.api.requests.NudgeRequest;
 import run.wallet.iota.api.requests.ReplayBundleRequest;
 import run.wallet.iota.api.requests.SendTransferRequest;
 import run.wallet.iota.api.requests.WebGetExchangeRatesHistoryRequest;
 import run.wallet.iota.api.requests.WebGetExchangeRatesRequest;
 
 
+import run.wallet.iota.api.responses.ApiResponse;
 import run.wallet.iota.api.responses.NodeInfoResponse;
+import run.wallet.iota.api.responses.NudgeResponse;
 import run.wallet.iota.helper.Constants;
 import run.wallet.iota.helper.Sf;
 import run.wallet.iota.model.Address;
@@ -79,21 +84,12 @@ public final class AppService extends Service {
 	private static AppService SERVICE;//=new AppService();
     private Activity activity;
     private Activity activitySettings;
-
     private Handler syncDataHandler = new Handler();
-
     private Handler startSyncsHandler = new Handler();
-    
-    //private Handler sendSeviceQueHandler = new Handler();
-    //private ProcessSendQue processSendQue;
-    
-    private SyncDataThread syncDataThread;
-    //private RefreshInternet refreshInternet;
 
-    private SharedPreferences sharedPref;
+    private SyncDataThread syncDataThread;
 
     private final IBinder mBinder = new LocalBinder();
-
     private static OnAlarmReceiver areceiver;
     private static OnAlarmReceiver aoreceiver;
     private static OnBootReceiver receiver;
@@ -102,11 +98,9 @@ public final class AppService extends Service {
 
 
     public static boolean shouldReloadContacts=false;
-    
-    private boolean activeCall=false;
 
-    private static final long MILLIS_SYNC_DATA = 180000; // every 3 mins
-    //private static final long MILLIS_SEND_QUE = 30000; // 30 seconds
+    private static final long MILLIS_SYNC_DATA = 50000; // every 50 secs
+
 
     private boolean isAppStarted=false;
 
@@ -115,7 +109,6 @@ public final class AppService extends Service {
     private Runnable appStopCheck = new Runnable() {
         @Override
         public void run() {
-            Log.e("SERVICE","Logout timeout hit");
             Store.logout();
             if(SERVICE.activity!=null) {
                 SERVICE.activity.finish();
@@ -283,7 +276,7 @@ public final class AppService extends Service {
 		unregisterReceiver(receiver);
 		unregisterReceiver(breceiver);
 		unregisterReceiver(ubreceiver);
-
+        Log.e("SERVICE","SHUTDOIWN CALLED: "+System.currentTimeMillis());
 		Intent pservice = new Intent(this, OnAlarmReceiver.class);
 		stopService(pservice);
 		syncDataHandler=null;
@@ -305,18 +298,23 @@ public final class AppService extends Service {
         return false;
     }
     
-
+    private void checkStartAppService(Context context) {
+        if(!isAppServiceRunning(context)) {
+            Intent service = new Intent(context, AppService.class);
+            startService(service);
+        }
+    }
 
 
 
     private class OnBootReceiver extends BroadcastReceiver {
     	@Override
     	public void onReceive(Context context, Intent intent) {
-    		if(!AppService.isAppServiceRunning(context)) {
-    			Intent service = new Intent(context, AppService.class);
-    			context.startService(service);
-    		}
-    	
+
+            synchronized(this) {
+                checkStartAppService(context);
+                AppService.startRegularRefresh();
+            }
     	}
     }
     
@@ -324,7 +322,9 @@ public final class AppService extends Service {
     private class OnAlarmReceiver extends BroadcastReceiver {
     	@Override
     	public void onReceive(Context context, Intent intent) {
+
     	    synchronized(this) {
+                checkStartAppService(context);
                 AppService.startRegularRefresh();
     		}
     	}
@@ -332,10 +332,11 @@ public final class AppService extends Service {
     private class OnUserPresentReceiver extends BroadcastReceiver {
     	@Override
     	public void onReceive(Context context, Intent intent) {
-    	    synchronized(this) {
 
+            synchronized(this) {
+                checkStartAppService(context);
+                AppService.startRegularRefresh();
             }
-    	
     	}
     }
 
@@ -368,7 +369,6 @@ public final class AppService extends Service {
 		@Override
 		protected Boolean doInBackground(Boolean... params) {
             ensureStartups(getBaseContext());
-
             AutoNudgerGo();
 
 			return true;
@@ -391,6 +391,19 @@ public final class AppService extends Service {
         if(SERVICE!=null) {
             SERVICE.tasks.clear();
         }
+    }
+    public static boolean isAutoNudgerRunning() {
+        try {
+            Collection<ApiRequest> reqs=SERVICE.tasks.values();
+            for(ApiRequest request:reqs) {
+                if(request.getClass().getCanonicalName().equals(AutoNudgeRequest.class.getCanonicalName())) {
+                    return true;
+                }
+            }
+        } catch(Exception e) {
+            Log.e("service","error001: "+e.getMessage());
+        }
+        return false;
     }
     public static boolean isGetAccountDataRunning(Seeds.Seed seed) {
         try {
@@ -598,7 +611,7 @@ public final class AppService extends Service {
             runTask(rt,gtr);
         }
     }
-    public static void AuditAddresses(Context context,Seeds.Seed seed) {
+    public static void auditAddresses(Context context, Seeds.Seed seed) {
         if(Validator.isValidCaller() && seed!=null) {
             if(AppService.countSeedRunningTasks(seed)==0) {
                 TaskManager rt = new TaskManager(context);
@@ -607,9 +620,20 @@ public final class AppService extends Service {
             }
         }
     }
-    public static void reAuditAddresses(Context context,Seeds.Seed seed) {
+    public static void auditAddressesWithDelay(Context context,Seeds.Seed seed) {
+        if(Validator.isValidCaller() && seed!=null) {
+            if(AppService.countSeedRunningTasks(seed)==0) {
+                TaskManager rt = new TaskManager(context);
+                AuditAddressesRequest gtr = new AuditAddressesRequest(seed);
+                runTask(rt, gtr);
+            }
+        }
+    }
+    /*
+    public static void auditAddressesWithDelay(Context context, Seeds.Seed seed) {
         if(Validator.isValidCaller() && seed!=null) {
             Handler godelay=new Handler();
+            //godelay.pre
             godelay.postDelayed(new Runnable() {
                 @Override
                 public void run() {
@@ -622,6 +646,7 @@ public final class AppService extends Service {
             },1000);
         }
     }
+    */
     public static void getFirstTimeLoad(Context context) {
         if(Validator.isValidCaller() && Store.getCurrentSeed()!=null) {
             TaskManager rt = new TaskManager(context);
@@ -654,6 +679,7 @@ public final class AppService extends Service {
             if(SERVICE !=null && !isGetAccountDataRunning(Store.getCurrentSeed())) {
                 TaskManager rt = new TaskManager(context);
                 GetAccountDataRequest gna = new GetAccountDataRequest(seed);
+                gna.setSingleAddressRefresh(address);
                 runTask(rt, gna);
             }
         }
@@ -676,6 +702,13 @@ public final class AppService extends Service {
         }
 
 
+    }
+    public static void nudgeTransaction(Context context, Seeds.Seed seed, Transfer transfer) {
+        if(Validator.isValidCaller() && Store.getCurrentSeed()!=null) {
+            NudgeRequest rtr = new NudgeRequest(seed,transfer);
+            TaskManager rt = new TaskManager(context);
+            runTask(rt,rtr);
+        }
     }
     public static void replayBundleTransaction(Context context, Seeds.Seed seed, String hash, String refreshCallAddress) {
         if(Validator.isValidCaller() && Store.getCurrentSeed()!=null) {
@@ -780,173 +813,29 @@ public final class AppService extends Service {
     public static void updateExchangeRatesHistory(Context context, String currencyPair, int step) {
         TaskManager rt = new TaskManager(context);
         WebGetExchangeRatesHistoryRequest nir = new WebGetExchangeRatesHistoryRequest(currencyPair,step);
-
         runBasicTask(rt, nir);
-
     }
 
-    private static final long nudgeEvery=60000*3;
-    private static long lastNudgeRun=System.currentTimeMillis()-(60000*2);
-    private static boolean isNudging=false;
+    private static final long nudgeEvery=60000*2;
+    private static long lastNudgeRun=System.currentTimeMillis()-(60000*1);
 
-
-    private static List<NudgeTransfer> nudgeTransfers=new ArrayList<>();
-    private static NudgeTask nudgeTask;
     private static void AutoNudgerGo() {
         long now=System.currentTimeMillis();
-
-        if(SERVICE!=null && !isNudging && lastNudgeRun<now-nudgeEvery) {
+        if(SERVICE!=null && lastNudgeRun<now-nudgeEvery) {
             Store.loadNudgeTransfers(SERVICE);
-            nudgeTransfers=Store.getNudgeTransfers();
-            if(!nudgeTransfers.isEmpty()) {
-                isNudging=true;
+            if(!Store.getNudgeTransfers().isEmpty() && !isAutoNudgerRunning()) {
                 lastNudgeRun=now;
-                nudgeTask=new NudgeTask();
-                nudgeTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,true);
+                TaskManager rt = new TaskManager(SERVICE);
+                AutoNudgeRequest nir = new AutoNudgeRequest();
+                runTask(rt, nir);
             }
 
         }
     }
-    public static void bumpNudges() {
-        lastNudgeRun=System.currentTimeMillis()-(60000*4);
-    }
-    private static class NudgeTask extends AsyncTask<Boolean, Void, Boolean> {
 
-        public NudgeTask() {
+    /*
 
-        }
-
-        @Override
-        protected Boolean doInBackground(Boolean... params) {
-            Store.init(SERVICE);
-            SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(SERVICE);
-            int nudgeAttempts= Sf.toInt(prefs.getString(Constants.PREF_TRANSFER_NUDGE_ATTEMPTS, ""+Constants.PREF_TRANSFER_NUDGE_ATTEMPTS_VALUE));
-
-            if(nudgeAttempts>0) {
-                Nodes.Node node = Store.getNode();
-                if (node != null) {
-                    RunIotaAPI api = new RunIotaAPI.Builder().protocol(node.protocol).host(node.ip).port(((Integer) node.port).toString()).build();
-
-                    jota.dto.response.GetNodeInfoResponse nir = null;
-                    try {
-                        nir = api.getNodeInfo();
-                    } catch (Exception e) {
-                        node = Store.getNode();
-                        try {
-                            nir = api.getNodeInfo();
-                        } catch (Exception e2) {
-                            return true;
-                        }
-                    }
-                    if (nir != null) {
-                        //Log.e("APPSERVICE", "Running nudge transfers, milestone: " + nir.getLatestMilestoneIndex());
-                        if (nir.getLatestMilestoneIndex() == nir.getLatestSolidSubtangleMilestoneIndex()) {
-                            //Log.e("APPSERVICE", "Running nudge transfers, milestone ok for running ");
-                            Map<String, NudgeTransfer> refreshSeedShorts = new HashMap<>();
-                            int len = nudgeTransfers.size();
-
-                            // strictly this way incase one gets added from another method
-                            for (int i = 0; i < len; i++) {
-                                NudgeTransfer ntran = nudgeTransfers.get(i);
-                                //Log.e("APPSERVICE", "test: "+ntran.transfer.getValue()+" = " + ntran.transfer.getHash() + " ::::::::::::::::::::::::::::::: hash: " + ntran.transfer.getMilestone());
-                                int useval = Constants.PREF_TRANSFER_NUDGE_MILESTONES_VALUE;
-                                //int deleteval = Constants.PREF_TRANSFER_NUDGE_MILESTONES_VALUE + 10;
-                                if (ntran.transfer.getValue() > 0) {
-                                    useval = Constants.PREF_TRANSFER_NUDGE_MILESTONES_VALUE + 25;  // Redundant --- wait 2 more before trying receiving iota payments, let the other wallet get a chance
-                                }
-                                if (ntran.transfer.getMilestone() < nir.getLatestMilestoneIndex() - useval) {
-                                    Log.e("APPSERVICE", "run nudge: mstone: " + ntran.transfer.getMilestone() +"--"+nir.getLatestMilestoneIndex()+"--"+useval+ "-- val: " + ntran.transfer.getValue() + " -- hash: " + ntran.transfer.getHash());
-                                    try {
-                                        Seeds.Seed seed=null;
-                                        for(Seeds.Seed tseed: Store.getSeedList()) {
-                                            if(tseed.getSystemShortValue().equals(ntran.seedShort)) {
-                                                seed=tseed;
-                                            }
-                                        }
-                                        if(seed!=null) {
-                                            boolean hascompleted = false;
-                                            List<Transfer> allTransfers = Store.getTransfers(SERVICE, seed);
-                                            List<String> hashes=new ArrayList<>();
-                                            for(Transfer transfer: allTransfers) {
-                                                if(transfer.getValue()==ntran.transfer.getValue() && transfer.getAddress().equals(ntran.transfer.getAddress())) {
-                                                    if(transfer.isCompleted()) {
-                                                        hascompleted = true;
-                                                    }
-                                                    hashes.add(transfer.getHash());
-                                                    Log.e("APPSERVICE", "check hash: "+transfer.isCompleted()+" - "+transfer.getHash());
-                                                }
-                                            }
-                                            List<jota.model.Transaction> transactions = api.findTransactionsObjectsByHashes(hashes.toArray(new String[hashes.size()]));
-
-                                            if (!transactions.isEmpty()) {
-                                                Log.e("APPSERVICE", "received trans size: "+transactions.size());
-                                                for (jota.model.Transaction transaction : transactions) {
-                                                    if (transaction.getPersistence() != null && transaction.getPersistence().booleanValue()) {
-                                                        hascompleted = true;
-                                                        Log.e("APPSERVICE", "received trans has completed");
-                                                    }
-                                                }
-                                            }
-                                            if (hascompleted || hashes.isEmpty() || transactions.isEmpty()) {
-                                                Log.e("APPSERVICE", "...............completed before confirm, remove :))))");
-                                                ntran.status = NudgeTransfer.NUDGE_CONFIRM;
-                                                refreshSeedShorts.put(ntran.seedShort, ntran);
-                                            } else {
-                                                Log.e("APPSERVICE", "nudging ............... start");
-                                                ReplayBundleResponse replay = api.replayBundle(ntran.transfer.getHash(), Constants.PREF_TRANSFER_DEPTH_DEFAULT, Store.getMinWeightDefaultDefault());
-                                                if (replay.getSuccessfully()[0].booleanValue()) {
-                                                    Log.e("APPSERVICE", "nudging ............... confirmed");
-                                                    ntran.status = NudgeTransfer.NUDGE_CONFIRM;
-                                                    refreshSeedShorts.put(ntran.seedShort, ntran);
-                                                }
-                                            }
-                                        } else {
-                                            refreshSeedShorts.put(ntran.seedShort, ntran);
-                                        }
-                                    } catch (Exception e) {
-                                        Log.e("APPSERVICE", "exception: " + e.getMessage());
-                                        refreshSeedShorts.put(ntran.seedShort, ntran);
-                                    }
-                                }
-                            }
-                            //Log.e("APPSERVICE", "Running nudge transfers, finished transfers loop");
-                            if (!refreshSeedShorts.isEmpty()) {
-                                Log.e("APPSERVICE", "Running nudge transfers, has remove");
-                                List<Seeds.Seed> seeds = Store.getSeedList();
-                                for (String seedShort : refreshSeedShorts.keySet()) {
-                                    for (Seeds.Seed seed : seeds) {
-                                        if (String.valueOf(seed.value).startsWith(seedShort)) {
-                                            AppService.getAccountData(SERVICE, seed);
-                                            break;
-                                        }
-                                    }
-                                    Store.removeNudgeTransfer(SERVICE,refreshSeedShorts.get(seedShort));
-                                }
-                                Store.saveNudgeTransfers(SERVICE);
-                            }
-
-
-                        }
-                    }
-
-                }
-            }
-            return true;
-
-        }
-
-        @Override
-        protected void onPostExecute(Boolean result) {
-
-            isNudging=false;
-        }
-
-        @Override
-        protected void onPreExecute() {
-        }
-
-
-    }
+    // for future cold wallet feature
     private class SafeDeleteFiles extends AsyncTask<Boolean, Void, Boolean> {
 
         List<File> okdelete=new ArrayList<File>();
@@ -989,7 +878,7 @@ public final class AppService extends Service {
     }
 
 
-
+*/
 
 
 

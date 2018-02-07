@@ -20,8 +20,6 @@
 package run.wallet.iota.api.handler;
 
 import android.content.Context;
-import android.content.SharedPreferences;
-import android.support.v7.preference.PreferenceManager;
 import android.util.Log;
 
 import java.util.ArrayList;
@@ -29,24 +27,14 @@ import java.util.List;
 
 import jota.RunIotaAPI;
 import jota.dto.response.FindTransactionResponse;
-import jota.dto.response.GetBalancesResponse;
 import jota.dto.response.GetNewAddressResponse;
 import jota.dto.response.GetNodeInfoResponse;
-import jota.model.Bundle;
-import jota.model.Transaction;
-import run.wallet.common.Cal;
-import run.wallet.common.Sf;
 import run.wallet.iota.api.requests.ApiRequest;
 import run.wallet.iota.api.requests.AuditAddressesRequest;
 import run.wallet.iota.api.requests.GetNewAddressRequest;
 import run.wallet.iota.api.responses.ApiResponse;
-import run.wallet.iota.api.responses.RefreshEventResponse;
-import run.wallet.iota.helper.Audit;
 import run.wallet.iota.model.Address;
 import run.wallet.iota.model.Store;
-import run.wallet.iota.model.Transfer;
-import run.wallet.iota.model.TransferTransaction;
-import run.wallet.iota.model.Wallet;
 import run.wallet.iota.service.AppService;
 
 public class AuditAddressesRequestHandler extends IotaRequestHandler {
@@ -64,7 +52,7 @@ public class AuditAddressesRequestHandler extends IotaRequestHandler {
         AuditAddressesRequest request = (AuditAddressesRequest) inrequest;
 
         // check less than 2, 1..iteself, and no others
-        if(AppService.countAuditRunningTasks(request.getSeed())<2) {
+        if(AppService.countSeedRunningTasks(request.getSeed())<2) {
             List<Address> addresses = Store.getAddresses(context,request.getSeed());
 
 
@@ -89,7 +77,6 @@ public class AuditAddressesRequestHandler extends IotaRequestHandler {
                             tr1 = apiProxy.findTransactionsByAddresses(add.getAddress());
                         } catch (Exception e){}
                         if(tr1!=null) {
-                            //Log.e("AUDIT","address: "+add.getIndex()+"-"+add.getAddress()+" --- "+tr1.getHashes().length);
                             if (tr1.getHashes().length == 0) {
                                 AppService.attachNewAddress(context, request.getSeed(), add.getAddress());
                             } else {
@@ -127,7 +114,7 @@ public class AuditAddressesRequestHandler extends IotaRequestHandler {
                                 addresses.size(), gnr.isChecksum(), 1, gnr.isReturnAll());
                         run.wallet.iota.api.responses.GetNewAddressResponse gnar = new run.wallet.iota.api.responses.GetNewAddressResponse(request.getSeed(),gna);
                         Store.addAddress(context,gnr,gnar);
-                        AppService.reAuditAddresses(context, request.getSeed());
+                        AppService.auditAddressesWithDelay(context, request.getSeed());
                     } catch (Exception e) {}
                     //AppService.generateNewAddress(context,request.getSeed());
 

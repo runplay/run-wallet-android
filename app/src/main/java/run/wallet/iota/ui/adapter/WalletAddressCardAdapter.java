@@ -90,7 +90,7 @@ public class WalletAddressCardAdapter extends RecyclerView.Adapter<WalletAddress
             boolean showused=prefs.getBoolean(Constants.PREFERENCES_SHOW_USED,true);
 
             addresses.clear();
-            for(Address add: Store.getAddresses()) {
+            for(Address add: Store.getDisplayAddresses(Store.getAddresses())) {
                 if(add.isAttached()) {
                 //Log.e("ADDU",add.getAddress()+" -- "+showused +"="+ add.isUsed());
                     if(showused)

@@ -8,6 +8,7 @@ import jota.model.*;
 import jota.pow.ICurl;
 import jota.pow.SpongeFactory;
 import jota.utils.*;
+import run.wallet.iota.model.Store;
 import run.wallet.iota.model.SystemMessage;
 
 import org.apache.commons.lang3.StringUtils;
@@ -44,6 +45,118 @@ public class RunIotaAPI extends RunIotaAPICore {
         customCurl = builder.customCurl;
     }
 
+
+
+    public static final String NUDGE_TAG =        "9999999999RUN9WALLET9NUDGE9";
+    public RunSendTransferResponse sendReBroadcastTransfer(final String nudgeHash, int depth, int minWeightMagnitude) throws ArgumentException {
+
+        StopWatch stopWatch = new StopWatch();
+
+        List<Transaction> gotTran = findTransactionsObjectsByHashes(new String[]{nudgeHash});
+
+        List<String> trytes=new ArrayList<>();
+        trytes.add(gotTran.get(0).toTrytes());
+
+        List<Transaction> trxs = nudgeTransfer(nudgeHash,trytes.toArray(new String[trytes.size()]), depth, minWeightMagnitude);
+        Boolean[] successful = new Boolean[trxs.size()];
+        List<String> hashes=new ArrayList<>();
+        for (int i = 0; i < trxs.size(); i++) {
+            final FindTransactionResponse response = findTransactionsByBundles(trxs.get(i).getBundle());
+            successful[i] = response.getHashes().length != 0;
+            if(response.getHashes().length>0) {
+                for(String hash: response.getHashes()) {
+                    hashes.add(hash);
+                }
+            }
+        }
+        RunSendTransferResponse str=RunSendTransferResponse.create(hashes, successful, stopWatch.getElapsedTimeMili());
+
+        return str;
+
+    }
+    public List<Transaction> broadCastTransfer(String nudgeHash, final String[] trytes, final int depth, final int minWeightMagnitude) throws ArgumentException {
+        final GetTransactionsToApproveResponse txs = getTransactionsToApprove(depth);
+
+        long now= System.currentTimeMillis();
+
+        final GetAttachToTangleResponse res = attachToTangle(txs.getTrunkTransaction(), nudgeHash, minWeightMagnitude, trytes);
+
+        try {
+            broadcastGo(res.getTrytes());
+        } catch (ArgumentException e) {
+            return new ArrayList<>();
+        }
+        //Log.e("TRYTES","broadcastAndStore: "+(System.currentTimeMillis()-now));
+        final List<Transaction> trx = new ArrayList<>();
+
+        for (final String tryte : Arrays.asList(res.getTrytes())) {
+            trx.add(new Transaction(tryte, customCurl.clone()));
+        }
+        return trx;
+    }
+
+    public void broadcastGo(final String... trytes) throws ArgumentException {
+
+        if (!InputValidator.isArrayOfAttachedTrytes(trytes)) {
+            throw new ArgumentException(INVALID_TRYTES_INPUT_ERROR);
+        }
+
+        try {
+            broadcastTransactions(trytes);
+        } catch (Exception e) {
+            throw new ArgumentException(e.toString());
+        }
+
+    }
+    public RunSendTransferResponse sendNudgeTransfer(final String seed, final String nudgeHash, final String address, final int addressIndex, int addressSecurity, int depth, int minWeightMagnitude) throws ArgumentException {
+
+        StopWatch stopWatch = new StopWatch();
+
+        List<Transfer> transfers = new ArrayList<>();
+        Transfer transfer=new Transfer(address, 0, "RUN9NUDGE9HASH9"+nudgeHash+"9END", NUDGE_TAG);
+        transfers.add(transfer);
+        List<String> trytes = prepareTransfers(seed, addressSecurity, transfers, null, null, false);
+
+        List<Transaction> trxs = nudgeTransfer(nudgeHash,trytes.toArray(new String[trytes.size()]), depth, minWeightMagnitude);
+
+        Boolean[] successful = new Boolean[trxs.size()];
+        List<String> hashes=new ArrayList<>();
+        for (int i = 0; i < trxs.size(); i++) {
+            final FindTransactionResponse response = findTransactionsByBundles(trxs.get(i).getBundle());
+            successful[i] = response.getHashes().length != 0;
+            if(response.getHashes().length>0) {
+                for(String hash: response.getHashes()) {
+                    hashes.add(hash);
+                }
+            }
+        }
+        RunSendTransferResponse str=RunSendTransferResponse.create(hashes, successful, stopWatch.getElapsedTimeMili());
+
+        return str;
+
+    }
+    public List<Transaction> nudgeTransfer(String nudgeHash, final String[] trytes, final int depth, final int minWeightMagnitude) throws ArgumentException {
+        GetTransactionsToApproveResponse txs = getTransactionsToApprove(depth);
+        if(txs.getBranchTransaction()==null)
+            txs = getTransactionsToApprove(depth);
+
+        long now= System.currentTimeMillis();
+
+
+        final GetAttachToTangleResponse res = attachToTangle(nudgeHash,txs.getBranchTransaction() , minWeightMagnitude, trytes);
+        try {
+            broadcastAndStore(res.getTrytes());
+        } catch (ArgumentException e) {
+            return new ArrayList<>();
+        }
+        //Log.e("TRYTES","broadcastAndStore: "+(System.currentTimeMillis()-now));
+        final List<Transaction> trx = new ArrayList<>();
+
+        for (final String tryte : Arrays.asList(res.getTrytes())) {
+            trx.add(new Transaction(tryte, customCurl.clone()));
+        }
+        return trx;
+    }
     /**
      * Generates a new address from a seed and returns the remainderAddress.
      * This is either done deterministically, or by providing the index of the new remainderAddress.
@@ -170,7 +283,7 @@ public class RunIotaAPI extends RunIotaAPICore {
         // of the tail transactions, and thus the bundles
         GetInclusionStateResponse gisr = null;
         if (tailTxArray.length != 0 && inclusionStates) {
-                gisr = getLatestInclusion(tailTxArray);
+            gisr = getLatestInclusion(tailTxArray);
             if (gisr == null || gisr.getStates() == null || gisr.getStates().length == 0) {
                 throw new IllegalStateException(GET_INCLUSION_STATE_RESPONSE_ERROR);
             }
@@ -241,11 +354,16 @@ public class RunIotaAPI extends RunIotaAPICore {
      * @throws ArgumentException is thrown when invalid trytes is provided.
      */
     public List<Transaction> sendTrytes(final String[] trytes, final int depth, final int minWeightMagnitude) throws ArgumentException {
-        final GetTransactionsToApproveResponse txs = getTransactionsToApprove(depth);
+        GetTransactionsToApproveResponse txs = getTransactionsToApprove(depth);
+        if(txs.getTrunkTransaction()==null) {
+            // no truck transaction returned try again.... but need a better solution.....
+            txs = getTransactionsToApprove(depth);
+        }
 
         // attach to tangle - do pow
         long now= System.currentTimeMillis();
         //Log.e("TRYTES","ATTACH TO TANGLE: "+now);
+
         final GetAttachToTangleResponse res = attachToTangle(txs.getTrunkTransaction(), txs.getBranchTransaction(), minWeightMagnitude, trytes);
         //Log.e("TRYTES","attachToTangle: "+(System.currentTimeMillis()-now));
         try {
@@ -453,8 +571,8 @@ public class RunIotaAPI extends RunIotaAPICore {
             if (inputs != null && !inputs.isEmpty()) {
                 //Log.e("PREP","inputs... OKKKKKK: "+remainder);
                 return addRemainder(seed, security, inputs, bundle, tag, totalValue, remainder, signatureFragments);
-            //  Case 1: user provided inputs
-            //  Validate the inputs by calling getBalances
+                //  Case 1: user provided inputs
+                //  Validate the inputs by calling getBalances
 
             /*
 
@@ -763,7 +881,7 @@ public class RunIotaAPI extends RunIotaAPICore {
      * @return Analyzed Transaction objects.
      * @throws ArgumentException is thrown when the specified input is not valid.
      */
-    public ReplayBundleResponse replayBundle(String transaction, int depth, int minWeightMagnitude) throws ArgumentException {
+    public RunReplayBundleResponse replayBundle(String transaction, int depth, int minWeightMagnitude) throws ArgumentException {
 
         if (!InputValidator.isHash(transaction)) {
             throw new ArgumentException(INVALID_TAIL_HASH_INPUT_ERROR);
@@ -793,7 +911,7 @@ public class RunIotaAPI extends RunIotaAPICore {
             successful[i] = response.getHashes().length != 0;
         }
 
-        return ReplayBundleResponse.create(successful, stopWatch.getElapsedTimeMili());
+        return RunReplayBundleResponse.create(trxs,successful, stopWatch.getElapsedTimeMili());
     }
 
     /**

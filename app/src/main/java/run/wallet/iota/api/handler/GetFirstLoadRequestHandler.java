@@ -72,6 +72,7 @@ public class GetFirstLoadRequestHandler extends IotaRequestHandler {
         public long predictaddress=0;
         public String predictstr="";
         public boolean showWaitMessage=false;
+
         public int countaddress=0;
         public int counttransfers=0;
         public boolean isFinished=false;
@@ -113,8 +114,8 @@ public class GetFirstLoadRequestHandler extends IotaRequestHandler {
             holders.put(firstLoadRequest.getSeed().id,holder);
         }
 
-
         boolean userDeclaredBalance=holder.userConfirmedBalance==null?false:holder.userConfirmedBalance.booleanValue();
+        holder.userConfirmedBalance=userDeclaredBalance?Boolean.TRUE:Boolean.FALSE;
 //Log.e("FL","uc="+holder.userConfirmedBalance+" - ud="+userDeclaredBalance);
         if(!userDeclaredBalance || firstLoadRequest.getSeed().isappgenerated) {
 
@@ -150,6 +151,7 @@ public class GetFirstLoadRequestHandler extends IotaRequestHandler {
             while(!stop) {
                 Address alreadyAddress=already.get(start);
                 Map<String,Boolean> snapshotBalanceAlreadyAddresses=new HashMap();
+                boolean foundTransfers=false;
                 if(alreadyAddress!=null) {
                     holder.countaddress++;
                     alreadyAddress.setIndex(start);
@@ -160,6 +162,7 @@ public class GetFirstLoadRequestHandler extends IotaRequestHandler {
 
                     Address newaddress=null;
                     long useBalance=0L;
+
                     try {
                         GetNewAddressResponse gnr = apiProxy.getNewAddress(String.valueOf(firstLoadRequest.getSeed().value), firstLoadRequest.getSecurity(),
                                 start, false, 1, false);
@@ -175,11 +178,8 @@ public class GetFirstLoadRequestHandler extends IotaRequestHandler {
                         List<String> tmpadd=new ArrayList<>();
                         tmpadd.add(newaddress.getAddress());
 
-                        //snapshotBalanceAlreadyAddresses.put(newaddress.getAddress(),true);
                         GetBalancesResponse gbal = apiProxy.getBalances(100,tmpadd);
                         useBalance=Sf.toLong(gbal.getBalances()[0]);
-
-                        //Log.e("BAL","received bal: "+useBalance);
 
                         newaddress.setValue(useBalance);
                         newaddress.setLastMilestone(gbal.getMilestoneIndex());
@@ -188,19 +188,17 @@ public class GetFirstLoadRequestHandler extends IotaRequestHandler {
                         Bundle[] bundles = apiProxy.bundlesFromAddresses(new String[]{newaddress.getAddress()}, true);
                         if (bundles != null && bundles.length > 0) {
                             newaddress.setAttached(true);
-                            //Log.e("FIRST-TIME", "BUNDLES COUNT: "+bundles.length);
+                            foundTransfers=true;
                             for (int i = 0; i < bundles.length; i++) {
 
                                 String hash = bundles[i].getTransactions().get(0).getHash();
                                 if (hasalready.get(hash) == null) {
-                                    //Log.e("FIRST-TIME", "NEW HASH: "+hash);
                                     hasalready.put(hash, true);
                                     allbundles.add(bundles[i]);
                                 }
                             }
                         }
 
-                        //Log.e("MK-SNAP","ADDRESS: "+useBalance+" - "+newaddress.getAddress());
                         long oldWallet=wallet.getBalance();
                         long expecting=oldWallet+useBalance;
 
@@ -229,7 +227,7 @@ public class GetFirstLoadRequestHandler extends IotaRequestHandler {
                         snapshotBalanceAlreadyAddresses.put(newaddress.getAddress(),true);
                         holder.counttransfers = transfers.size();
                     } catch (Exception e) {
-                        Log.e("ERR-FLR020","ex: "+e.getMessage());
+                        Log.e("ERR-FLR020","address index: "+start+", ex: "+e.getMessage());
                     }
 
                 }
@@ -246,14 +244,10 @@ public class GetFirstLoadRequestHandler extends IotaRequestHandler {
                 //Log.e("WALLET","current value: "+wallet.getBalance()+" - "+wallet.getBalancePendingIn()+" -- "+wallet.getBalancePendingOut());
                 int countempty=0;
 
-                if(lastComplete>0 && allAddresses.size()>=stopWhenCountEmpty) {
-                    //if(hasTransfers) {
-                        for (int i = allAddresses.size() - 1; i >= 0 && i > lastComplete; i--) {
-                            //if (!allAddresses.get(i).isAttached()) {
-                                countempty++;
-                            //}
-                        }
-                    //}
+                if(!foundTransfers && lastComplete>0 && allAddresses.size()>=stopWhenCountEmpty) {
+                    for (int i = allAddresses.size() - 1; i >= 0 && i > lastComplete; i--) {
+                        countempty++;
+                    }
                 }
                 start++;
                 //Log.e("COUNT_EMPTY",allAddresses.size()+" addresses, empty: "+countempty);
@@ -282,7 +276,7 @@ public class GetFirstLoadRequestHandler extends IotaRequestHandler {
         boolean hasTransfer=false;
         for(int i=allAddresses.size()-1; i>=0; i--) {
             Address address= allAddresses.get(i);
-            if(address.getValue()>0) {
+            if(address.getValue()!=0 || address.getPendingValue()!=0) {
                 hasTransfer=true;
             } else if(hasTransfer) {
                 address.setUsed(true);
@@ -291,7 +285,7 @@ public class GetFirstLoadRequestHandler extends IotaRequestHandler {
         }
         Store.setAccountData(context, ((GetFirstLoadRequest) request).getSeed(),wallet,transfers,allAddresses);
         holder.isFinished=true;
-        AppService.AuditAddresses(context,((GetFirstLoadRequest) request).getSeed());
+        AppService.auditAddressesWithDelay(context,((GetFirstLoadRequest) request).getSeed());
 
         return new GetFirstLoadResponse();
     }

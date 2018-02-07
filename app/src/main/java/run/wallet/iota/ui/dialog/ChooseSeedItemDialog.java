@@ -37,7 +37,9 @@ import run.wallet.iota.model.Store;
 import run.wallet.iota.ui.UiManager;
 import run.wallet.iota.ui.adapter.WalletAddressCardAdapter;
 import run.wallet.iota.ui.adapter.WalletTransfersCardAdapter;
+import run.wallet.iota.ui.fragment.WalletAddressesFragment;
 import run.wallet.iota.ui.fragment.WalletTabFragment;
+import run.wallet.iota.ui.fragment.WalletTransfersFragment;
 
 
 public class ChooseSeedItemDialog extends DialogFragment implements DialogInterface.OnClickListener {
@@ -92,7 +94,8 @@ public class ChooseSeedItemDialog extends DialogFragment implements DialogInterf
         switch (which) {
             case 0:
                 Store.setCurrentSeed(getActivity(),seed);
-
+                WalletTransfersFragment.resetScroll();
+                WalletAddressesFragment.resetScroll();
                 WalletAddressCardAdapter.load(getActivity(),true);
                 WalletTransfersCardAdapter.load(getActivity(),true);
                 getDialog().dismiss();

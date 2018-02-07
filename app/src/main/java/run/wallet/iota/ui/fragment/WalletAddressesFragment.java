@@ -19,7 +19,6 @@
 
 package run.wallet.iota.ui.fragment;
 
-import android.app.UiModeManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
@@ -28,7 +27,6 @@ import android.support.design.widget.Snackbar;
 import android.support.v7.widget.AppCompatButton;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -36,32 +34,25 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.github.mikephil.charting.data.LineData;
-
 import org.greenrobot.eventbus.Subscribe;
 
 import jota.utils.IotaToText;
 import run.wallet.R;
-import run.wallet.common.Sf;
 import run.wallet.iota.api.handler.GetFirstLoadRequestHandler;
-import run.wallet.iota.api.requests.SendTransferRequest;
 import run.wallet.iota.api.responses.AddressSecurityChangeResponse;
 import run.wallet.iota.api.responses.ApiResponse;
 import run.wallet.iota.api.responses.GetAccountDataResponse;
 import run.wallet.iota.api.responses.GetFirstLoadResponse;
 import run.wallet.iota.api.responses.GetNewAddressResponse;
 import run.wallet.iota.api.responses.NodeInfoResponse;
+import run.wallet.iota.api.responses.NudgeResponse;
 import run.wallet.iota.api.responses.RefreshEventResponse;
 import run.wallet.iota.api.responses.SendTransferResponse;
 import run.wallet.iota.api.responses.error.NetworkError;
-import run.wallet.iota.model.Address;
 import run.wallet.iota.model.Store;
 import run.wallet.iota.service.AppService;
 import run.wallet.iota.ui.UiManager;
 import run.wallet.iota.ui.adapter.WalletAddressCardAdapter;
-
-import java.util.Arrays;
-import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -98,7 +89,10 @@ public class WalletAddressesFragment extends BaseSwipeRefreshLayoutFragment  {
     @BindView(R.id.fl_confirm_no)
     AppCompatButton noButton;
     //private List<Address> addresses;
-
+    private static boolean shouldRefresh=false;
+    public static void setShouldRefresh(boolean refresh)    {
+        shouldRefresh=refresh;
+    }
     private Unbinder unbinder;
     Handler firstLoad = new Handler();
 
@@ -136,6 +130,10 @@ public class WalletAddressesFragment extends BaseSwipeRefreshLayoutFragment  {
             UiManager.displayInfoBar(getActivity(),infoBar);
             if(emptyAddresses.getVisibility()==View.VISIBLE && AppService.countAddressRunningTasks(Store.getCurrentSeed())>0) {
                 emptyCreate.setVisibility(View.VISIBLE);
+            }
+            if(shouldRefresh) {
+                shouldRefresh=false;
+                setAdapter(true);
             }
             attachingHandler.postDelayed(runAttaching,1000);
         }
@@ -210,32 +208,40 @@ public class WalletAddressesFragment extends BaseSwipeRefreshLayoutFragment  {
         }
         super.onDestroyView();
     }
-
+    private static int firstVis=0;
+    public static void resetScroll() {
+        firstVis=0;
+    }
     private void setAdapter(boolean force) {
-        if(adapter==null) {
-            adapter = new WalletAddressCardAdapter(getActivity());
-        } else {
-            if(force) {
-                WalletAddressCardAdapter.load(getActivity(),true);
-            }
-            adapter.notifyDataSetChanged();
-        }
-        LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
-        recyclerView.setLayoutManager(layoutManager);
-        recyclerView.setAdapter(adapter);
-        if(adapter.getItemCount()!=0) {
-            //Log.e("HMMM","Adapter is not empty");
-            emptyAddresses.setVisibility(View.GONE);
-            firstLoadPod.setVisibility(View.GONE);
-        } else {
-            //Log.e("HMMM","Adapter is empty");
-            if(Store.getCurrentWallet()!=null) {
-                //Log.e("HMMM","Adapter is empty so is wallet");
-                emptyAddresses.setVisibility(View.VISIBLE);
+        if(recyclerView!=null) {
+            if (adapter == null) {
+                firstVis = 0;
+                adapter = new WalletAddressCardAdapter(getActivity());
+            } else {
+                firstVis = recyclerView.getVerticalScrollbarPosition();
+                if (force) {
+                    WalletAddressCardAdapter.load(getActivity(), true);
+                }
 
             }
-        }
+            LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
+            recyclerView.setLayoutManager(layoutManager);
+            recyclerView.setAdapter(adapter);
+            if (adapter.getItemCount() != 0) {
+                //Log.e("HMMM","Adapter is not empty");
+                emptyAddresses.setVisibility(View.GONE);
+                firstLoadPod.setVisibility(View.GONE);
+                adapter.notifyDataSetChanged();
+            } else {
+                //Log.e("HMMM","Adapter is empty");
+                if (Store.getCurrentWallet() != null) {
+                    //Log.e("HMMM","Adapter is empty so is wallet");
+                    emptyAddresses.setVisibility(View.VISIBLE);
 
+                }
+            }
+            recyclerView.scrollToPosition(firstVis);
+        }
     }
 
     @Subscribe
@@ -262,6 +268,11 @@ public class WalletAddressesFragment extends BaseSwipeRefreshLayoutFragment  {
 
     @Subscribe
     public void onEvent(GetAccountDataResponse str) {
+        swipeRefreshLayout.setRefreshing(false);
+        setAdapter(true);
+    }
+    @Subscribe
+    public void onEvent(NudgeResponse str) {
         swipeRefreshLayout.setRefreshing(false);
         setAdapter(true);
     }
@@ -328,7 +339,7 @@ public class WalletAddressesFragment extends BaseSwipeRefreshLayoutFragment  {
         //AppService.getNodeInfo(getActivity());
         //Log.e("GETACC","REFRESH PUULLLLLL");
         //AppService.getAccountData(getActivity(),Store.getCurrentSeed(),true);
-        AppService.AuditAddresses(getActivity(),Store.getCurrentSeed());
+        AppService.auditAddresses(getActivity(),Store.getCurrentSeed());
         //getAccountData();
     }
     private void getAccountData() {

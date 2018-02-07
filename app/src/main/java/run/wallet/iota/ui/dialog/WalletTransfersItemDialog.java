@@ -26,20 +26,30 @@ import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
+import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
+import android.util.Log;
 
 import org.greenrobot.eventbus.EventBus;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+import jota.dto.response.GetNodeInfoResponse;
+import jota.utils.Checksum;
 import run.wallet.R;
+import run.wallet.common.Cal;
 import run.wallet.iota.api.TaskManager;
 import run.wallet.iota.api.requests.ReplayBundleRequest;
+import run.wallet.iota.api.responses.NodeInfoResponse;
 import run.wallet.iota.helper.Constants;
+import run.wallet.iota.helper.Sf;
 import run.wallet.iota.model.Store;
 import run.wallet.iota.model.Transfer;
 import run.wallet.iota.service.AppService;
@@ -50,12 +60,10 @@ import run.wallet.iota.ui.fragment.PendingCancelledFragment;
 
 public class WalletTransfersItemDialog extends DialogFragment implements DialogInterface.OnClickListener {
 
-    private String address;
-    private boolean isConfirmed;
-    private boolean isAddressDouble;
-    private boolean isCancelled;
-    private boolean isAttachment;
+    private Transfer transfer;
     private String hash;
+    private int maxNudgeAttempts;
+
 
     public WalletTransfersItemDialog() {
     }
@@ -64,17 +72,27 @@ public class WalletTransfersItemDialog extends DialogFragment implements DialogI
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         Bundle bundle = getArguments();
-        address = bundle.getString("address");
-        isConfirmed = bundle.getInt("isConfirmed") != 0;
-        isCancelled = bundle.getInt("isCancelled") != 0;
-        isAttachment = bundle.getInt("isAttachment") != 0;
-        isAddressDouble=bundle.getInt("isAddressDouble") != 0;
+
         hash = bundle.getString("hash");
+
+
+        transfer = Store.isAlreadyTransfer(hash,Store.getTransfers());
+        if(transfer==null)
+            dismiss();
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
+        maxNudgeAttempts= Sf.toInt(prefs.getString(Constants.PREF_TRANSFER_NUDGE_ATTEMPTS, ""+Constants.PREF_TRANSFER_NUDGE_ATTEMPTS_VALUE));
+
         int useR = R.array.listOnWalletTransfersRecyclerViewClickDialog;
-        if(isAddressDouble)
+        if(transfer.isMarkDoubleAddress()) {
             useR = R.array.listOnWalletTransfersRecyclerViewClickDialogCancelled;
-        else if(isConfirmed || isCancelled || isAttachment)
+        } else if(transfer.isCompleted() || transfer.isMarkDoubleSpend() || transfer.isAttachment()) {
             useR = R.array.listOnWalletTransfersRecyclerViewClickDialogCompleted;
+        } else {
+            if(maxNudgeAttempts==0 || maxNudgeAttempts>=transfer.getNudgeCount() || transfer.getTimestamp()<System.currentTimeMillis()- (Cal.HOURS_1_IN_MILLIS)) {
+                useR = R.array.listOnWalletTransfersRecyclerViewClickDialogResend;
+            }
+        }
+
 
         return new AlertDialog.Builder(getActivity())
                 .setTitle(getString(R.string.transfer))
@@ -89,7 +107,11 @@ public class WalletTransfersItemDialog extends DialogFragment implements DialogI
         final Bundle bundle = new Bundle();
         switch (which) {
             case 0:
-                ClipData clipAddress = ClipData.newPlainText(getActivity().getString(R.string.address), address);
+                String useAddress=transfer.getAddress();
+                try {
+                    useAddress=Checksum.addChecksum(transfer.getAddress());
+                } catch(Exception e){}
+                ClipData clipAddress = ClipData.newPlainText(getActivity().getString(R.string.address), useAddress);
                 clipboard.setPrimaryClip(clipAddress);
                 break;
             case 1:
@@ -98,19 +120,35 @@ public class WalletTransfersItemDialog extends DialogFragment implements DialogI
                 break;
 
             case 2:
-                if(isAddressDouble) {
+                //Log.e("DIALOG","GO");
+                if(transfer.isMarkDoubleAddress()) {
                     Transfer gottransfer=Store.isAlreadyTransfer(hash,Store.getTransfers());
                     if(gottransfer!=null) {
                         Store.setCacheTransfer(gottransfer);
                         UiManager.openFragmentBackStack(getActivity(), PendingCancelledFragment.class);
                     }
 
-                } else if (!isConfirmed) {
-                    AppService.replayBundleTransaction(getActivity(),Store.getCurrentSeed(),hash,address);
+                } else if (!transfer.isCompleted()) {
+                    Transfer transfer = Store.getCurrentTransferFromHash(hash);
+                    if(transfer!=null && maxNudgeAttempts!=0) {
+                        AppService.nudgeTransaction(getActivity(),Store.getCurrentSeed(),transfer);
+                    } else {
+                        Snackbar.make(getActivity().findViewById(R.id.drawer_layout), getString(R.string.messages_transaction_already_confirmed), Snackbar.LENGTH_LONG).show();
+                    }
+
                 } else  {
                     Snackbar.make(getActivity().findViewById(R.id.drawer_layout), getString(R.string.messages_transaction_already_confirmed), Snackbar.LENGTH_LONG).show();
                 }
                 break;
+            case 3:
+                if (!transfer.isCompleted()) {
+                    Transfer transfer = Store.getCurrentTransferFromHash(hash);
+                    if(transfer!=null) {
+                        AppService.replayBundleTransaction(getActivity(),Store.getCurrentSeed(),hash,transfer.getAddress());
+                    }
+                } else {
+                    Snackbar.make(getActivity().findViewById(R.id.drawer_layout), getString(R.string.messages_transaction_already_confirmed), Snackbar.LENGTH_LONG).show();
+                }
         }
     }
 }

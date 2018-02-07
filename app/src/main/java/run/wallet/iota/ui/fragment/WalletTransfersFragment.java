@@ -47,6 +47,7 @@ import run.wallet.iota.api.responses.ApiResponse;
 import run.wallet.iota.api.responses.GetAccountDataResponse;
 import run.wallet.iota.api.responses.GetFirstLoadResponse;
 import run.wallet.iota.api.responses.NodeInfoResponse;
+import run.wallet.iota.api.responses.NudgeResponse;
 import run.wallet.iota.api.responses.RefreshEventResponse;
 import run.wallet.iota.api.responses.SendTransferResponse;
 import run.wallet.iota.api.responses.error.NetworkError;
@@ -109,8 +110,11 @@ public class WalletTransfersFragment extends BaseSwipeRefreshLayoutFragment impl
 
 
 
+    private static boolean shouldRefresh=false;
+    public static void setShouldRefresh(boolean refresh)    {
+        shouldRefresh=refresh;
+    }
     private Unbinder unbinder;
-
     Handler firstLoad = new Handler();
 
     @Override
@@ -158,6 +162,11 @@ public class WalletTransfersFragment extends BaseSwipeRefreshLayoutFragment impl
         @Override
         public void run() {
             UiManager.displayInfoBar(getActivity(),infoBar);
+
+            if(shouldRefresh) {
+                shouldRefresh=false;
+                setAdapter(true);
+            }
             attachingHandler.postDelayed(runAttaching,1000);
         }
     };
@@ -193,6 +202,7 @@ public class WalletTransfersFragment extends BaseSwipeRefreshLayoutFragment impl
 
             }
         });
+
     }
 
     @Override
@@ -289,6 +299,11 @@ public class WalletTransfersFragment extends BaseSwipeRefreshLayoutFragment impl
         setAdapter(true);
     }
     @Subscribe
+    public void onEvent(NudgeResponse str) {
+        swipeRefreshLayout.setRefreshing(false);
+        setAdapter(true);
+    }
+    @Subscribe
     public void onEvent(NodeInfoResponse nodeInfoResponse) {
         if (nodeInfoResponse.isSyncOk()) {
             //getAccountData();
@@ -302,17 +317,26 @@ public class WalletTransfersFragment extends BaseSwipeRefreshLayoutFragment impl
     public void onEvent(RefreshEventResponse gnar) {
         setAdapter(false);
     }
+
+    private static int firstVis=0;
+    public static void resetScroll() {
+        firstVis=0;
+    }
+
     private void setAdapter(boolean force) {
 
-        if(adapter==null) {
-            adapter = new WalletTransfersCardAdapter(getActivity(),force);
-        } else {
-            if(force) {
-                WalletTransfersCardAdapter.load(getActivity(),true);
-            }
-            adapter.notifyDataSetChanged();
-        }
         if(recyclerView!=null) {
+            if(adapter==null) {
+                firstVis=0;
+                adapter = new WalletTransfersCardAdapter(getActivity(),force);
+            } else {
+                firstVis = recyclerView.getVerticalScrollbarPosition();
+                if(force) {
+                    WalletTransfersCardAdapter.load(getActivity(),true);
+                }
+                adapter.notifyDataSetChanged();
+            }
+
             LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
             recyclerView.setLayoutManager(layoutManager);
             recyclerView.setAdapter(adapter);
@@ -341,6 +365,7 @@ public class WalletTransfersFragment extends BaseSwipeRefreshLayoutFragment impl
 
                 }
             }
+            recyclerView.scrollToPosition(firstVis);
         }
 
 

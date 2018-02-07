@@ -24,7 +24,10 @@ import android.util.Log;
 import android.view.MenuItem;
 
 import run.wallet.R;
+import run.wallet.iota.model.Store;
 import run.wallet.iota.service.AppService;
+import run.wallet.iota.ui.adapter.WalletAddressCardAdapter;
+import run.wallet.iota.ui.adapter.WalletTransfersCardAdapter;
 import run.wallet.iota.ui.fragment.SettingsFragment;
 
 public class SettingsActivity extends AppCompatActivity {
@@ -57,12 +60,26 @@ public class SettingsActivity extends AppCompatActivity {
     }
     @Override
     public void onBackPressed() {
+        finishUp();
         this.finish();
     }
 
     @Override
+    public void onDestroy() {
+        super.onDestroy();
+
+
+    }
+    private void finishUp() {
+        if(Store.getCurrentSeed()!=null) {
+            Store.init(this, true);
+            AppService.refreshEvent();
+        }
+    }
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if(item.getItemId()==android.R.id.home) {
+            finishUp();
             if (getFragmentManager().getBackStackEntryCount() > 0) {
                 getFragmentManager().popBackStack();
                 return true;

@@ -46,7 +46,7 @@ public class NotificationHelper {
     }
     public static void vibrate(Context context) {
         Vibrator v = (Vibrator) context.getSystemService(Context.VIBRATOR_SERVICE);
-        v.vibrate(500);
+        v.vibrate(240);
     }
     public static void responseNotification(Context context, int image, String title, int id) {
 

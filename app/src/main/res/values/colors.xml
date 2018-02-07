@@ -29,4 +29,13 @@
     <color name="overlay">#80ABA18E</color>
 
 
+    <color name="colorPrimaryLightBlue">#000099</color>
+    <color name="colorPrimaryDarkLightBlue">#0000CC</color>
+    <color name="colorPrimaryDarkerLightBlue">#0000FF</color>
+    <color name="colorAccentLightBlue">#003399</color>
+    <color name="colorSecondaryLightBlue">#958779</color>
+    <color name="colorMiddleLightBlue">#afa8a0</color>
+    <color name="colorLightLightBlue">#6666FF</color>
+    <color name="textColorPrimaryLightBlue">#3333FF</color>
+    <color name="textColorSecondaryLightBlue">#6666FF</color>
 </resources>

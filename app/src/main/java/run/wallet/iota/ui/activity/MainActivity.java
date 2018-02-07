@@ -127,6 +127,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         super.onCreate(savedInstanceState);
         //SharedPreferences sp = this.getSharedPreferences("nodes",Context.MODE_PRIVATE);
 
+        //setTheme(R.style.AppThemeLightBlue);
         //sp.edit().clear().commit();
         Store.init(this);
         setContentView(R.layout.activity_main);
@@ -161,7 +162,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             this.getWindow().setStatusBarColor(B.getColor(this, R.color.colorPrimaryDark));
         }
         drawer.addDrawerListener(drawerListener);
-
+        AppService.getNodeInfo(this);
 
     }
     @SuppressWarnings("deprecation")

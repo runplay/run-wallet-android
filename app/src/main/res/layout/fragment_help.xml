@@ -92,6 +92,7 @@
                         android:gravity="center_vertical"
                         android:layout_height="wrap_content"
                         android:paddingBottom="@dimen/baseline_card"/>
+
                     <TextView
                         android:text="@string/help_key_send"
                         android:drawableLeft="@drawable/ic_iota_out"
@@ -128,6 +129,43 @@
                         android:layout_height="wrap_content"
                         android:gravity="center_vertical"
                         android:paddingBottom="@dimen/baseline_card"/>
+                    <TextView
+                        android:text="@string/help_aw_nudge"
+                        android:drawableLeft="@drawable/nudge_orange"
+                        android:drawablePadding="6dp"
+                        android:layout_width="match_parent"
+                        android:textAppearance="@style/Base.TextAppearance.AppCompat.Body1"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:paddingBottom="@dimen/baseline_card"/>
+                    <TextView
+                        android:text="@string/snackbar_balance_live"
+                        android:drawableLeft="@drawable/bal_live_help"
+                        android:drawablePadding="6dp"
+                        android:layout_width="match_parent"
+                        android:textAppearance="@style/Base.TextAppearance.AppCompat.Body1"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:paddingBottom="@dimen/baseline_card"/>
+                    <TextView
+                        android:text="@string/snackbar_balance_out"
+                        android:drawableLeft="@drawable/bal_avail_help"
+                        android:drawablePadding="6dp"
+                        android:layout_width="match_parent"
+                        android:textAppearance="@style/Base.TextAppearance.AppCompat.Body1"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:paddingBottom="@dimen/baseline_card"/>
+                    <TextView
+                        android:text="@string/snackbar_balance_pending"
+                        android:drawableLeft="@drawable/bal_future_help"
+                        android:drawablePadding="6dp"
+                        android:layout_width="match_parent"
+
+                        android:textAppearance="@style/Base.TextAppearance.AppCompat.Body1"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:paddingBottom="@dimen/baseline_card"/>
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -141,6 +179,8 @@
                             android:layout_marginEnd="6dp"
                             android:paddingStart="4dp"
                             android:paddingEnd="4dp"
+                            android:layout_marginTop="4dp"
+                            android:layout_marginBottom="4dp"
                             android:gravity="center_vertical|center_horizontal"
                             android:background="@drawable/ic_replay_orange"
                             android:layout_width="wrap_content"

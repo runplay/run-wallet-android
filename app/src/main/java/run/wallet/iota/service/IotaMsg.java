@@ -4,9 +4,9 @@ package run.wallet.iota.service;
 import android.util.Log;
 
 
-import jota.dto.response.*;
 import jota.error.ArgumentException;
 import jota.model.*;
+import jota.dto.response.*;
 import jota.pow.ICurl;
 import jota.pow.SpongeFactory;
 import jota.utils.*;
@@ -362,13 +362,11 @@ public class IotaMsg extends IotaMsgCore {
 
         // Check if message is correct trytes encoded of any length
         if (transfer.getMessage() == null || !InputValidator.isTrytes(transfer.getMessage(), transfer.getMessage().length())) {
-            Log.e("INV","invalid trytes1 message");
             return false;
         }
 
         // Check if tag is correct trytes encoded and not longer than 27 trytes
         if (transfer.getTag() == null || !InputValidator.isTrytes(transfer.getTag(), transfer.getTag().length()) || transfer.getTag().length() > Constants.TAG_LENGTH) {
-            Log.e("INV","invalid trytes2 tag");
             return false;
         }
 

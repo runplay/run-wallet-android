@@ -48,9 +48,11 @@ import run.wallet.common.B;
 import run.wallet.common.Sf;
 import run.wallet.iota.api.requests.ApiRequest;
 import run.wallet.iota.api.requests.AuditAddressesRequest;
+import run.wallet.iota.api.requests.AutoNudgeRequest;
 import run.wallet.iota.api.requests.GetAccountDataRequest;
 import run.wallet.iota.api.requests.GetFirstLoadRequest;
 import run.wallet.iota.api.requests.GetNewAddressRequest;
+import run.wallet.iota.api.requests.NudgeRequest;
 import run.wallet.iota.api.requests.ReplayBundleRequest;
 import run.wallet.iota.api.requests.SendTransferRequest;
 import run.wallet.iota.helper.AESCrypt;
@@ -142,8 +144,17 @@ public class UiManager {
                     } else if(req instanceof ReplayBundleRequest) {
                         ReplayBundleRequest request=(ReplayBundleRequest) req;
                         if(request.getSeed().id.equals(currentSeed.id)) {
+                            processing.add(createProcessRunningPod(context, R.drawable.send_white, context.getString(R.string.info_resend), 0));
+                        }
+                    } else if(req instanceof NudgeRequest) {
+                        NudgeRequest request=(NudgeRequest) req;
+                        if(request.getSeed().id.equals(currentSeed.id)) {
                             processing.add(createProcessRunningPod(context, R.drawable.send_white, context.getString(R.string.info_nudge), 0));
                         }
+                    } else if(req instanceof AutoNudgeRequest) {
+                        //if(request.getSeed().id.equals(currentSeed.id)) {
+                        processing.add(createProcessRunningPod(context, R.drawable.send_white, context.getString(R.string.auto), 0));
+                        //}
                     }
 
                 }

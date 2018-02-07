@@ -26,6 +26,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
+import jota.model.Bundle;
 import jota.model.Transaction;
 import run.wallet.iota.helper.Audit;
 import run.wallet.iota.helper.Utils;
@@ -34,6 +35,7 @@ import run.wallet.iota.model.Seeds;
 import run.wallet.iota.model.Store;
 import run.wallet.iota.model.Transfer;
 import run.wallet.iota.model.TransferTransaction;
+import run.wallet.iota.model.Wallet;
 
 public class SendTransferResponse extends ApiResponse {
 
@@ -44,49 +46,17 @@ public class SendTransferResponse extends ApiResponse {
         setDuration(apiResponse.getDuration());
         List<Address> alreadyAddress = Store.getAddresses(context,seed);
         List<Transfer> transfers = new ArrayList<>();
-        //long tval=0;
-        long ts=0;
-        long totalValue=0;
-        long timestamp=0;
-        String address="";
-        String hash="";
-        String tag="";
-        String destinationAddress="";
-        Boolean persistence=false;
-        String message = "";
-
-        List<TransferTransaction> transactions=new ArrayList<>();
-        for (Transaction trx : apiResponse.getTransactions()) {
-
-            message=trx.getSignatureFragments();
-            address = trx.getAddress();
-            persistence = trx.getPersistence();
-            if(persistence==null)
-                persistence=Boolean.FALSE;
-            long value=trx.getValue();
-            totalValue += value;
-
-            value+=totalValue;
-            if (trx.getCurrentIndex() == 0) {
-                timestamp = trx.getAttachmentTimestamp();
-                tag = trx.getTag();
-                destinationAddress = address;
-                hash = trx.getHash();
-            }
-            Address hasAddress = Store.isAlreadyAddress(address, alreadyAddress);
-            if (value != 0 && hasAddress != null) {
-                transactions.add(new TransferTransaction(hasAddress.getAddress(), value));
-            }
+        List<Transfer> alreadyTransfers=Store.getTransfers(context,seed);
+        Wallet wallet=Store.getWallet(context,seed);
 
 
-        }
-        Transfer addtransfer=new Transfer(timestamp, destinationAddress, hash, persistence, totalValue, message, tag);
-        if(Store.getNodeInfo()!=null) {
-            addtransfer.setMilestone(Store.getNodeInfo().getLatestMilestoneIndex());
-        }
-        addtransfer.setTransactions(transactions);
-        transfers.add(addtransfer);
+        Audit.populateTxToTransfers(apiResponse.getTransactions(),Store.getNodeInfo(),transfers,alreadyAddress);
+        Audit.setTransfersToAddresses(seed, transfers, alreadyAddress, wallet, alreadyTransfers);
+        Audit.processNudgeAttempts(context, seed, transfers);
+        Store.updateAccountData(context, seed, wallet, transfers, alreadyAddress);
 
+
+        /*
         for(Transfer transfer: transfers) {
             if(transfer.getValue()==0) {
                 Address already = null;
@@ -102,6 +72,7 @@ public class SendTransferResponse extends ApiResponse {
                 }
             }
         }
+        */
 
     }
 

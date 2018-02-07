@@ -37,9 +37,12 @@
     <string name="tag_optional">Tag (optional, A-Z,a-z and 9 only)</string>
     <string name="neighbor_ip">Neighbor IP:</string>
     <string name="next">Next</string>
+    <string name="auto">Auto</string>
 
     <string name="info_transfer">Transfer</string>
+
     <string name="info_nudge">Nudge</string>
+    <string name="info_resend">Resend</string>
     <string name="info_audit">Audit</string>
     <string name="info_refresh">Refresh</string>
     <string name="info_new_address">Address</string>
@@ -97,7 +100,7 @@
     <string name="messages_to_long_seed">Seed should not contain more than 81 characters. Extra characters are ignored</string>
     <string name="messages_to_short_seed">Seed does not contain enough characters. Insecure seed</string>
     <string name="messages_not_fully_synced_yet">Node is not fully synced</string>
-    <string name="messages_wait_for_transfer">Please wait for the current Transfer process to finish</string>
+    <string name="messages_wait_for_transfer">Please wait for the current process to finish</string>
 
     <string name="messages_not_yet_implemented">Not yet implemented</string>
     <string name="messages_enter_txaddress_with_checksum">Please valid address required</string>
@@ -116,8 +119,9 @@
     <string name="message_seed_duplicate">Seed is already in the wallet</string>
     <string name="message_install_web_view">Install WebView</string>
     <string name="messages_iota_donation">Address copied to clipboard</string>
-    <string name="messages_address_used">The address is already used. Please generate a new one or choose a non-used address.</string>
-    <string name="messages_transaction_already_confirmed">The transaction is already confirmed.</string>
+    <string name="messages_address_used">The address is already used. Please generate a new one or choose a non-used address</string>
+    <string name="messages_transaction_already_confirmed">The transaction is already confirmed</string>
+    <string name="messages_transaction_auto_off">Turn off auto Nudge in settings to perform this option</string>
     <string name="messages_create_new_msgaddress">Creating new contact link</string>
     <string name="messages_first_load">First load, please wait a minute</string>
     <string name="first_load_predict">Balance</string>
@@ -213,6 +217,9 @@
 
     <string name="message_messy_view">View Messy? see the settings to tidy it</string>
     <string name="message_tap_balance">tap me</string>
+    <string name="tap_live">Live</string>
+    <string name="tap_avail">Available</string>
+    <string name="tap_future">Future</string>
 
 
     <string name="address_security_default_is">Default is</string>
@@ -246,6 +253,7 @@
     <string name="notification_attaching_new_address_request_title">Attaching address</string>
     <string name="notification_replay_bundle_request_title">Nudge (promote) transfer</string>
 
+
     <string name="notification_generating_new_address_response_succeeded_title">New address generated</string>
 
     <string name="notification_send_transfer_response_succeeded_title">Transfer executed</string>
@@ -254,8 +262,11 @@
     <string name="notification_attaching_new_address_response_succeeded_title">Attach address executed</string>
     <string name="notification_attaching_new_address_response_failed_title">Attach address failed</string>
     ´
-    <string name="notification_replay_bundle_response_succeeded_title">Nudged</string>
-    <string name="notification_replay_bundle_response_failed_title">Nudging failed</string>
+    <string name="notification_replay_bundle_response_succeeded_title">Resend</string>
+    <string name="notification_replay_bundle_response_failed_title">Resend failed</string>
+
+    <string name="notification_nudge_succeeded_title">Nudged</string>
+    <string name="notification_nudge_failed_title">Nudging failed</string>
 
     <string name="notification_address_attach_to_tangle_blocked_title">Attach failed, try another node or enable local PoW</string>
     <string name="notification_transfer_attach_to_tangle_blocked_title">Transaction failed, try another node or enable local PoW</string>
@@ -341,8 +352,8 @@
     <string name="settings_used">Used Addresses</string>
     <string name="settings_used_summary">Show used Addresses in the \'Receive\' section</string>
 
-    <string name="settings_attachments">Addresses attached</string>
-    <string name="settings_attachments_summary">Show new Address attachments in the \'Actions\' section</string>
+    <string name="settings_attachments">Nudge and Attachments</string>
+    <string name="settings_attachments_summary">Show Nudges and Address attachments in the \'Actions\' section</string>
 
 
     <string name="settings_issue_reporter_title">Report issue</string>
@@ -403,6 +414,18 @@
     <string name="sample_show_log">Show Log</string>
     <string name="sample_hide_log">Hide Log</string>
 
+    <!-- Welcome -->
+    <string name="welcome_title">Welcome</string>
+    <string name="welcome_intro">run IOTA provides an easy to use fast wallet for your everyday IOTA use</string>
+
+
+    <string name="colour_change">Change app colour</string>
+
+    <string name="colour_theme_blue_light">Sky</string>
+    <string name="colour_theme_blue_dark">Royal</string>
+    <string name="colour_theme_red">Urgent</string>
+    <string name="colour_theme_brown">Boring</string>
+
 
     <!-- Alert Dialog-->
     <string name="copy_address">Copy address</string>
@@ -410,6 +433,7 @@
 
     <string name="receive_to_address">Request to this address</string>
     <string name="replay_bundle">Nudge (promote) transfer</string>
+    <string name="resend_bundle">Re-send transfer</string>
     <string name="transfer_cancelled_why">Why No complete?</string>
     <string name="toast_wrongPW">Wrong password</string>
     <string name="title_current_seed">Current Seed:</string>
@@ -498,8 +522,10 @@
     <string name="help_key_attach">Address attachment to IOTA</string>
     <string name="help_key_complete">Transfer completed</string>
     <string name="help_key_nudge">Nudge (promote) count</string>
-    <string name="help_key_address">Address name</string>
+    <string name="help_key_nudge_tran">Nudge transfer</string>
+    <string name="help_key_address">Address (promote) name</string>
     <string name="help_key_security">Address security value</string>
+
 
 
     <string name="help_allw_head">All Wallets Area</string>
@@ -526,7 +552,7 @@
     <string name="help_set_address_auto">Automatic Addresses 🎚</string>
     <string name="help_set_address_auto_text">Change the number of empty zero balance addresses to keep</string>
     <string name="help_set_nudge_auto">Nudge Attempts 🎚</string>
-    <string name="help_set_nudge_auto_text">If auto nudge is turned on, the app will wait 25 IOTA milestones (~60 minutes) for a pending out Transfer, then Nudge promote the Transfer</string>
+    <string name="help_set_nudge_auto_text">If auto nudge is turned on, the app will wait 5 IOTA milestones (~10 minutes) for a pending out Transfer, then Nudge promote the Transfer</string>
     <string name="help_set_weight">Min Weight 🔐</string>
     <string name="help_set_weight_text">Change the Min Weight value to use for transfers</string>
     <string name="help_set_delete">Delete data ❌</string>

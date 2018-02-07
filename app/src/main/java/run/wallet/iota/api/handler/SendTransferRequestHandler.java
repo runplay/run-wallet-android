@@ -98,7 +98,8 @@ public class SendTransferRequestHandler extends IotaRequestHandler {
                         false)
                     );
 
-            AppService.getAccountData(context, ((SendTransferRequest) request).getSeed());
+
+            //AppService.getAccountData(context, ((SendTransferRequest) request).getSeed());
 
         } catch (ArgumentException | IllegalAccessError e) {
             NetworkError error = new NetworkError();

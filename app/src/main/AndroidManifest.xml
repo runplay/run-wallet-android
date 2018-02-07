@@ -6,17 +6,24 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.VIBRATE" />
 
-    <uses-permission android:required="false" android:name="android.permission.BLUETOOTH" />
-    <uses-permission android:required="false" android:name="android.permission.BLUETOOTH_ADMIN" />
-    <uses-permission android:required="false" android:name="android.permission.READ_EXTERNAL_STORAGE" />
-    <uses-permission android:required="false" android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:required="false" android:name="android.permission.CAMERA" />
 
     <!--
+        <uses-permission android:required="false" android:name="android.permission.BLUETOOTH" />
+    <uses-permission android:required="false" android:name="android.permission.BLUETOOTH_ADMIN" />
+    <uses-permission android:required="false" android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:required="false" android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+
         <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     -->
-
+    <supports-screens
+        android:anyDensity="true"
+        android:largeScreens="true"
+        android:normalScreens="true"
+        android:resizeable="true"
+        android:smallScreens="false"
+        android:xlargeScreens="true" />
     <application
         android:name="run.wallet.iota.IOTA"
         android:allowBackup="true"
@@ -61,6 +68,7 @@
                 <data
                     android:host="iota.runplay.com"
                     android:scheme="http" />
+
             </intent-filter>
         </activity>
         <service
