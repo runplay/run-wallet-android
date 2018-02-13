@@ -77,7 +77,7 @@ class MessageRequestTask extends AsyncTask<ApiRequest, String, ApiResponse> {
             //}
 
             ApiRequest apiRequest = params[0];
-            tag = apiRequest.getClass().getName();
+            tag = apiRequest.getClass().getCanonicalName();
 
 
             ApiProvider apiProvider = new IotaMessageApiProvider(protocol, host, port, context);

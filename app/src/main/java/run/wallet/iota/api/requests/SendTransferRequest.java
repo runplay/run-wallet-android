@@ -23,17 +23,19 @@ import java.util.ArrayList;
 import java.util.List;
 
 import jota.model.Transfer;
+import run.wallet.common.Sf;
 import run.wallet.iota.helper.Constants;
 import run.wallet.iota.model.Address;
+import run.wallet.iota.model.PayPacket;
 import run.wallet.iota.model.Seeds;
 import run.wallet.iota.model.Store;
 
 public class SendTransferRequest extends SeedApiRequest {
 
     private int security = 2;
-    private String address = "";
-    private List<String> addresses;
-    private String value = "";
+    List<PayPacket.PayTo> payTos=new ArrayList<>();
+    //private List<String> addresses;
+    //private String value = "";
     private String message = "";
     private String tag = "";
     private int minWeightMagnitude = Constants.PREF_MIN_WEIGHT_DEFAULT;
@@ -46,8 +48,9 @@ public class SendTransferRequest extends SeedApiRequest {
             , String message, String tag) {
         super(seed);
 
-        this.address = address;
-        this.value = value;
+        PayPacket.PayTo pt = new PayPacket.PayTo(Sf.toLong(value),address);
+        payTos.add(pt);
+        //this.value = value;
         this.message = message;
         this.tag = tag;
         this.setFromAddresses(fromAddress);
@@ -55,43 +58,38 @@ public class SendTransferRequest extends SeedApiRequest {
         minWeightMagnitude= Store.getMinWeightDefaultDefault();
 
     }
-    public SendTransferRequest(Seeds.Seed seed, String address, String value, String message, String tag, int minWeight) {
-        super(seed);
-        this.minWeightMagnitude=minWeight;
-        this.address = address;
-        this.value = value;
-        this.message = message;
-        this.tag = tag;
-    }
     public SendTransferRequest(Seeds.Seed seed, String address, String value, String message, String tag) {
         super(seed);
-
-        this.address = address;
-        this.value = value;
+        PayPacket.PayTo pt = new PayPacket.PayTo(Sf.toLong(value),address);
+        payTos.add(pt);
+        //this.value = value;
         this.message = message;
         this.tag = tag;
         minWeightMagnitude= Store.getMinWeightDefaultDefault();
     }
 
-    public SendTransferRequest(Seeds.Seed seed,List<String> addresses, String value, String message, String tag) {
+    public SendTransferRequest(Seeds.Seed seed, List<PayPacket.PayTo> payTos, List<Address> fromAddress, Address remainder
+            , String message, String tag) {
         super(seed);
 
-        this.addresses = addresses;
-        this.value = value;
+        this.payTos = payTos;
+        //this.value = value;
         this.message = message;
         this.tag = tag;
+        this.setFromAddresses(fromAddress);
+        this.setRemainder(remainder);
         minWeightMagnitude= Store.getMinWeightDefaultDefault();
     }
-
+/*
     public Transfer prepareTransfer() {
         return new Transfer(address, Long.valueOf(value), message, tag);
         //return transfers;
     }
-
+*/
     public List<Transfer> prepareTransfers() {
         List<Transfer> transfers = new ArrayList<>();
-        for (int i = 0; i < addresses.size(); i++) {
-            transfers.add(new Transfer(addresses.get(i), Long.valueOf(value), message, tag));
+        for (PayPacket.PayTo pt: payTos) {
+            transfers.add(new Transfer(pt.address, pt.value, message, tag));
         }
         return transfers;
     }
@@ -110,29 +108,20 @@ public class SendTransferRequest extends SeedApiRequest {
         this.security = security;
     }
 
-    public String getAddress() {
-        return address;
+
+    public List<PayPacket.PayTo> getPayTos() {
+        return payTos;
     }
 
-    public void setAddress(String address) {
-        this.address = address;
-    }
 
-    public List<String> getAddresses() {
-        return addresses;
-    }
-
-    public void setAddresses(List<String> addresses) {
-        this.addresses = addresses;
-    }
-
-    public String getValue() {
+    public long getValue() {
+        long value=0L;
+        for (PayPacket.PayTo pt: payTos) {
+            value+=pt.value;
+        }
         return value;
     }
 
-    public void setValue(String value) {
-        this.value = value;
-    }
 
     public String getMessage() {
         return message;

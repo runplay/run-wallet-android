@@ -1,5 +1,6 @@
 package run.wallet.iota.model;
 
+import android.app.Fragment;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
@@ -48,6 +49,7 @@ public class Store {
     private static final String PREF_TRANSFERS="traf";
     private static final String PREF_WALLET= "wallet";
 
+    private Class<? extends Fragment> currentFragment;
 
     private Seeds seeds;
     private Seeds.Seed currentSeed;
@@ -89,11 +91,9 @@ public class Store {
     private Transfer tmpCacheTransfer;
 
     private Store() {}
-    public static void init(Context context) {
-        init(context,false);
-    }
+
     public static void init(Context context,boolean force) {
-        if(force || store.currentSeed==null) {
+        if(Validator.isValidInitaliser() && (force || store.currentSeed==null)) {
             //Log.e("INIT","Store init()");
             WalletAddressCardAdapter.clear();
             WalletTransfersCardAdapter.clear();
@@ -127,11 +127,12 @@ public class Store {
         loadWallets(context);
     }
 
-    public static class TransferBalances {
-        public long available;
-        public long pending;
+    public static void setCurrentFragment(Class<? extends Fragment> fragment) {
+        store.currentFragment=fragment;
     }
-
+    public static Class<? extends Fragment> getCurrentFragment() {
+        return store.currentFragment;
+    }
 
 
 
@@ -417,7 +418,6 @@ public class Store {
         if(store.currentSeed!=null && seed.id.equals(store.currentSeed.id)) {
             reinit(context);
         }
-        updateStats(context, seed, wallet, addresses, transfers);
         if(store.currentSeed!=null && seed.id.equals(store.currentSeed.id)) {
             reinit(context);
         }
@@ -560,7 +560,7 @@ public class Store {
             if(store.currentSeed!=null && seed.id.equals(store.currentSeed.id)) {
                 reinit(context);
             }
-            updateStats(context, seed, wallet, addresses, transfers);
+
         }
 
     }
@@ -655,40 +655,7 @@ public class Store {
         return store.minWeight;
 
     }
-    private static void updateStats(Context context, Seeds.Seed seed, Wallet wallet, List<Address> addresses, List<Transfer> transfers) {
-        SharedPreferences sp = context.getSharedPreferences("ustats", Context.MODE_PRIVATE);
-        String jsonstr = sp.getString(seed.id,"{}");
-        JSONObject job = new JSONObject(jsonstr);
-        job.put("iota",getIotaBalanceCategory(wallet.getBalanceDisplay()));
-        job.put("add",addresses.size());
-        job.put("tra",transfers.size());
 
-        sp.edit().putString(seed.id,job.toString()).commit();
-    }
-    private static final String period=".";
-    public static final String getUaStats(Context context) {
-        SharedPreferences sp = context.getSharedPreferences("ustats", Context.MODE_PRIVATE);
-        StringBuilder stats=new StringBuilder();
-        if(store.seeds!=null && !store.seeds.getSeeds().isEmpty()) {
-            List<Seeds.Seed> seeds=Store.getSeeds().getSeeds();
-            for (int i=0; i<seeds.size(); i++ ) {
-                Seeds.Seed seed=seeds.get(i);
-                String jsonstr = sp.getString(seed.id,"{}");
-                JSONObject job = new JSONObject(jsonstr);
-                stats.append(job.getInt("add"));
-                stats.append(period);
-                stats.append(job.getInt("tra"));
-                stats.append(period);
-                stats.append(job.getLong("iota"));
-                if(i<seeds.size()-1)
-                    stats.append(",");
-            }
-        }
-        if(stats.toString().isEmpty())
-            stats.append("0");
-        // first is address count, second transfer count, 3rd wallet value as int = 1=iota, 2=kiota, 3=miota, 4=giota, etc....
-        return stats.toString();
-    }
 
 
     private static final long miota=  1000000;
@@ -730,36 +697,49 @@ public class Store {
     }
 
     public static final List<Address> getAddresses() {
-        return store.addresses;
+        if(Validator.isValidCaller()) {
+            return store.addresses;
+        }
+        return new ArrayList<>();
     }
     public static final List<Address> getAddressesNotAttached() {
         List<Address> got=new ArrayList<>();
-        for(Address add: store.addresses) {
-            if(!add.isAttached()) {
-                got.add(add);
+        if(Validator.isValidCaller()) {
+            for (Address add : store.addresses) {
+                if (!add.isAttached()) {
+                    got.add(add);
+                }
             }
         }
         return got;
     }
     public static final List<Address> getAddressesAttached() {
         List<Address> got=new ArrayList<>();
-        for(Address add: store.addresses) {
-            if(add.isAttached()) {
-                got.add(add);
+        if(Validator.isValidCaller()) {
+            for (Address add : store.addresses) {
+                if (add.isAttached()) {
+                    got.add(add);
+                }
             }
         }
         return got;
     }
     public static List<Transfer> getTransfers() {
-        return store.transfers;
+        if(Validator.isValidCaller()) {
+            return store.transfers;
+        }
+        return new ArrayList<>();
     }
 
     public static Seeds getSeeds() {
-        return store.seeds;
+        if(Validator.isValidCaller()) {
+            return store.seeds;
+        }
+        return null;
     }
 
     public static List<Seeds.Seed> getSeedList() {
-        if(store.seeds!=null)
+        if(Validator.isValidCaller() && store.seeds!=null)
             return store.seeds.getSeeds();
         return null;
     }
@@ -789,7 +769,7 @@ public class Store {
             SharedPreferences ntsp = context.getSharedPreferences(NT_STORE, Context.MODE_PRIVATE);
             ntsp.edit().clear().commit();
             store=new Store();
-            Store.init(context);
+            Store.init(context,true);
             Log.e("STORE","WIPED DATA & INIT: now has seed count: "+getSeedList().size());
         }
     }
@@ -852,16 +832,19 @@ public class Store {
         store.seeds.removeSeed(context,seedId);
     }
     private static Seeds.Seed getDefaultSeed() {
-        if(store.seeds!=null) {
-            for (Seeds.Seed seed : store.seeds.getSeeds()) {
-                if (seed.isdefault)
-                    store.currentSeed = seed;
+        if(Validator.isValidCaller()) {
+            if (store.seeds != null) {
+                for (Seeds.Seed seed : store.seeds.getSeeds()) {
+                    if (seed.isdefault)
+                        store.currentSeed = seed;
+                }
+                if (store.currentSeed == null && !store.seeds.getSeeds().isEmpty()) {
+                    store.currentSeed = store.seeds.getSeed(0);
+                }
             }
-            if (store.currentSeed == null && !store.seeds.getSeeds().isEmpty()) {
-                store.currentSeed = store.seeds.getSeed(0);
-            }
+            return store.currentSeed;
         }
-        return store.currentSeed;
+        return null;
     }
     public static void setAddressesToNotAttached(Context context, Seeds.Seed seed, List<Address> setAddresses) {
         List<Address> addresses=getAddresses(context,seed);
@@ -937,18 +920,22 @@ public class Store {
     }
     public static List<Address> getAddresses(Context context, Seeds.Seed seed) {
         List<Address> addresses=new ArrayList<>();
-        SharedPreferences sp = context.getSharedPreferences(seed.id, Context.MODE_PRIVATE);
-        String jarrayString = SpManager.getEncryptedPreference(sp, PREF_ADDRESSES, "[]");
-        //Log.e("TMP-LOAD-ADDRESS",jarrayString);
-        try {
-            JSONArray jar = new JSONArray(jarrayString);
-            for (int i = 0; i < jar.length(); i++) {
-                JSONObject job = jar.getJSONObject(i);
-                Address add = new Address(job);
-                addresses.add(add);
+        if(Validator.isValidCaller()) {
+
+            SharedPreferences sp = context.getSharedPreferences(seed.id, Context.MODE_PRIVATE);
+            String jarrayString = SpManager.getEncryptedPreference(sp, PREF_ADDRESSES, "[]");
+            //Log.e("TMP-LOAD-ADDRESS",jarrayString);
+            try {
+                JSONArray jar = new JSONArray(jarrayString);
+                for (int i = 0; i < jar.length(); i++) {
+                    JSONObject job = jar.getJSONObject(i);
+                    Address add = new Address(job);
+                    addresses.add(add);
+                }
+            } catch (Exception e) {
             }
-        } catch (Exception e) {
         }
+
         return addresses;
     }
     public static void addUpdateWallet(Context context, Seeds.Seed seed, Wallet wallet) {
@@ -969,22 +956,26 @@ public class Store {
 
     @Nullable
     public static Wallet getWallet(Seeds.Seed seed) {
-        for(Wallet wallet: store.allwallets) {
-            if(wallet.getSeedId().equals(seed.id))
-                return wallet;
+        if(Validator.isValidCaller()) {
+            for (Wallet wallet : store.allwallets) {
+                if (wallet.getSeedId().equals(seed.id))
+                    return wallet;
+            }
         }
         return null;
     }
     @Nullable
     public static Wallet getWallet(Context context, Seeds.Seed seed) {
-        SharedPreferences sp = context.getSharedPreferences(seed.id, Context.MODE_PRIVATE);
-        String jobString = SpManager.getEncryptedPreference(sp, PREF_WALLET, "[]");
-        try {
-            JSONObject job = new JSONObject(jobString);
-            if(job!=null) {
-                return new Wallet(job);
+        if(Validator.isValidCaller()) {
+            SharedPreferences sp = context.getSharedPreferences(seed.id, Context.MODE_PRIVATE);
+            String jobString = SpManager.getEncryptedPreference(sp, PREF_WALLET, "[]");
+            try {
+                JSONObject job = new JSONObject(jobString);
+                if (job != null) {
+                    return new Wallet(job);
+                }
+            } catch (Exception e) {
             }
-        } catch (Exception e) {
         }
         return null;
     }
@@ -1053,9 +1044,7 @@ public class Store {
                 address.setIndex(request.getIndex());
                 address.setIndexName(request.getIndex()+1);
                 jar.put(address.toJson());
-                //Log.e("ADD-SAVE-ADDRESS","NO ACTION:   "+address.getAddress().length()+" -- "+address.toJson().toString());
             }
-            //Log.e("ADD-SAVE-ADDRESS","addresses:   "+jar.toString());
 
             SpManager.setEncryptedPreference(sp, PREF_ADDRESSES, jar.toString());
             if(store.currentSeed.id.equals(request.getSeed().id)) {
@@ -1112,17 +1101,19 @@ public class Store {
     }
     public static List<Transfer> getTransfers(Context context, Seeds.Seed seed) {
         List<Transfer> transfers = new ArrayList<>();
-        SharedPreferences sp = context.getSharedPreferences(seed.id, Context.MODE_PRIVATE);
-        String jarrayString = SpManager.getEncryptedPreference(sp, PREF_TRANSFERS, "[]");
+        if(Validator.isValidCaller()) {
+            SharedPreferences sp = context.getSharedPreferences(seed.id, Context.MODE_PRIVATE);
+            String jarrayString = SpManager.getEncryptedPreference(sp, PREF_TRANSFERS, "[]");
 
-        try {
-            JSONArray jar = new JSONArray(jarrayString);
-            for (int i = 0; i < jar.length(); i++) {
-                JSONObject job = jar.getJSONObject(i);
-                Transfer add = new Transfer(job);
-                transfers.add(add);
+            try {
+                JSONArray jar = new JSONArray(jarrayString);
+                for (int i = 0; i < jar.length(); i++) {
+                    JSONObject job = jar.getJSONObject(i);
+                    Transfer add = new Transfer(job);
+                    transfers.add(add);
+                }
+            } catch (Exception e) {
             }
-        } catch (Exception e) {
         }
         return transfers;
     }

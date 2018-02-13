@@ -62,7 +62,7 @@ class BasicRequestTask extends AsyncTask<ApiRequest, String, ApiResponse> {
         if (context != null) {
             start = new Date();
             ApiRequest apiRequest = params[0];
-            tag = apiRequest.getClass().getName();
+            tag = apiRequest.getClass().getCanonicalName();
             BasicApiProvider basicApi=new BasicApiProvider(context);
             ApiResponse response = basicApi.processRequest(apiRequest);
             return response;

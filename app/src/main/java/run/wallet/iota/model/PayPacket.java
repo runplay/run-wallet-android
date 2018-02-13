@@ -12,10 +12,10 @@ import java.util.zip.Checksum;
 
 public class PayPacket {
 
-    private static final PayPacket packet = new PayPacket();
+    private static PayPacket packet = new PayPacket();
 
-    private long value;
-    private List<String> payto=new ArrayList();
+
+    private List<PayTo> payto=new ArrayList();
     private List<Address> payfrom=new ArrayList();
     private Address remainer;
     private boolean breakPig=false;
@@ -23,37 +23,57 @@ public class PayPacket {
     private String error;
 
 
-    public static boolean createPayPacket(long value, String payto) {
-        List<String> to=new ArrayList<String>();
+    public static class PayTo {
+        public long value;
+        public String address;
+        public PayTo(long value, String address) {
+            this.value=value; this.address=address;
+        }
+    }
+
+    public static long getTotalToPay() {
+        long total=0L;
+        for(PayTo pt: packet.payto) {
+            total+=pt.value;
+        }
+        return total;
+    }
+    public static void removePayTo(PayTo pt) {
+        packet.payto.remove(pt);
+    }
+    public static void removePayTo(int index) {
+        packet.payto.remove(index);
+    }
+    public static void addPayTo(PayTo pt) {
+
         try {
-            if(jota.utils.Checksum.isAddressWithChecksum(payto)) {
-                payto= jota.utils.Checksum.removeChecksum(payto);
+            if(jota.utils.Checksum.isAddressWithChecksum(pt.address)) {
+                pt.address= jota.utils.Checksum.removeChecksum(pt.address);
             }
         } catch(Exception e) {}
-        to.add(payto);
-        return createPayPacket(value,to);
-    }
-    private static boolean createPayPacket(long value, List<String> payto) {
-        clear();
-        if(value>0 && payto!=null && !payto.isEmpty()) {
-            packet.payto.addAll(payto);
-            findApplyAddresses(value);
-            checkValid();
-
-            //Log.e("PAYPACK","pay: "+packet.value+", to: "+packet.payto.get(0)
-            //        +", pig: "+packet.breakPig+", valid: "+packet.isValid
-            //        +", from: "+packet.payfrom.size()+" - ");
+        if(pt.address.length()==81 && pt.address.matches("^[A-Z9]+$")) {
+            packet.payto.add(pt);
         }
+    }
+    public static boolean updatePayPacket() {
+        findApplyAddresses(getTotalToPay());
+        checkValid();
+            //Log.e("PAYPACK","pay: "+getTotalToPay()+", to: "+packet.payto.get(0).address +", pig: "+packet.breakPig+", valid: "+packet.isValid +", from: "+packet.payfrom.size()+" - ");
         return packet.isValid;
     }
-    private static void clear() {
-        packet.value=0;
+    public static void start() {
+        clear();
+    }
+    public static void clear() {
+        packet=new PayPacket();
+        /*
         packet.remainer=null;
         packet.payfrom.clear();
         packet.payto.clear();
         packet.isValid=false;
         packet.breakPig=false;
         packet.error=null;
+        */
     }
     public static String getError() {
         return packet.error;
@@ -86,7 +106,11 @@ public class PayPacket {
     }
 
     private static void findApplyAddresses(long forPayValue) {
-        packet.value=forPayValue;
+        packet.payfrom.clear();
+        packet.remainer=null;
+        packet.isValid=false;
+        packet.breakPig=false;
+        packet.error=null;
 
         List<Address> use=new ArrayList<>();
         List<Address> higherpigs=new ArrayList<>();
@@ -101,13 +125,12 @@ public class PayPacket {
         if(stored!=null && !stored.isEmpty()) {
             for(Address address: stored) {
                 boolean okgo=true;
-                for(String addstr: getPayTo()) {
-                    if(address.getAddress().startsWith(addstr)) {
+                for(PayTo addstr: packet.payto) {
+                    if(address.isUsed() || address.getAddress().startsWith(addstr.address)) {
                         okgo=false;
                         break;
                     }
                 }
-
                 if(okgo && address.getValue()>0) {
                     if (address.getValue() >= forPayValue) {
                         if (address.isPig()) {
@@ -120,25 +143,32 @@ public class PayPacket {
                         }
                     } else {
                         if (address.isPig()) {
-                            //Log.e("ADD", "add lowerpig");
                             lowerpigs.add(address);
                         } else {
-                            //Log.e("ADD", "add loweropen");
                             loweropen.add(address);
                         }
                     }
                 }
             }
         }
-
-        // traverse smaller to total value
-        for(Address lower: loweropen) {
-            uselower.add(lower);
-            //Log.e("ADD","match loweropen: "+totalAddresses(uselower));
-            if(totalAddresses(uselower)>=forPayValue) {
-                break;
+        List<List<Address>> perms=permute(loweropen,2);
+        List<Address> lowest = null;
+        for(List<Address> plist:perms) {
+            if(lowest==null)
+                lowest=plist;
+            long total=totalAddresses(lowest);
+            List<Address> tmpuselower=new ArrayList<>();
+            for(Address lower: plist) {
+                tmpuselower.add(lower);
+                //Log.e("ADD","match loweropen: "+totalAddresses(uselower));
+                long tmpTotal=totalAddresses(tmpuselower);
+                if(tmpTotal>=forPayValue && tmpTotal<total) {
+                    lowest=tmpuselower;
+                    break;
+                }
             }
         }
+        uselower.addAll(lowest);
         if(perfect!=null) {
             long totallower=totalAddresses(uselower);
             //Log.e("ADD","match perfect");
@@ -180,15 +210,15 @@ public class PayPacket {
                     packet.breakPig = true;
                 }
             }
-            //Log.e("ADD","use is empty, mark invalid, break pig: "+packet.breakPig);
         }
+
         // find remainder
         for(Address address: stored) {
             if(Store.isAlreadyAddress(address,getPayFrom())==null) {
                 if(address.isAttached() && !address.isUsed() && !address.isPig() && address.getValue()==0 && address.getPendingValue()==0) {
                     boolean okgo=true;
-                    for(String addstr: getPayTo()) {
-                        if(address.getAddress().equals(addstr)) {
+                    for(PayTo addstr: packet.payto) {
+                        if(address.getAddress().equals(addstr.address)) {
                             okgo=false;
                             break;
                         }
@@ -202,52 +232,24 @@ public class PayPacket {
                 }
             }
         }
-        /*
+    }
+    public static List<List<Address>> permute(List<Address> addresses, int size) {
+        List<List<Address>> permutations = new ArrayList<List<Address>>();
+        permutations.add(new ArrayList<Address>());
 
-                for(Address address: stored) {
-            if(Store.isAlreadyAddress(address,use)==null) {
-                if(address.isAttached() && !address.isUsed() && !address.isPig() && address.getValue()==0 && address.getPendingValue()==0) {
-                    boolean okgo=true;
-                    for(String addstr: getPayTo()) {
-                        if(address.getAddress().equals(addstr)) {
-                            okgo=false;
-                            break;
-                        }
-                    }
-
-                    //Log.e("ADD","use remainder ok");
-                    if(okgo) {
-                        packet.remainer = address;
-                        break;
-                    }
+        for ( int i = 0; i < addresses.size(); i++ ) {
+            List<List<Address>> current = new ArrayList<List<Address>>();
+            for ( List<Address> permutation : permutations ) {
+                for ( int j = 0, n = permutation.size() + 1; j < n; j++ ) {
+                    List<Address> temp = new ArrayList<Address>(permutation);
+                    temp.add(j, addresses.get(i));
+                    current.add(temp);
                 }
             }
+            permutations = new ArrayList<List<Address>>(current);
         }
 
-
-
-
-        if(packet.remainer==null) {
-            for(Address address: stored) {
-                if(Store.isAlreadyAddress(address,use)==null) {
-                    if(address.isAttached() && !address.isUsed()) {
-                        boolean okgo=true;
-                        for(String addstr: getPayTo()) {
-                            if(address.getAddress().startsWith(addstr)) {
-                                okgo=false;
-                                break;
-                            }
-                        }
-                        //Log.e("ADD","use remainder ok");
-                        if(okgo) {
-                            packet.remainer = address;
-                            break;
-                        }
-                    }
-                }
-            }
-        }
-        */
+        return permutations;
     }
     private static long totalAddresses(List<Address> addresses) {
         long total=0;
@@ -259,7 +261,7 @@ public class PayPacket {
 
     public static final void checkValid() {
         boolean valid=true;
-        if(getValue()<=0) {
+        if(getTotalToPay()<=0) {
             valid=false;
             packet.error="Value must be positive amount";
         } else if(packet.payto==null || packet.payto.isEmpty()) {
@@ -279,18 +281,16 @@ public class PayPacket {
             for(Address add: packet.payfrom) {
                 covered+=add.getValue();
             }
-            if(covered<packet.value) {
+            if(covered<getTotalToPay()) {
                 valid=false;
-                packet.error="From addresses total value does not cover the send value";
+                packet.error="Not enough funds to pay the send value";
             }
         }
         //Log.e("PKT","packet error: "+packet.error);
         packet.isValid=valid;
     }
-    public static final long getValue() {
-        return packet.value;
-    }
-    public static final List<String> getPayTo() {
+
+    public static final List<PayTo> getPayTo() {
         return packet.payto;
     }
     public static final List<Address> getPayFrom() {

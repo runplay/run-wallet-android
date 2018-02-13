@@ -41,6 +41,7 @@ import butterknife.Unbinder;
 import run.wallet.R;
 import run.wallet.iota.helper.Constants;
 
+import run.wallet.iota.model.Store;
 import run.wallet.iota.ui.UiManager;
 import run.wallet.iota.ui.adapter.NetworkPagerAdapter;
 
@@ -127,6 +128,7 @@ public class NetworkTabFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
+        Store.setCurrentFragment(this.getClass());
         //EventBus.getDefault().register(this);
     }
 

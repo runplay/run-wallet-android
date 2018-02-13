@@ -109,7 +109,7 @@ public class WalletTransfersCardAdapter extends RecyclerView.Adapter<TransferVie
 
     }
     public static synchronized void load(Context context, boolean force) {
-        if(force || seed==null || !seed.id.equals(Store.getCurrentSeed().id) || transfers.isEmpty()) {
+        if(force || seed==null || (Store.getCurrentSeed()!=null && !seed.id.equals(Store.getCurrentSeed().id)) || transfers.isEmpty()) {
             if(context!=null) {
                 transfers.clear();
                 transfers.addAll(Store.getTransfers());

@@ -45,6 +45,7 @@ public class SettingsPasswordFragment extends PreferenceFragment {
     private static final String PREFERENCE_CHANGE_PASSWORD = "preference_change_password";
     private static final String PREFERENCE_WIPE_WALLETS = "preference_wipe_out";
     private static final String PREFERENCE_SHOW_MSGSEED = "preference_show_msgseed";
+    private static final String PREFERENCE_TOR = "preference_show_tor";
 
 
     @Override
@@ -101,6 +102,11 @@ public class SettingsPasswordFragment extends PreferenceFragment {
                 });
 
                 alertDialog.show();
+                break;
+            case PREFERENCE_TOR:
+                getActivity().setResult(Constants.REQUEST_GO_TOR);
+                getActivity().finish();
+
                 break;
         }
         return super.onPreferenceTreeClick(preferenceScreen, preference);

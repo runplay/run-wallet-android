@@ -44,6 +44,7 @@ import butterknife.OnEditorAction;
 import butterknife.Unbinder;
 import jota.utils.SeedRandomGenerator;
 import run.wallet.R;
+import run.wallet.iota.helper.Constants;
 import run.wallet.iota.helper.SeedValidator;
 import run.wallet.iota.model.Seeds;
 import run.wallet.iota.model.Store;
@@ -134,7 +135,7 @@ public class ChooseSeedAddFragment extends Fragment {
     }
 
     private void addSeedToStore() {
-        if(Store.getSeedList().size()>=4) {
+        if(Store.getSeedList().size()>= Constants.WALLET_MAX_ALLOW) {
             Snackbar.make(getView(), R.string.max_seeds, Snackbar.LENGTH_LONG).show();
             return;
         }

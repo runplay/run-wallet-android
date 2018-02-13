@@ -65,7 +65,6 @@ public class Transaction implements Parcelable {
         address=job.optString("address");
         value=job.optLong("value");
         tag=job.optString("tag");
-        obsoleteTag=job.optString("obsoleteTag");
         timestamp=job.optLong("timestamp");
         attachmentTimestamp=job.optLong("attachmentTimestamp");
         attachmentTimestampLowerBound=job.optLong("attachmentTimestampLowerBound");
@@ -77,6 +76,7 @@ public class Transaction implements Parcelable {
         branchTransaction=job.optString("branchTransaction");
         nonce=job.optString("nonce");
         persistence=job.optBoolean("persistence");
+        obsoleteTag=job.optString("obsoleteTag");
 
     }
     public Transaction(String hash, String signatureFragments, String address, long value, String tag, String obsoleteTag, long timestamp,

@@ -21,42 +21,53 @@ package run.wallet.iota.ui.fragment;
 
 import android.Manifest;
 import android.annotation.TargetApi;
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Fragment;
-import android.app.FragmentTransaction;
+import android.content.ClipData;
+import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.graphics.Typeface;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TextInputEditText;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.preference.PreferenceManager;
 import android.support.v7.widget.AppCompatButton;
 import android.support.v7.widget.Toolbar;
+import android.text.Editable;
+import android.text.InputType;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ScrollView;
 import android.widget.Spinner;
 import android.widget.TextView;
 
 import org.apache.commons.lang3.StringUtils;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import jota.utils.Checksum;
 import run.wallet.R;
@@ -72,7 +83,6 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
-import jota.error.ArgumentException;
 
 import jota.utils.IotaUnitConverter;
 import jota.utils.IotaToText;
@@ -103,35 +113,45 @@ public class SnTrFragment extends Fragment {
     TextInputEditText amountEditText;
     @BindView(R.id.new_transfer_address_input)
     TextInputEditText addressEditText;
+    @BindView(R.id.new_transfer_scroll)
+    ScrollView scrollView;
+    @BindView(R.id.new_transfer_message_text_input_layout)
+    TextInputLayout messageLayout;
+    @BindView(R.id.new_transfer_tag_input_layout)
+    TextInputLayout tagLayout;
+    @BindView(R.id.remainder_pod)
+    View remainderPod;
+    @BindView(R.id.new_transfer_add_address_pod)
+    View addAddressPod;
+    @BindView(R.id.new_transfer_show_multi_balance)
+    View multiBalance;
     @BindView(R.id.new_transfer_message_input)
     TextInputEditText messageEditText;
     @BindView(R.id.new_transfer_tag_input)
     TextInputEditText tagEditText;
     @BindView(R.id.new_transfer_address_text_input_layout)
     TextInputLayout addressEditTextInputLayout;
-    @BindView(R.id.new_transfer_amount_text_input_layout)
-    TextInputLayout amountEditTextInputLayout;
+    @BindView(R.id.new_transfer_import_warn)
+    TextView warnImport;
     @BindView(R.id.new_transfer_units_spinner)
     Spinner unitsSpinner;
     @BindView(R.id.new_transfer_get_qr)
-    ImageView qrSelect;
+    View qrSelect;
+    @BindView(R.id.new_transfer_keyboard)
+    View keyboard;
 
-    @BindView(R.id.new_transfer_to)
-    View payToView;
-    @BindView(R.id.new_transfer_message)
+    @BindView(R.id.new_transfer_summary)
+    View walletView;
+    @BindView(R.id.new_transfer_show_details)
     View paySummary;
-    @BindView(R.id.new_transfer_summary_value)
-    TextView summaryValue;
-    @BindView(R.id.new_transfer_summary_address)
-    TextView summaryAddress;
+    @BindView(R.id.new_transfer_clear)
+    Button btnClear;
 
     @BindView(R.id.new_transfer_from_addresses)
     LinearLayout fromAddresses;
     @BindView(R.id.new_transfer_remainder_address)
     LinearLayout remainderAddress;
 
-    @BindView(R.id.new_transfer_send_fab_button)
-    FloatingActionButton fab;
     @BindView(R.id.new_transfer_next)
     AppCompatButton next;
 
@@ -142,9 +162,74 @@ public class SnTrFragment extends Fragment {
     @BindView(R.id.pig_locked)
     TextView pendingLabel;
 
+    @BindView(R.id.new_transfer_add)
+    AppCompatButton addPayment;
+
+    @BindView(R.id.new_transfer_address_list)
+    LinearLayout listAddresses;
+    @BindView(R.id.new_transfer_address_confirm)
+    ImageView checkAddress;
+    @BindView(R.id.new_transfer_value_confirm)
+    ImageView checkValue;
+
+    @BindView(R.id.new_transfer_sub_value)
+    TextView subValue;
+    @BindView(R.id.new_transfer_sub_third)
+    TextView subThird;
+    @BindView(R.id.new_transfer_sub_unit)
+    TextView subUnit;
+
+    @BindView(R.id.new_transfer_add_message)
+    ImageView addMessage;
+    @BindView(R.id.new_transfer_add_tag)
+    TextView addTag;
+
+    @BindView(R.id.new_transfer_details_pod)
+    LinearLayout podDetails;
+    @BindView(R.id.new_transfer_add_pod)
+    LinearLayout podAdd;
+
+    @BindView(R.id.new_transfer_back)
+    AppCompatButton btnBack;
+    @BindView(R.id.new_transfer_pay_now)
+    AppCompatButton btnPayNow;
+    @BindView(R.id.new_transfer_paste)
+    View btnPaste;
+
+    private int editPayToAddressIndex=-1;
     private PayPacket.AvailableBalances balances;
+    //private List<PayPacket.PayTo> paytoAddresses=new ArrayList();
 
-
+    private void removePayTo(String address) {
+        PayPacket.PayTo rem=null;
+        for(PayPacket.PayTo pk: PayPacket.getPayTo()) {
+            if(pk.address.equals(address)) {
+                rem=pk;
+                break;
+            }
+        }
+        if(rem!=null) {
+            editPayToAddressIndex=-1;
+            PayPacket.removePayTo(rem);
+            PayPacket.updatePayPacket();
+            populatePaytoAddresses(true);
+            if(PayPacket.getPayTo().size()>4) {
+                addAddressPod.setVisibility(View.GONE);
+            } else {
+                addAddressPod.setVisibility(View.VISIBLE);
+            }
+        }
+    }
+    private void editPayTo(String address) {
+        for(int i=0; i<PayPacket.getPayTo().size(); i++) {
+            PayPacket.PayTo pk= PayPacket.getPayTo().get(i);
+            if(pk.address.equals(address)) {
+                editPayToAddressIndex=i;
+                addressEditText.setText(pk.address);
+                amountEditText.setText(pk.value+"");
+            }
+        }
+    }
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -167,11 +252,12 @@ public class SnTrFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         ((AppCompatActivity) getActivity()).setSupportActionBar(newTransferToolbar);
         setHasOptionsMenu(false);
+
+        //paytoAddresses.clear();
         newTransferToolbar.setNavigationIcon(getResources().getDrawable(R.drawable.md_nav_back));
         newTransferToolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.d("cek", "home selected");
                 getActivity().onBackPressed();
             }
         });
@@ -203,13 +289,43 @@ public class SnTrFragment extends Fragment {
 
             }
         }
+        addMessage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(messageLayout.getVisibility()==View.GONE) {
+                    messageLayout.setVisibility(View.VISIBLE);
+                } else {
+                    messageLayout.setVisibility(View.GONE);
+                }
+            }
+        });
+        addTag.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(tagLayout.getVisibility()==View.GONE) {
+                    tagLayout.setVisibility(View.VISIBLE);
+                } else {
+                    tagLayout.setVisibility(View.GONE);
+                }
+            }
+        });
         qrSelect.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 openQRCodeScanner();
             }
         });
-        fab.hide();
+
+
+        addPayment.setEnabled(false);
+        addPayment.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                addAdress();
+            }
+        });
+
+        next.setEnabled(false);
         next.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -219,21 +335,248 @@ public class SnTrFragment extends Fragment {
         Wallet wallet=Store.getCurrentWallet();
         balances=PayPacket.calculateAvailableBalances();
 
-        availableBalance.setText(IotaToText.convertRawIotaAmountToDisplayText(balances.available, false));
+        availableBalance.setText(IotaToText.convertRawIotaAmountToDisplayText(balances.available, true));
         //if(wallet.getAvailableBalance()>0) {
-            availableBalance.setTextColor(B.getColor(getActivity(),R.color.green));
+        availableBalance.setTextColor(B.getColor(getActivity(),R.color.green));
         //}
-        pendingBalance.setText(IotaToText.convertRawIotaAmountToDisplayText(balances.locked, false));
+        pendingBalance.setText(IotaToText.convertRawIotaAmountToDisplayText(balances.locked, true));
         pendingBalance.setAlpha(0.4F);
         pendingLabel.setAlpha(0.5F);
         if(wallet.getBalancePendingIn()>0) {
             pendingBalance.setTextColor(B.getColor(getActivity(),R.color.green));
         }
+
+        addressEditText.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                isLongClicked=true;
+                return false;
+            }
+        });
+        btnClear.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                addressEditText.setText("");
+                amountEditText.setText("");
+            }
+        });
+        addressEditText.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                if(isLongClicked) {
+                    isLongClicked=false;
+                    return false;
+                }
+                InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Activity.INPUT_METHOD_SERVICE);
+                if(imm.isActive(addressEditText)) {
+                    return false;
+                }
+                int inType = addressEditText.getInputType();
+                addressEditText.setInputType(InputType.TYPE_NULL);
+                addressEditText.onTouchEvent(event);
+                addressEditText.setInputType(inType);
+
+                return true; // consume touch event
+
+
+            }
+
+        });
+        addressEditText.addTextChangedListener(inputWatcher);
+        amountEditText.addTextChangedListener(inputWatcher);
+
+        btnBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                goBackBtn();
+            }
+        });
+        keyboard.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                UiManager.setKeyboard(getActivity(),addressEditText,true);
+                scroller.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        scrollView.post(new Runnable() {
+                            @Override
+                            public void run() {
+                                scrollView.fullScroll(View.FOCUS_DOWN);
+                                addressEditText.requestFocus();
+                            }
+                        });
+                    }
+                }, 500);
+            }
+        });
+        btnPaste.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ClipboardManager clipboard = (ClipboardManager) getActivity().getSystemService(Context.CLIPBOARD_SERVICE);
+                ClipData cd=clipboard.getPrimaryClip();
+                if (cd != null && cd.getItemCount() > 0) {
+                    addressEditText.setText(cd.getItemAt(0).coerceToText(getActivity()));
+                }
+            }
+        });
+
+    }
+    private boolean isLongClicked=false;
+    private Handler scroller = new Handler();
+    private boolean hasClipboardAddress() {
+        ClipboardManager clipboard = (ClipboardManager) getActivity().getSystemService(Context.CLIPBOARD_SERVICE);
+        ClipData cd=clipboard.getPrimaryClip();
+        if (cd != null && cd.getItemCount() > 0) {
+            String address=cd.getItemAt(0).coerceToText(getActivity()).toString();
+
+            //Log.e("CLIPB","has add? : "+isValidAddress(address)+" -- "+address);
+            return isValidAddress(address);
+        }
+        return false;
+    }
+    private String removeChecksum(String address) {
+        try {
+            if (Checksum.isAddressWithChecksum(address)) {
+                address=Checksum.removeChecksum(address);
+            }
+        } catch (Exception e) {}
+        return address;
+    }
+    private void goBackBtn() {
+        paySummary.setVisibility(View.GONE);
+        walletView.setVisibility(View.VISIBLE);
+        podAdd.setVisibility(View.VISIBLE);
+        podDetails.setVisibility(View.GONE);
+        if(PayPacket.getPayTo().size()>4) {
+            addAddressPod.setVisibility(View.GONE);
+        } else {
+            addAddressPod.setVisibility(View.VISIBLE);
+        }
+        populatePaytoAddresses(true);
+    }
+    private TextWatcher inputWatcher = new TextWatcher() {
+        @Override
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+        }
+
+        @Override
+        public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+        }
+
+        @Override
+        public void afterTextChanged(Editable s) {
+            if(checkSetMultiAddressImport(s)) {
+
+            } else {
+                long value=Long.valueOf(amountInSelectedUnit());
+                if(value>0 && balances.available>=value && isValidAddress()) {
+                    next.setEnabled(true);
+                    next.setAlpha(1F);
+                    addPayment.setEnabled(true);
+                    addPayment.setAlpha(1F);
+                } else {
+                    if(PayPacket.getPayTo().isEmpty()) {
+                        next.setEnabled(false);
+                        next.setAlpha(0.5F);
+                        addPayment.setEnabled(false);
+                        addPayment.setAlpha(0.5F);
+                    } else {
+                        next.setEnabled(true);
+                        next.setAlpha(1F);
+                        addPayment.setEnabled(false);
+                        addPayment.setAlpha(0.5F);
+                    }
+                }
+                if(isValidAddress()) {
+                    if(addressEditTextInputLayout.isFocused())
+                        getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
+                    checkAddress.setAlpha(1F);
+                    addressEditTextInputLayout.setError(null);
+                } else {
+                    checkAddress.setAlpha(0.2F);
+                }
+                if(value>0 && balances.available>=value) {
+                    //amountEditText.setBackgroundColor(B.getColor(getActivity(),R.color.white));
+                    checkValue.setAlpha(1F);
+                } else {
+                    checkValue.setAlpha(0.2F);
+                }
+            }
+        }
+    };
+    private boolean checkSetMultiAddressImport(Editable s) {
+        String use=s.toString();
+        if(use.length()>90) {
+            List<PayPacket.PayTo> imported=new ArrayList<>();
+            // probably multi address paste
+            use=use.replace("\r","");
+            String delim=",";
+            if(use.contains("|"))
+                delim="|";
+            else if(use.contains("-"))
+                delim="-";
+            String[] lines = use.split("\n");
+            boolean didAdd=false;
+            for(String line: lines) {
+                long value=0L;
+                String address=null;
+                if(line.length()>90) {
+                    String[] sp = line.split(delim);
+                    for(String tmp: sp) {
+                        tmp=tmp.replaceAll("\"","");
+                        if(tmp.length()>80) {
+                            address=removeChecksum(tmp);
+                        } else if(tmp.length()<20) {
+                            value=Sf.toLong(tmp);
+                        }
+                    }
+
+                }
+                if(address!=null && address.length()>80) {
+                    PayPacket.PayTo pt = new PayPacket.PayTo(value,address);
+                    PayPacket.addPayTo(pt);
+                    didAdd=true;
+                }
+            }
+            if(didAdd) {
+                addressEditText.setText("");
+                populatePaytoAddresses(true);
+                PayPacket.updatePayPacket();
+                if (!PayPacket.isValid()) {
+                    warnImport.setVisibility(View.VISIBLE);
+                    warnImport.setText(getString(R.string.message_fix_import));
+                }
+            }
+
+        }
+        return false;
     }
     @Override
     public void onResume() {
         super.onResume();
+        Store.setCurrentFragment(this.getClass());
         useSeed= Store.getCurrentSeed();
+        if(hasClipboardAddress()) {
+            btnPaste.setAlpha(1f);
+        } else {
+            btnPaste.setAlpha(0.5F);
+        }
+        populatePaytoAddresses(true);
+        /*
+        if(PayPacket.getPayTo().isEmpty()) {
+            amountEditText.setBackgroundColor(B.getColor(getActivity(),R.color.flatGreenAlpha));
+            addressEditText.setBackgroundColor(B.getColor(getActivity(),R.color.flatGreenAlpha));
+        } else {
+            amountEditText.setBackgroundColor(B.getColor(getActivity(),R.color.white));
+            addressEditText.setBackgroundColor(B.getColor(getActivity(),R.color.white));
+        }
+        */
+    }
+    @Override
+    public void onPause() {
+        super.onPause();
     }
     @Override
     public void onDestroyView() {
@@ -244,38 +587,124 @@ public class SnTrFragment extends Fragment {
         super.onDestroyView();
     }
 
-    private void goNext() {
+    private void addAdress() {
+        addressEditTextInputLayout.setError(null);
         if (!isValidAddress()) {
             addressEditTextInputLayout.setError(getString(R.string.messages_invalid_address));
         } else if (getAmount().isEmpty() || getAmount().equals("0")) {
             addressEditTextInputLayout.setError(getString(R.string.messages_enter_amount));
-
         } else if (balances!=null && balances.available < Long.parseLong(amountInSelectedUnit())) {
-            amountEditTextInputLayout.setError(getString(R.string.messages_not_enough_balance));
-
+            addressEditTextInputLayout.setError(getString(R.string.messages_not_enough_balance));
         } else {
+            boolean has=false;
+            String address=removeChecksum(addressEditText.getText().toString());
+            if(editPayToAddressIndex==-1) {
+                for(PayPacket.PayTo pt: PayPacket.getPayTo()) {
+                    if(pt.address.equals(address)) {
+                        has=true;
+                        break;
+                    }
+                }
+                if(!has) {
+                    PayPacket.addPayTo(new PayPacket.PayTo(Long.parseLong(amountInSelectedUnit()), address));
+                    PayPacket.updatePayPacket();
+                    if (PayPacket.isValid()) {
+                        if(PayPacket.getPayTo().size()>4) {
+                            addAddressPod.setVisibility(View.GONE);
+                        } else {
+                            addAddressPod.setVisibility(View.VISIBLE);
+                        }
+                        addressEditText.setText("");
+                    } else {
+                        PayPacket.removePayTo(PayPacket.getPayTo().size()-1);
+                        addressEditTextInputLayout.setError(PayPacket.getError());
 
-            PayPacket.createPayPacket(Long.parseLong(amountInSelectedUnit()),addressEditText.getText().toString());
+                    }
+
+                } else {
+                    addressEditTextInputLayout.setError(getString(R.string.info_address_already));
+                }
+            } else {
+
+                PayPacket.PayTo pt= PayPacket.getPayTo().get(editPayToAddressIndex);
+                pt.address=removeChecksum(addressEditText.getText().toString());
+                pt.value=Long.parseLong(amountInSelectedUnit());
+
+                PayPacket.updatePayPacket();
+                if (PayPacket.isValid()) {
+                    addressEditText.setText("");
+                    editPayToAddressIndex=-1;
+                } else {
+                    addressEditTextInputLayout.setError(PayPacket.getError());
+                }
+
+
+            }
+            inputManager.hideSoftInputFromWindow(getView().getWindowToken(),0);
+            populatePaytoAddresses(true);
+        }
+    }
+    private void redrawTotalToPay() {
+        IotaToText.IotaDisplayData dd=IotaToText.getIotaDisplayData(PayPacket.getTotalToPay());
+        subValue.setText(dd.value);
+        subThird.setText(dd.thirdDecimal);
+        subUnit.setText(dd.unit);
+        if(Sf.toLong(dd.value)>0) {
+            multiBalance.setVisibility(View.VISIBLE);
+        } else {
+            multiBalance.setVisibility(View.GONE);
+        }
+
+    }
+    private void goNext() {
+
+        if(PayPacket.getPayTo().isEmpty()) {
+            boolean validated=true;
+            if (!isValidAddress()) {
+                addressEditTextInputLayout.setError(getString(R.string.messages_invalid_address));
+                validated=false;
+            } else if (getAmount().isEmpty() || getAmount().equals("0")) {
+                addressEditTextInputLayout.setError(getString(R.string.messages_enter_amount));
+                validated=false;
+            } else if (balances!=null && balances.available < Long.parseLong(amountInSelectedUnit())) {
+                addressEditTextInputLayout.setError(getString(R.string.messages_not_enough_balance));
+                validated=false;
+            }
+            if(validated) {
+                addAdress();
+                addressEditText.setText("");
+                amountEditText.setText("0");
+            }
+        } else {
+            if(isValidAddress() && !getAmount().isEmpty() && !getAmount().equals("0")) {
+                addAdress();
+                addressEditText.setText("");
+                amountEditText.setText("0");
+                populatePaytoAddresses(true);
+            }
+
+        }
+        if(!PayPacket.getPayTo().isEmpty()) {
+            inputManager.hideSoftInputFromWindow(getView().getWindowToken(),0);
+            PayPacket.updatePayPacket();
             if(PayPacket.isValid()) {
+
+
                 if(useSeed!=null) {
                     seedName.setText(useSeed.name);
-                    seedAddress.setText(useSeed.getShortValue()+"***");
                 }
-                summaryValue.setText(IotaToText.convertRawIotaAmountToDisplayText(PayPacket.getValue(), false));
-                Address payAddress = new Address(PayPacket.getPayTo().get(0),false);
-                summaryAddress.setText(payAddress.getShortAddress()+"***");
+                paySummary.setVisibility(View.VISIBLE);
+                walletView.setVisibility(View.GONE);
+                podAdd.setVisibility(View.GONE);
+                podDetails.setVisibility(View.VISIBLE);
+                addAddressPod.setVisibility(View.GONE);
 
+                populatePaytoAddresses(false);
                 fillFromAddresses();
                 fillBalanceAddress();
 
-
-                paySummary.setVisibility(View.VISIBLE);
-                payToView.setVisibility(View.GONE);
-                fab.show();
-
-
             } else {
-                amountEditTextInputLayout.setError(PayPacket.getError());
+                addressEditTextInputLayout.setError(PayPacket.getError());
             }
         }
 
@@ -297,15 +726,17 @@ public class SnTrFragment extends Fragment {
             addId.setLayoutParams(param);
             addId.setText("a"+address.getIndexName());
             addId.setBackgroundColor(bgcolor);
-            addId.setPadding(2,2,2,2);
+            addId.setTypeface(addId.getTypeface(), Typeface.BOLD);
+            addId.setPadding(6,2,6,2);
             addId.setTextColor(white);
 
             TextView addValue=new TextView(getActivity());
             addValue.setLayoutParams(param);
-            addValue.setText(IotaToText.convertRawIotaAmountToDisplayText(address.getValue(), false));
+            addValue.setText(IotaToText.convertRawIotaAmountToDisplayText(address.getValue(), true));
             addValue.setTextColor(bgcolor);
             addValue.setTextSize(16F);
-            addValue.setPadding(5,2,2,2);
+            addValue.setTypeface(addId.getTypeface(), Typeface.BOLD);
+            addValue.setPadding(10,2,2,2);
 
             layout.addView(addId);
             layout.addView(addValue);
@@ -322,50 +753,65 @@ public class SnTrFragment extends Fragment {
         remainderAddress.removeAllViews();
         int bgcolor=B.getColor(getActivity(),R.color.colorPrimary);
         int white=B.getColor(getActivity(),R.color.white);
-        //for(Address address: PayPacket.getPayFrom()) {
+        int green=B.getColor(getActivity(),R.color.green);
+        long fromAddTotal=0L;
+        for(Address add: PayPacket.getPayFrom()) {
+            fromAddTotal+=add.getValue();
+        }
 
+        if(PayPacket.getTotalToPay()==fromAddTotal) {
+            remainderPod.setVisibility(View.GONE);
+        } else {
+            //for(Address address: PayPacket.getPayFrom()) {
+            remainderPod.setVisibility(View.VISIBLE);
             LinearLayout layout = new LinearLayout(getActivity());
             layout.setOrientation(LinearLayout.HORIZONTAL);
 
             layout.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT));
-            layout.setPadding(0,0,10,0);
+            layout.setPadding(0, 0, 10, 0);
             LinearLayout.LayoutParams param = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
 
             TextView addId = new TextView(getActivity());
             addId.setLayoutParams(param);
-            addId.setText("a"+PayPacket.getRemainder().getIndexName());
+            addId.setText("a" + PayPacket.getRemainder().getIndexName());
             addId.setBackgroundColor(bgcolor);
-            addId.setPadding(2,2,2,2);
+            addId.setTypeface(addId.getTypeface(), Typeface.BOLD);
+            addId.setPadding(6, 2, 6, 2);
+            addId.setPadding(2, 2, 2, 2);
             addId.setTextColor(white);
 
-            TextView addValue=new TextView(getActivity());
-            addValue.setLayoutParams(param);
-            addValue.setText(IotaToText.convertRawIotaAmountToDisplayText(PayPacket.getRemainder() .getValue(), false));
-            addValue.setTextColor(bgcolor);
-            addValue.setTextSize(16F);
-            addValue.setPadding(5,2,2,2);
+            TextView remainderValue = new TextView(getActivity());
+            remainderValue.setLayoutParams(param);
+            remainderValue.setText("+"+IotaToText.convertRawIotaAmountToDisplayText(fromAddTotal-PayPacket.getTotalToPay(), true));
+            remainderValue.setTextColor(green);
+            remainderValue.setTextSize(16F);
+            remainderValue.setTypeface(addId.getTypeface(), Typeface.BOLD);
+            remainderValue.setPadding(10, 2, 2, 2);
 
+            TextView text = new TextView(getActivity());
+            text.setLayoutParams(param);
+            text.setText(" > ");
+            text.setTextSize(16F);
+            text.setPadding(10, 2, 10, 2);
+
+            layout.addView(remainderValue);
+            layout.addView(text);
             layout.addView(addId);
-            layout.addView(addValue);
             remainderAddress.addView(layout);
             synchronized (remainderAddress) {
                 remainderAddress.notifyAll();
             }
-
+        }
         //}
     }
-    @OnClick(R.id.new_transfer_send_fab_button)
-    public void onNewTransferSendFabClick(FloatingActionButton fab) {
-        inputManager.hideSoftInputFromWindow(fab.getWindowToken(), 0);
-
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
-
+    @OnClick(R.id.new_transfer_pay_now)
+    public void onBtnPayNowClick() {
         addressEditTextInputLayout.setError(null);
-        amountEditTextInputLayout.setError(null);
+        addressEditTextInputLayout.setError(null);
 
         //noinspection StatementWithEmptyBody
         if (!PayPacket.isValid()) {
-            amountEditTextInputLayout.setError(PayPacket.getError());
+            addressEditTextInputLayout.setError(PayPacket.getError());
 
         } else {
             AlertDialog alertDialog = new AlertDialog.Builder(getActivity())
@@ -378,10 +824,10 @@ public class SnTrFragment extends Fragment {
             alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, getString(R.string.buttons_ok),
                     new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int which) {
-                            AppService.sendNewTransfer(getActivity(),useSeed,getAddress(),
-                                    amountInSelectedUnit()
+                            AppService.sendNewTransfer(getActivity(),useSeed,PayPacket.getPayTo()
                                     ,PayPacket.getPayFrom(),PayPacket.getRemainder()
                                     , getMessage(), getTaG());
+                            PayPacket.clear();
                             //Store.addEmptyTempCurrentTransfer(getActivity(),getAddress(), Sf.toLong(amountInSelectedUnit()),getMessage(),getTag());
                             getActivity().onBackPressed();
                         }
@@ -393,6 +839,8 @@ public class SnTrFragment extends Fragment {
 
     private String amountInSelectedUnit() {
         String inputAmount = amountEditText.getText().toString();
+        if(inputAmount.isEmpty())
+            inputAmount="0";
         IotaUnits unit = toIotaUnit(unitsSpinner.getSelectedItemPosition());
         Long iota = Long.parseLong(inputAmount) * (long) Math.pow(10, unit.getValue());
         return iota.toString();
@@ -476,12 +924,7 @@ public class SnTrFragment extends Fragment {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        /*
-        switch (item.getItemId()) {
-            case R.id.action_qr_code:
-                openQRCodeScanner();
-        }
-        */
+
         return false;
     }
 
@@ -489,7 +932,6 @@ public class SnTrFragment extends Fragment {
         if (!PermissionRequestHelper.hasCameraPermission(getActivity())) {
             checkPermissionCamera();
         } else {
-            //Fragment fragment = new QRScannerFragment();
             UiManager.openFragment(getActivity(),QRScannerFragment.class);
         }
     }
@@ -524,34 +966,24 @@ public class SnTrFragment extends Fragment {
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putString(ADDRESS, getAddress());
-        outState.putString(AMOUNT, getAmount());
-        outState.putString(MESSAGE, getMessage());
-        outState.putString(TAG, getTaG());
-        outState.putInt(SPINNER_POISTION, unitsSpinner.getSelectedItemPosition());
     }
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        if (savedInstanceState != null) {
-            addressEditText.setText(savedInstanceState.getString(ADDRESS));
-            amountEditText.setText(savedInstanceState.getString(AMOUNT));
-            messageEditText.setText(savedInstanceState.getString(MESSAGE));
-            tagEditText.setText(savedInstanceState.getString(TAG));
-            unitsSpinner.setSelection(savedInstanceState.getInt(SPINNER_POISTION));
-        }
     }
-
     private boolean isValidAddress() {
-        String validAddress=addressEditText.getText().toString();
+        return isValidAddress(addressEditText.getText().toString());
+    }
+    private boolean isValidAddress(String address) {
         try {
-            if (Checksum.isAddressWithChecksum(validAddress)) {
-                validAddress = Checksum.removeChecksum(validAddress);
+            if (Checksum.isAddressWithChecksum(address)) {
+                address = Checksum.removeChecksum(address);
             }
         } catch(Exception e) {}
-        if(validAddress.length()==81 && validAddress.matches("^[A-Z9]+$")) {
+        if(address.length()==81 && address.matches("^[A-Z9]+$")) {
             //Log.e("VALIDATE","GOOD: "+validAddress.length()+" -- "+validAddress.matches("^[A-Z9]+$"));
+            //addressEditText.setBackgroundColor(B.getColor(getActivity(),R.color.white));
             return true;
         }
         return false;
@@ -585,4 +1017,93 @@ public class SnTrFragment extends Fragment {
             return tag;
         }
     }
+    private static final LinearLayout.LayoutParams param = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+    private static final LinearLayout.LayoutParams main = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+    private static final LinearLayout.LayoutParams mainouts = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+    private static final LinearLayout.LayoutParams param2 = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+    private static final LinearLayout.LayoutParams param3 = new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT);
+
+    private static final LinearLayout.LayoutParams param4 = new LinearLayout.LayoutParams(100, LinearLayout.LayoutParams.WRAP_CONTENT);
+    private static final LinearLayout.LayoutParams param5 = new LinearLayout.LayoutParams(150, LinearLayout.LayoutParams.WRAP_CONTENT);
+
+    private void populatePaytoAddresses(boolean showButtons) {
+
+        listAddresses.removeAllViews();
+        Context context=getActivity();
+        int bgcolor= B.getColor(context, R.color.colorPrimary);
+        int bglight=B.getColor(context,R.color.colorLight);
+        int green=B.getColor(context,R.color.green);
+
+        param.setMargins(16,6,16,6);
+        param2.setMargins(8,4,8,4);
+        param3.setMargins(0,4,8,4);
+        param3.weight=1;
+        for(PayPacket.PayTo payto: PayPacket.getPayTo()) {
+
+            LinearLayout layout = new LinearLayout(context);
+            layout.setBackgroundColor(bglight);
+            layout.setOrientation(LinearLayout.HORIZONTAL);
+            layout.setLayoutParams(main);
+            layout.setPadding(20, 2, 20, 2);
+
+            TextView addValue = new TextView(context);
+            addValue.setLayoutParams(param2);
+            addValue.setText(IotaToText.convertRawIotaAmountToDisplayText(payto.value, true));
+            addValue.setTextSize(16F);
+            addValue.setTypeface(null, Typeface.BOLD);
+            addValue.setTextColor(green);
+
+            addValue.setPadding(5, 2, 2, 2);
+            addValue.setSingleLine();
+
+            TextView addAddress = new TextView(context);
+            addAddress.setLayoutParams(param3);
+            addAddress.setText(payto.address);
+            addAddress.setTextColor(bgcolor);
+            addAddress.setTextSize(12F);
+            addAddress.setPadding(5, 2, 2, 2);
+            addAddress.setSingleLine();
+
+            layout.addView(addValue);
+            layout.addView(addAddress);
+            if(showButtons) {
+                ImageView edit = new ImageView(context);
+                edit.setLayoutParams(param);
+
+                edit.setImageResource(R.drawable.edit);
+                edit.setTag(payto.address);
+                edit.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        editPayTo((String) v.getTag());
+                    }
+                });
+
+                ImageView remove = new ImageView(context);
+                remove.setLayoutParams(param);
+                remove.setImageResource(R.drawable.ic_remove_circle);
+                remove.setTag(payto.address);
+                remove.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        removePayTo((String) v.getTag());
+                        populatePaytoAddresses(true);
+                    }
+                });
+                layout.addView(remove);
+                layout.addView(edit);
+            }
+
+
+
+            listAddresses.addView(layout);
+
+        }
+        synchronized (listAddresses) {
+            listAddresses.notifyAll();
+        }
+        redrawTotalToPay();
+        //uselayout.notify();
+    }
+
 }

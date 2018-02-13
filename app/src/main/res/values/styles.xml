@@ -7,11 +7,9 @@
         <!-- Customize your theme here. -->
         <item name="android:windowBackground">@color/colorPrimary</item>
         <item name="android:colorBackground">@color/colorPrimary</item>
-        <item name="android:background">@drawable/logo</item>
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
-        <item name="colorButtonNormal">@color/colorPrimaryDark</item>
         <item name="preferenceTheme">@style/PreferenceThemeOverlay</item>
         <item name="android:textColorPrimary">@color/textColorPrimary</item>
         <item name="android:textColorSecondary">@color/textColorSecondary</item>
@@ -20,23 +18,40 @@
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">match_parent</item>
         <!-- No backgrounds, titles or window float -->
-
+        <item name="android:windowBackground">@color/colorPrimary</item>
         <item name="android:windowNoTitle">true</item>
         <item name="android:windowIsFloating">false</item>
         <item name="android:colorBackground">@color/colorPrimary</item>
-        <item name="android:background">@drawable/logo</item>
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
-        <item name="colorButtonNormal">@color/colorPrimaryDark</item>
         <item name="preferenceTheme">@style/PreferenceThemeOverlay</item>
         <item name="android:textColorPrimary">@color/textColorPrimary</item>
         <item name="android:textColorSecondary">@color/textColorSecondary</item>
     </style>
-
+    <style name="AppButton" parent="AppTheme">
+        <item name="android:layout_margin">0dp</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="android:backgroundTint">@color/colorPrimary</item>
+        <item name="android:padding">3dp</item>
+        <item name="android:paddingStart">6dp</item>
+        <item name="android:paddingEnd">6dp</item>
+        <item name="android:colorBackground">@color/colorLight</item>
+    </style>
+    <style name="AppButtonWhite" parent="AppTheme">
+        <item name="android:layout_margin">0dp</item>
+        <item name="android:textColorPrimary">@color/colorPrimary</item>
+        <item name="android:textColor">@color/colorPrimary</item>
+        <item name="android:backgroundTint">@color/white</item>
+        <item name="android:padding">3dp</item>
+        <item name="android:paddingStart">6dp</item>
+        <item name="android:paddingEnd">6dp</item>
+    </style>
     <style name="AppTheme.NoActionBar">
+        <item name="android:windowBackground">@color/colorPrimary</item>
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
+        <item name="buttonStyle">@style/AppButton</item>
     </style>
 
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />

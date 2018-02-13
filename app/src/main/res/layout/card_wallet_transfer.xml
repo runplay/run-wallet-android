@@ -5,6 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
+    android:paddingTop="4dp"
     android:id="@+id/transfer_card">
     <LinearLayout
         android:id="@+id/item_wt_filtered"
@@ -13,6 +14,7 @@
         android:visibility="gone"
         android:padding="6dp"
         android:orientation="horizontal"
+        android:background="@color/whiteAlpha"
         >
         <TextView
             android:id="@+id/item_wt_filtered_balance"
@@ -47,7 +49,6 @@
     android:layout_height="wrap_content"
     android:layout_marginLeft="@dimen/baseline_card"
     android:layout_marginRight="@dimen/baseline_card"
-    android:layout_marginTop="@dimen/baseline_small"
     app:cardCornerRadius="@dimen/card_corner_radius"
     app:contentPadding="@dimen/baseline_small"
     android:id="@+id/item_wt_card"
@@ -258,26 +259,60 @@
                 android:text="@string/card_label_actions"
                 android:textAppearance="@style/Base.TextAppearance.AppCompat.Caption" />
 
-            <LinearLayout
-                android:id="@+id/transferTransactions"
+            <HorizontalScrollView
+                android:id="@+id/transferTransactionsView"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
                 android:layout_below="@+id/item_wt_trans_header"
-                android:orientation="horizontal"
-                android:isScrollContainer="true"
-                android:paddingTop="2dp"
-                android:paddingBottom="2dp"
-                android:layout_marginBottom="@dimen/baseline_typo"
+                android:layout_height="wrap_content">
+                <LinearLayout
+                    android:id="@+id/transferTransactions"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:paddingTop="6dp"
+                    android:paddingBottom="6dp"
+                    android:layout_marginBottom="@dimen/baseline_typo"
+                    >
 
-                >
+                </LinearLayout>
+            </HorizontalScrollView>
+            <LinearLayout
+                android:layout_below="@+id/transferTransactionsView"
+                android:id="@+id/transferTransactionsOtherView"
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="sans-serif-medium"
+                    android:text="@string/card_label_actions_other"
+                    android:textAppearance="@style/Base.TextAppearance.AppCompat.Caption" />
 
+                <HorizontalScrollView
+
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+                    <LinearLayout
+                        android:id="@+id/transferTransactionsOther"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:paddingTop="6dp"
+                        android:paddingBottom="6dp"
+                        android:layout_marginBottom="@dimen/baseline_typo"
+                        >
+
+                    </LinearLayout>
+                </HorizontalScrollView>
             </LinearLayout>
+
             <TextView
                 android:id="@+id/item_wt_message_header"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:fontFamily="sans-serif-medium"
-                android:layout_below="@+id/transferTransactions"
+                android:layout_below="@+id/transferTransactionsOtherView"
                 android:text="@string/card_label_message"
                 android:textAppearance="@style/Base.TextAppearance.AppCompat.Caption" />
 

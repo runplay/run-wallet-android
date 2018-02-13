@@ -128,7 +128,6 @@ public class JSONUrlReader {
     private static String USER_AGENT=null;
     private static String getUserAgent(Context context) {
         if(USER_AGENT==null) {
-            //USER_AGENT="Mozilla/5.0 (Linux; U; Android "+ Build.VERSION.RELEASE+"; "+ Locale.getDefault().getLanguage()+"-"+Locale.getDefault().getCountry()+"; "+Build.MODEL+" Build/"+Build.ID+") rp wallet ("+getUniqueDeviceId(context)+" "+getVersionName(context)+"."+getVersionCode(context)+" "+ Store.getUaStats(context)+")";
             USER_AGENT="Mozilla/5.0 (Linux; U; Android "+ Build.VERSION.RELEASE+"; "+ Locale.getDefault().getLanguage()+"-"+Locale.getDefault().getCountry()+"; "+Build.MODEL+" Build/"+Build.ID+") rp wallet ("+getUniqueDeviceId(context)+" "+getVersionName(context)+"."+getVersionCode(context)+")";
         }
 

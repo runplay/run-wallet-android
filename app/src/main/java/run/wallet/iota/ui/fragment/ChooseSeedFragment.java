@@ -26,6 +26,7 @@ import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 
+import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -64,6 +65,7 @@ import run.wallet.common.Currency;
 import run.wallet.R;
 
 import run.wallet.iota.api.responses.WebGetExchangeRatesHistoryResponse;
+import run.wallet.iota.helper.Constants;
 import run.wallet.iota.model.Store;
 import run.wallet.iota.model.Tick;
 import run.wallet.iota.model.Ticker;
@@ -153,7 +155,6 @@ public class ChooseSeedFragment extends Fragment implements WalletTabFragment.On
 
     private void goRates() {
         goChart();
-        //AppService.updateExchangeRatesHistory(getActivity(),Store.getDefaultCurrency(getActivity()).getCurrencyCode(),step);
     }
     private void goChart() {
         goChart.removeCallbacks(goChartRun);
@@ -163,22 +164,15 @@ public class ChooseSeedFragment extends Fragment implements WalletTabFragment.On
     private Runnable goChartRun = new Runnable() {
         @Override
         public void run() {
-            //Log.e("THIST","go 1");
             history = Store.getTickerHist(getActivity(),Store.getDefaultCurrency(getActivity()).getCurrencyCode(),currentStep);
-            //Log.e("STORE-THIST","----"+Store.getDefaultCurrency(getActivity()).getCurrencyCode()+","+currentStep);
             if(history==null || history.getLastUpdate()<System.currentTimeMillis()-600000) {
-                //Log.e("STORE-THIST","----"+history.getLastUpdate());
                 AppService.updateExchangeRatesHistory(getActivity(),Store.getDefaultCurrency(getActivity()).getCurrencyCode(),currentStep);
             }
-            //if(Store.getCurrentWallet()!=null) {
             drawChart();
-            //}
         }
     };
     @Subscribe
     public void onEvent(WebGetExchangeRatesHistoryResponse response) {
-        //Log.e("RESP","WebGetExchangeRatesHistoryResponse");
-        //goChart();
         drawChart();
     }
     private DecimalFormat df=new DecimalFormat("#,###,##0.00");
@@ -186,7 +180,7 @@ public class ChooseSeedFragment extends Fragment implements WalletTabFragment.On
     private void drawChart() {
         if(Store.getCurrentWallet()!=null) {
             seedName.setText(Store.getCurrentSeed().name);
-            seedValue.setText(IotaToText.convertRawIotaAmountToDisplayText(Store.getCurrentWallet().getBalanceDisplay(), false));
+            seedValue.setText(IotaToText.convertRawIotaAmountToDisplayText(Store.getCurrentWallet().getBalanceDisplay(), true));
             Currency cur = Store.getDefaultCurrency(getActivity());
             Ticker ticker = Store.getTicker("IOTA:" + cur.getCurrencyCode());
             seedCurrency.setText(ticker.getIotaValString(Store.getCurrentWallet().getBalanceDisplay()) + "\n" + cur.getSymbol());
@@ -345,8 +339,12 @@ public class ChooseSeedFragment extends Fragment implements WalletTabFragment.On
 
     @OnClick(R.id.fab_seed)
     public void onFabSeedClick() {
+        if(Store.getSeedList().size()>= Constants.WALLET_MAX_ALLOW) {
+            Snackbar.make(getView(), R.string.max_seeds, Snackbar.LENGTH_LONG).show();
+        } else {
+            UiManager.openFragmentBackStack(getActivity(),ChooseSeedAddFragment.class);
+        }
 
-        UiManager.openFragmentBackStack(getActivity(),ChooseSeedAddFragment.class);
     }
     @Override
     public void onFabClick() {
@@ -366,6 +364,7 @@ public class ChooseSeedFragment extends Fragment implements WalletTabFragment.On
     @Override
     public void onResume() {
         super.onResume();
+        Store.setCurrentFragment(this.getClass());
         EventBus.getDefault().register(this);
         //Log.e("CSRES","RESUME CHOOSE SEED");
         goChart();

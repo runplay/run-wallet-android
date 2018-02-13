@@ -71,6 +71,7 @@ public class Constants {
 
     public static final int REQUEST_CODE_LOGIN = 101;
     public static final int REQUEST_RESTART_KILL_APP =85;
+    public static final int REQUEST_GO_TOR =8118;
 
     public static final int REQUEST_STORAGE_PERMISSION = 1;
     public static final int REQUEST_CAMERA_PERMISSION = 12;
@@ -78,7 +79,7 @@ public class Constants {
     public static final String QRCODE = "qrcode";
     public static final String UDP = "udp://";
     public static final String NEW_ADDRESS_TAG =  "99999999RUN9WALLET9ADDRESS9";
-    public static final String NEW_TRANSFER_TAG = "9999999RUN9WALLET9TRANSFER9";
+    public static final String NEW_TRANSFER_TAG = "RUN9WALLET9TRANSFER99999999";
     public static final String DONATION_TAG =     "9999999RUN9WALLET9DONATE999";
 
 
@@ -86,6 +87,7 @@ public class Constants {
 
     public static final int DONATE_NOW=68732;
 
+    public static final int WALLET_MAX_ALLOW = 5;
 
     //Intent actions
     public static final String ACTION_MAIN = "ACTION_MAIN";

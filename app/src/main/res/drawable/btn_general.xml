@@ -3,6 +3,8 @@
 
         <item android:state_pressed="true"
         	android:drawable="@drawable/btn_general_on" />
+    <item android:state_active="true"
+        android:drawable="@drawable/btn_general_active" />
     <!--
     <item android:drawable="@drawable/btn_general_active"
           android:state_activated="true"/>

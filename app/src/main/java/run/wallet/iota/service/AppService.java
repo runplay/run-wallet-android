@@ -67,10 +67,12 @@ import run.wallet.iota.api.responses.NodeInfoResponse;
 import run.wallet.iota.api.responses.NudgeResponse;
 import run.wallet.iota.helper.Constants;
 import run.wallet.iota.helper.Sf;
+import run.wallet.iota.helper.TorHelper;
 import run.wallet.iota.model.Address;
 import run.wallet.iota.model.MsgStore;
 import run.wallet.iota.model.Nodes;
 import run.wallet.iota.model.NudgeTransfer;
+import run.wallet.iota.model.PayPacket;
 import run.wallet.iota.model.Seeds;
 import run.wallet.iota.model.Store;
 import run.wallet.iota.model.Transaction;
@@ -110,6 +112,7 @@ public final class AppService extends Service {
         @Override
         public void run() {
             Store.logout();
+            TorHelper.destroy();
             if(SERVICE.activity!=null) {
                 SERVICE.activity.finish();
             }
@@ -185,7 +188,8 @@ public final class AppService extends Service {
 
         ensureStartups(getBaseContext());
 
-        
+        TorHelper.init(this,null);
+
     	Intent service = new Intent(this, OnAlarmReceiver.class);
     	PendingIntent pintent = PendingIntent.getService(this, 0, service, 0);
 
@@ -515,36 +519,6 @@ public final class AppService extends Service {
         return rtasks;
     }
 
-    public static List<String> getAddressTaskRunning(Class<?> classtype) {
-        List<String> addresses=new ArrayList<>();
-
-        try {
-            Set<Long> reqs=SERVICE.tasks.keySet();
-            for(Long id:reqs) {
-                ApiRequest request= SERVICE.tasks.get(id);
-                if(request!=null) {
-                    if (request.getClass().getCanonicalName().equals(classtype.getCanonicalName())) {
-                        if (classtype.isInstance(SendTransferRequest.class)) {
-                            SendTransferRequest req = (SendTransferRequest) request;
-                            //if (Sf.toInt(req.getValue()) == 0) {
-                            //Log.e("service", "address: " + req.getAddress() + "--");
-                            addresses.add(req.getAddress());
-                            //}
-                        } else if (classtype.isInstance(MessageSendRequest.class)) {
-                            MessageSendRequest req = (MessageSendRequest) request;
-                            //Log.e("service", "address: " + req.getAddress() + "--");
-                            addresses.add(req.getAddress());
-
-                        }
-                    }
-                }
-            }
-        } catch(Exception e) {
-            Log.e("service","error006: "+e.getMessage());
-        }
-        return addresses;
-    }
-
     private static void runTask(TaskManager taskManager, ApiRequest request) {
         if(request!=null && taskManager !=null) {
             taskManager.startNewRequestTask(request);
@@ -735,18 +709,19 @@ public final class AppService extends Service {
             runTask(rt,tir);
         }
     }
-    public static void attachNewAddress(Context context, Seeds.Seed seed, List<String> address) {
-        if(Validator.isValidCaller() && Store.getCurrentSeed()!=null) {
-            TaskManager rt = new TaskManager(context);
-            SendTransferRequest tir = new SendTransferRequest(seed,address, "0", "", Constants.NEW_ADDRESS_TAG);
-            runTask(rt,tir);
-        }
-    }
+
     public static void sendMessageToAddress(Context context, Seeds.Seed seed, String toAddress, String amountIOTA, String message, String tag) {
         if(Validator.isValidCaller() && Store.getCurrentSeed()!=null) {
             TaskManager rt = new TaskManager(context);
             MessageSendRequest tir = new MessageSendRequest(seed,toAddress, message, tag);
             runMessageTask(rt,tir);
+        }
+    }
+    public static void sendNewTransfer(Context context, Seeds.Seed seed, List<PayPacket.PayTo> payTos, List<Address> fromAddress, Address remainder, String message, String tag) {
+        if(Validator.isValidCaller() && Store.getCurrentSeed()!=null) {
+            TaskManager rt = new TaskManager(context);
+            SendTransferRequest tir = new SendTransferRequest(seed, payTos,fromAddress,remainder, message, tag);
+            runTask(rt,tir);
         }
     }
     public static void sendNewTransfer(Context context, Seeds.Seed seed, String toAddress, String amountIOTA, List<Address> fromAddress, Address remainder, String message, String tag) {
@@ -799,7 +774,7 @@ public final class AppService extends Service {
         }
     }
     private static long lastExchangeRateCall;
-    private static final int timeoutExchangeRates=60000;
+    private static final int timeoutExchangeRates=120000;
     public static void updateExchangeRates(Context context) {
         long now=System.currentTimeMillis();
         if(lastExchangeRateCall==0 || now>lastExchangeRateCall+timeoutExchangeRates) {

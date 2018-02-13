@@ -48,7 +48,7 @@
                     android:hint="@string/address"
                     android:digits="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ9"
                     android:maxLength="90"
-                    android:inputType="text" />
+                    android:inputType="textNoSuggestions" />
 
             </android.support.design.widget.TextInputLayout>
 
@@ -120,7 +120,7 @@
                     android:hint="@string/tag_optional"
                     android:digits="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ9"
                     android:maxLength="27"
-                    android:inputType="text" />
+                    android:inputType="textNoSuggestions" />
 
             </android.support.design.widget.TextInputLayout>
 

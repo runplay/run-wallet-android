@@ -1,4 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
+<shape android:shape="rectangle"
+	xmlns:android="http://schemas.android.com/apk/res/android">
+	<solid android:color="@color/colorMiddle"/>
+
+	<corners android:radius="3dp"/>
+</shape>
+	<!--<?xml version="1.0" encoding="utf-8"?>
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android" >
      <item>
 		<shape
@@ -28,3 +35,4 @@
 	    </inset>
 	</item>
 </layer-list>
+-->

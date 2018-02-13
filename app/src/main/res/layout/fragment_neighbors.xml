@@ -78,7 +78,7 @@
                         android:layout_height="wrap_content"
                         android:hint="@string/neighbor_ip"
                         android:imeOptions="actionDone"
-                        android:inputType="text"
+                        android:inputType="textNoSuggestions"
                         android:textColor="?android:textColorPrimaryInverse" />
                 </android.support.design.widget.TextInputLayout>
 

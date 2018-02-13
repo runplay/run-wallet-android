@@ -89,6 +89,11 @@ public class AboutFragment extends Fragment {
         initAppVersion();
         iotaAddress.setText(Constants.DONATION_ADDRESS);
     }
+    @Override
+    public void onResume() {
+        super.onResume();
+        Store.setCurrentFragment(this.getClass());
+    }
 
     @Override
     public void onDestroyView() {

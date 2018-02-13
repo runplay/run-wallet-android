@@ -115,10 +115,10 @@ public class UiManager {
                     if(req instanceof SendTransferRequest) {
                         SendTransferRequest str = (SendTransferRequest) req;
                         if(str.getSeed().id.equals(currentSeed.id)) {
-                            if (Sf.toLong(str.getValue()) == 0) {
+                            if (str.getValue() == 0) {
                                 processing.add(createProcessRunningPod(context, R.drawable.tran_white, context.getString(R.string.info_new_attach), 0));
                             } else {
-                                processing.add(createProcessRunningPod(context, R.drawable.send_white, context.getString(R.string.info_transfer), Sf.toLong(str.getValue())));
+                                processing.add(createProcessRunningPod(context, R.drawable.send_white, context.getString(R.string.info_transfer), str.getValue()));
                             }
                         }
                     } else if(req instanceof GetAccountDataRequest) {
@@ -247,7 +247,7 @@ public class UiManager {
 
         TextView addValue = new TextView(context);
         addValue.setLayoutParams(param2);
-        String text = IotaToText.convertRawIotaAmountToDisplayText(value, false);
+        String text = IotaToText.convertRawIotaAmountToDisplayText(value, true);
 
         addValue.setText(text);
         addValue.setTextSize(20F);

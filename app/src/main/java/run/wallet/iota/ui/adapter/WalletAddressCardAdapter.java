@@ -151,13 +151,10 @@ public class WalletAddressCardAdapter extends RecyclerView.Adapter<WalletAddress
                 if (address.getPendingValue() != 0) {
                     //holder.rawValue.setVisibility(View.VISIBLE);
                     holder.rawValue.setCompoundDrawables(B.getDrawable(context, R.drawable.navigation_refresh), null, null, null);
-
+                    holder.rawValue.setText(IotaToText.convertRawIotaAmountToDisplayText(address.getPendingValue(), true));
                     if (address.getPendingValue() < 0) {
-
-                        holder.rawValue.setText(IotaToText.convertRawIotaAmountToDisplayText(address.getPendingValue(), false));
                         holder.rawValue.setTextColor(B.getColor(context, R.color.flatRed));
                     } else {
-                        holder.rawValue.setText(IotaToText.convertRawIotaAmountToDisplayText(address.getPendingValue(), false));
                         holder.rawValue.setTextColor(B.getColor(context, R.color.green));
                     }
                 }

@@ -76,7 +76,7 @@ public class ChooseSeedAdapter extends RecyclerView.Adapter<ChooseSeedAdapter.Vi
         Wallet wallet = Store.getWallet(address);
         if(wallet!=null) {
             holder.extraValue.setVisibility(View.VISIBLE);
-            String balanceText = IotaToText.convertRawIotaAmountToDisplayText(wallet.getBalanceDisplay(), false);
+            String balanceText = IotaToText.convertRawIotaAmountToDisplayText(wallet.getBalanceDisplay(), true);
             holder.seedValue.setText(balanceText);
             Currency defcur=Store.getDefaultCurrency(context);
             Ticker ticker = Store.getTicker("IOTA:"+defcur);

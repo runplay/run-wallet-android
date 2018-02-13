@@ -22,6 +22,7 @@ package run.wallet.iota.ui.fragment;
 import android.app.Fragment;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
@@ -147,9 +148,12 @@ public class WalletTabFragment extends LoggedInFragment {
         ((AppCompatActivity) getActivity()).setSupportActionBar(walletToolbar);
         WalletTransfersCardAdapter.setViewPager(viewPager);
         viewPager.setAdapter(adapter);
-        tabLayout.setupWithViewPager(viewPager);
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
-        tapCount= prefs.getInt(Constants.PREF_MSG_TAP_BALANCE,0);
+        goCreate();
+
+    }
+    private void goCreate() {
+
+
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
@@ -398,13 +402,12 @@ public class WalletTabFragment extends LoggedInFragment {
     @Override
     public void onResume() {
         super.onResume();
+        tabLayout.setupWithViewPager(viewPager);
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
+        tapCount= prefs.getInt(Constants.PREF_MSG_TAP_BALANCE,0);
+        Store.setCurrentFragment(this.getClass());
         EventBus.getDefault().register(this);
-        AppService.getNodeInfo(getActivity());
-        //WalletTransfersCardAdapter.setFilterAddress(null,null);
         updateBalance();
-
-
-        //getAccountData();
     }
     @Subscribe
     public void onEvent(SendTransferResponse str) {

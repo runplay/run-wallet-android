@@ -141,7 +141,7 @@ public class WalletTransfersFragment extends BaseSwipeRefreshLayoutFragment impl
                         confirmPod.setVisibility(View.GONE);
                         firstLoadPod.setVisibility(View.VISIBLE);
                         firstLoadAddress.setText("" + holder.countaddress);
-                        firstLoadPredict.setText(IotaToText.convertRawIotaAmountToDisplayText(holder.predictaddress, false));
+                        firstLoadPredict.setText(IotaToText.convertRawIotaAmountToDisplayText(holder.predictaddress, true));
                         firstLoadTransfer.setText("" + holder.counttransfers);
                         if (holder.showWaitMessage) {
                             firstLoadRelax.setVisibility(View.VISIBLE);

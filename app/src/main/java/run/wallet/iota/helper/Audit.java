@@ -155,7 +155,7 @@ public class Audit {
                 add.setUsed(false);
             //add.setValue(0);
             add.setPendingValue(0);
-            if(add.getPigInt()!=2) {
+            if(!add.isPigUser()) {
                 add.setPigInt(0);
             }
         }
@@ -290,7 +290,7 @@ public class Audit {
         for(Address address: allAddresses) {
 
             seedTotal+=address.getValue();
-            if(address.getPendingValue()!=0) {
+            if(address.getPendingValue()!=0 && !address.isPigUser()) {
                 address.setPigInt(1);
             }
         }

@@ -63,6 +63,7 @@ import run.wallet.iota.api.responses.error.NetworkError;
 import run.wallet.iota.helper.Constants;
 import run.wallet.iota.helper.NotificationHelper;
 import run.wallet.iota.helper.RootDetector;
+import run.wallet.iota.helper.TorHelper;
 import run.wallet.iota.model.QRCode;
 import run.wallet.iota.model.Store;
 import run.wallet.iota.security.SignatureCheck;
@@ -87,6 +88,7 @@ import run.wallet.iota.ui.fragment.QRScannerFragment;
 import run.wallet.iota.ui.fragment.SeedLoginFragment;
 import run.wallet.iota.ui.fragment.SettingsFragment;
 
+import run.wallet.iota.ui.fragment.TorFragment;
 import run.wallet.iota.ui.fragment.WalletAddressesFragment;
 import run.wallet.iota.ui.fragment.WalletTabFragment;
 import run.wallet.iota.ui.fragment.WalletTransfersFragment;
@@ -125,11 +127,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //SharedPreferences sp = this.getSharedPreferences("nodes",Context.MODE_PRIVATE);
-
-        //setTheme(R.style.AppThemeLightBlue);
-        //sp.edit().clear().commit();
-        Store.init(this);
+        Store.init(this,false);
+        TorHelper.init(this,null);
         setContentView(R.layout.activity_main);
         getWindow().getDecorView().setBackgroundColor(getResources().getColor(R.color.colorPrimary));
         ButterKnife.bind(this);
@@ -143,18 +142,19 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         prefs = PreferenceManager.getDefaultSharedPreferences(this);
         inputManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-        if (savedInstanceState != null && savedInstanceState.containsKey(STATE_CURRENT_FRAGMENT_TAG)) {
-            currentFragmentTag = savedInstanceState.getString(STATE_CURRENT_FRAGMENT_TAG);
-        }
+
         if (savedInstanceState == null || Store.getCurrentSeed() == null) {
             navigationView.getMenu().performIdentifierAction(R.id.nav_wallet, 0);
+        } else {
+            Class<? extends Fragment> currentFrag = Store.getCurrentFragment();
+            if(currentFrag!=null) {
+                UiManager.openFragment(this,currentFrag);
+            }
         }
-        //boolean showstart=true;
         if (!prefs.getBoolean(Constants.PREFERENCE_RUN_WITH_ROOT, false)) {
             if (RootDetector.isDeviceRooted()) {
                 RootDetectedDialog dialog = new RootDetectedDialog();
                 dialog.show(this.getFragmentManager(), null);
-                //showstart=false;
             }
         }
 
@@ -163,7 +163,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
         drawer.addDrawerListener(drawerListener);
         AppService.getNodeInfo(this);
-
     }
     @SuppressWarnings("deprecation")
     private void setNavColors() {
@@ -194,6 +193,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     @Override
     public void onBackPressed() {
+        showLogoutNavigationItem();
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
@@ -211,14 +211,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         String errorMessage = null;
         switch (error.getErrorType()) {
             case REMOTE_NODE_ERROR:
-                //errorMessage = getString(R.string.messages_network_remote_error);
                 AppService.getNodeInfo(this);
                 break;
             case NETWORK_ERROR:
                 errorMessage = getString(R.string.messages_network_error);
                 break;
             case ACCESS_ERROR:
-                //Log.e("ERROR",""+error.getMessage());
                 if(error.getMessage()!=null && !error.getMessage().contains("getNeigh")) {
                     errorMessage = getString(R.string.messages_network_access_error);
                 }
@@ -239,9 +237,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     }
 
-    /**
-     * Shows a fragment and hides the old one if there was a fragment previously visible
-     */
     private static final Class[] fragmentsToKill = {
             AboutFragment.class,
             GenerateQRCodeFragment.class,
@@ -277,7 +272,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         FragmentManager fragmentManager = getFragmentManager();
         Fragment currentFragment = fragmentManager.findFragmentByTag(currentFragmentTag);
 
-        if (currentFragment != null && currentFragment.getClass().getName().equals(fragment.getClass().getName())) {
+        if (currentFragment != null && currentFragment.getClass().getCanonicalName().equals(fragment.getClass().getCanonicalName())) {
             // Fragment already shown, do nothing
             return;
         }
@@ -298,11 +293,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             }
         }
 
-        fragmentTransaction.setCustomAnimations(R.animator.fade_in, R.animator.fade_out,
-                R.animator.fade_in, R.animator.fade_out);
-
         if (currentFragment != null) {
-            // Hide old fragment
             fragmentTransaction.hide(currentFragment);
         }
 
@@ -326,7 +317,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
 
         currentFragmentTag = tag;
-        //Log.e("SHOW","SHOW FRAG CALLED");
     }
 
     private void showFragment(Fragment fragment, boolean addToBackStack) {
@@ -342,15 +332,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         navigationView.getMenu().findItem(R.id.nav_choose_wallet).setVisible(Store.isLoggedIn());
         //navigationView.getMenu().findItem(R.id.nav_messaging).setVisible(Store.isLoggedIn());
         navigationView.getMenu().findItem(R.id.nav_settings).setVisible(Store.isLoggedIn());
+        navigationView.getMenu().findItem(R.id.nav_tor).setVisible(TorHelper.isTorNav());
     }
 
-
-    //private long lastNavCall
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         Fragment fragment = null;
         getFragmentManager().popBackStack();
-        //Log.e("NAVITEM"," -- "+item.getItemId());
         switch (item.getItemId()) {
             case R.id.nav_wallet:
                 if(!Store.isLoggedIn()) {
@@ -387,6 +375,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 break;
             case R.id.nav_help:
                 UiManager.openFragmentBackStack(this,HelpFragment.class);
+                break;
+            case R.id.nav_tor:
+                UiManager.openFragmentBackStack(this,TorFragment.class);
                 break;
 /*
             case R.id.nav_messaging:
@@ -530,6 +521,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 inputManager.hideSoftInputFromWindow(getWindow().getDecorView().getWindowToken(), 0);
                 UiManager.openFragment(this,SeedLoginFragment.class);
                 break;
+            case Constants.REQUEST_GO_TOR:
+                UiManager.openFragmentBackStack(this, TorFragment.class);
+                break;
         }
         if (data != null) {
             if(resultCode==Constants.DONATE_NOW) {
@@ -565,7 +559,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         try {
             EventBus.getDefault().register(this);
         } catch (EventBusException e) {}
-
         showLogoutNavigationItem();
         updateDynamicShortcuts();
         AppService.setIsAppStarted(this, true);
@@ -598,31 +591,18 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public void onPause() {
         super.onPause();
         updateDynamicShortcuts();
-        //Log.e("ACT","ACTIVITY onPause()");
         EventBus.getDefault().unregister(this);
         AppService.setIsAppStarted(this,false);
     }
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
-        if(currentFragmentTag!=null) {
-            outState.putString(STATE_CURRENT_FRAGMENT_TAG, currentFragmentTag);
-        }
-        if(Store.isLoggedIn()) {
-            outState.putString(STATE_CURRENT_FRAGMENT_TAG, currentFragmentTag);
-        }
         super.onSaveInstanceState(outState);
     }
 
     @Override
     protected void onRestoreInstanceState(Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
-        //Log.e("IN STATE","INSTANCE"+currentFragmentTag);
-        currentFragmentTag = savedInstanceState.getString(STATE_CURRENT_FRAGMENT_TAG);
-        if(currentFragmentTag==null) {
-            inputManager.hideSoftInputFromWindow(getWindow().getDecorView().getWindowToken(), 0);
-            navigationView.getMenu().performIdentifierAction(R.id.nav_wallet, 0);
-        }
     }
 
     @Override

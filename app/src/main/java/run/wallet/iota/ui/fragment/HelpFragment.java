@@ -67,6 +67,11 @@ public class HelpFragment extends Fragment {
         return view;
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        Store.setCurrentFragment(this.getClass());
+    }
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {

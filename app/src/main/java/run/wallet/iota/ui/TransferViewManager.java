@@ -102,7 +102,10 @@ public class TransferViewManager {
         TextView confirmCheck;
         @BindView(R.id.item_wt_mstone)
         TextView mstoneCount;
-
+        @BindView(R.id.transferTransactionsOtherView)
+        View otherAddressView;
+        @BindView(R.id.transferTransactionsOther)
+        LinearLayout otherAddressLayout;
 
         @BindView(R.id.item_wt_filtered_balance)
         TextView fBalance;
@@ -169,10 +172,6 @@ public class TransferViewManager {
     }
 
     public static final void populateViewHolder(Context context, ViewHolder holder, Transfer transfer, boolean isAutoNudge, int adapterPosition,boolean filtered) {
-
-
-
-
         String faddress=WalletTransfersCardAdapter.getFilterAddress();
 
         if(faddress!=null && transfer.isCompleted()) {
@@ -327,7 +326,17 @@ public class TransferViewManager {
             holder.balanceUnit.setTextColor(ContextCompat.getColor(context, R.color.colorPrimary));
         }
 
-        TransferViewManager.populateTransferTransactions(context,holder.transferTransactions,transfer);
+        TransferViewManager.populateTransferTransactions(context,holder.transferTransactions,transfer.getTransactions(),false);
+
+        if(!transfer.getOtherTransactions().isEmpty()) {
+            holder.otherAddressView.setVisibility(View.VISIBLE);
+            holder.otherAddressLayout.setVisibility(View.VISIBLE);
+            TransferViewManager.populateTransferTransactions(context,holder.otherAddressLayout,transfer.getOtherTransactions(),true);
+        } else {
+            //holder.otherAddressLayout.removeAllViews();
+            holder.otherAddressView.setVisibility(View.GONE);
+        }
+
         if(adapterPosition<0) {
 
         } else {
@@ -350,7 +359,7 @@ public class TransferViewManager {
         return message;
     }
 
-    private static void populateTransferTransactions(Context context, LinearLayout uselayout, Transfer transfer) {
+    private static void populateTransferTransactions(Context context, LinearLayout uselayout, List<TransferTransaction> transactions, boolean isOtherTransactions) {
         uselayout.removeAllViews();
 
         int bgcolor= B.getColor(context, R.color.colorPrimary);
@@ -358,64 +367,61 @@ public class TransferViewManager {
         int white=B.getColor(context,R.color.white);
         int red=B.getColor(context,R.color.flatRed);
         int green=B.getColor(context,R.color.green);
-        List<Address> allAddresses = Store.getAddresses();
 
         main.weight=1;
         param.setMargins(8,4,8,4);
         param2.setMargins(8,4,8,4);
         param3.setMargins(0,4,8,4);
-        for(TransferTransaction trans: transfer.getTransactions()) {
+        for(TransferTransaction trans: transactions) {
 
-            Address address = Store.isAlreadyAddress(trans.getAddress(),allAddresses);
-            if(address!=null) {
-                LinearLayout layout = new LinearLayout(context);
-                layout.setBackgroundColor(bglight);
-                layout.setOrientation(LinearLayout.HORIZONTAL);
-                layout.setLayoutParams(main);
-                layout.setPadding(2, 2, 2, 2);
-                layout.canScrollHorizontally(View.LAYOUT_DIRECTION_LTR);
+            LinearLayout layout = new LinearLayout(context);
+            layout.setBackgroundColor(bglight);
+            layout.setOrientation(LinearLayout.HORIZONTAL);
+            layout.setLayoutParams(main);
+            layout.setPadding(2, 2, 2, 2);
+            layout.canScrollHorizontally(View.LAYOUT_DIRECTION_LTR);
 
+            TextView addValue = new TextView(context);
+            addValue.setLayoutParams(param2);
 
-                TextView addId = new TextView(context);
-                addId.setLayoutParams(param);
-                addId.setText("a" + address.getIndexName());
-                addId.setBackgroundColor(bgcolor);
-                addId.setPadding(2, 2, 2, 2);
-                addId.setTextColor(white);
-                //addId.setMa
-
-                TextView addValue = new TextView(context);
-                addValue.setLayoutParams(param2);
-                addValue.setText(IotaToText.convertRawIotaAmountToDisplayText(trans.getValue(), false));
-                addValue.setTextSize(16F);
-                addValue.setTypeface(null, Typeface.BOLD);
-                if(trans.getValue()<0) {
-                    addValue.setTextColor(red);
-                } else {
-                    addValue.setTextColor(green);
-                }
-                addValue.setPadding(5, 2, 2, 2);
-                addValue.setSingleLine();
-
-                TextView addAddress = new TextView(context);
-                addAddress.setLayoutParams(param3);
-                addAddress.setText(trans.getAddress()+"***");
-                addAddress.setTextColor(bgcolor);
-                addAddress.setTextSize(12F);
-                addAddress.setPadding(5, 2, 2, 2);
-                addAddress.setSingleLine();
-
-
-                layout.addView(addId);
-                layout.addView(addValue);
-                layout.addView(addAddress);
-
-                uselayout.addView(layout);
+            addValue.setText(IotaToText.convertRawIotaAmountToDisplayText(trans.getValue(), true));
+            addValue.setTextSize(16F);
+            addValue.setTypeface(null, Typeface.BOLD);
+            if (trans.getValue() < 0) {
+                addValue.setTextColor(red);
             } else {
-                //Log.e("NULL-ADD","Null adrress: "+trans.getAddress()+" - "+transfer.getValue()+" - hash: "+transfer.getHash());
+                addValue.setTextColor(green);
             }
+            addValue.setPadding(5, 2, 2, 2);
+            addValue.setSingleLine();
+
+            TextView addAddress = new TextView(context);
+            addAddress.setLayoutParams(param3);
+            addAddress.setText(trans.getAddress());
+            addAddress.setTextColor(bgcolor);
+            addAddress.setTextSize(12F);
+            addAddress.setPadding(5, 2, 2, 2);
+            addAddress.setSingleLine();
+
+            if (!isOtherTransactions) {
+                List<Address> allAddresses = Store.getAddresses();
+                Address address = Store.isAlreadyAddress(trans.getAddress(), allAddresses);
+                if (address != null) {
+                    TextView addId = new TextView(context);
+                    addId.setLayoutParams(param);
+                    addId.setText("a" + address.getIndexName());
+                    addId.setBackgroundColor(bgcolor);
+                    addId.setPadding(2, 2, 2, 2);
+                    addId.setTextColor(white);
+                    layout.addView(addId);
+                }
+            }
+
+            layout.addView(addValue);
+            layout.addView(addAddress);
+
+            uselayout.addView(layout);
         }
-        //uselayout.notify();
     }
 
     public static void populateTransferTransactionOuts(Activity context, LinearLayout uselayout, List<TransferTransaction> transactions, Transfer transfer) {
@@ -445,7 +451,7 @@ public class TransferViewManager {
 
                 TextView balance = new TextView(context);
                 balance.setLayoutParams(param5);
-                balance.setText(IotaToText.convertRawIotaAmountToDisplayText(trans.getPayFromAddressZero(),false));
+                balance.setText(IotaToText.convertRawIotaAmountToDisplayText(trans.getPayFromAddressZero(),true));
                 balance.setPadding(2, 2, 2, 2);
 
                 if(address==null) {
@@ -482,7 +488,7 @@ public class TransferViewManager {
 
                 TextView addValue = new TextView(context);
                 addValue.setLayoutParams(param3);
-                addValue.setText(IotaToText.convertRawIotaAmountToDisplayText(trans.getValue(), false));
+                addValue.setText(IotaToText.convertRawIotaAmountToDisplayText(trans.getValue(), true));
                 addValue.setTextSize(20F);
                 addValue.setGravity(Gravity.RIGHT);
                 addValue.setTypeface(null, Typeface.BOLD);

@@ -55,7 +55,7 @@
                     android:layout_height="wrap_content"
                     android:hint="@string/seed"
                     android:digits="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ9"
-                    android:inputType="text" />
+                    android:inputType="textNoSuggestions" />
             </android.support.design.widget.TextInputLayout>
             <LinearLayout
                 android:layout_width="match_parent"

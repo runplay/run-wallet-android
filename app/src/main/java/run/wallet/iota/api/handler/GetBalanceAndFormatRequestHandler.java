@@ -65,14 +65,11 @@ public class GetBalanceAndFormatRequestHandler extends IotaRequestHandler {
         try {
             StopWatch stopWatch=new StopWatch();
             //stopWatch.
-            Log.e("BALF","Getting balances and format");
+            //Log.e("BALF","Getting balances and format");
             response = new GetBalanceAndFormatResponse(apiProxy.getBalanceAndFormat(((GetBalanceAndFormatRequest) request).addresses,0L,0,stopWatch,0
                     ));
             List<Input> inputs=((GetBalanceAndFormatResponse)response).getInputs();
-            Log.e("BALF","total balance: "+((GetBalanceAndFormatResponse)response).getBalance());
-            for(Input inp: inputs) {
-                Log.e("BALF","input: "+inp.getBalance()+" - "+inp.getAddress());
-            }
+
         } catch (ArgumentException e) {
             NetworkError error = new NetworkError();
 

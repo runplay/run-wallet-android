@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/splash_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
+    android:background="@color/colorPrimary"
+    android:layout_gravity="center"
+    android:gravity="center"
+    >
+    <LinearLayout
+        android:id="@+id/splash_tor"
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:visibility="gone"
+        android:orientation="vertical">
+        <TextView
+            android:text="@string/tor_title"
+            android:gravity="center_horizontal"
+            android:drawableTop="@drawable/tor"
+            android:textColor="@color/white"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+        <TextView
+            android:id="@+id/splash_tor_status"
+
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:textColor="@color/whiteAlpha"
+            />
+    </LinearLayout>
+
+</RelativeLayout>

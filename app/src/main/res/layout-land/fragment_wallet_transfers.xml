@@ -1,0 +1,230 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center_horizontal"
+    android:background="@color/colorSecondary">
+    <LinearLayout
+        android:id="@+id/transfers_empty"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+
+        android:orientation="vertical"
+        android:visibility="gone"
+        >
+        <TextView
+            android:drawableTop="@drawable/logo"
+            android:id="@+id/transfers_empty_title"
+            android:textColor="@color/white"
+            android:drawablePadding="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="@string/transfers_empty_title"
+            android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
+            android:textSize="14sp"
+            />
+        <TextView
+            android:padding="20dp"
+            android:id="@+id/transfers_empty_settings"
+            android:textColor="@color/grey"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
+            android:text="@string/transfers_empty_settings"
+            android:textSize="14sp"
+            />
+        <TextView
+
+            android:paddingLeft="50dp"
+            android:paddingRight="50dp"
+            android:drawableBottom="@drawable/tran_orange"
+            android:id="@+id/transfers_empty_create"
+            android:textColor="@color/grey"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
+            android:drawablePadding="10dp"
+            android:text="@string/transfers_empty_create"
+            android:textSize="14sp"
+
+            />
+
+    </LinearLayout>
+
+
+    <RelativeLayout
+        android:id="@+id/empty_transfers_item"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:visibility="gone"
+         >
+        <TextView
+            android:drawableTop="@drawable/logo"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="@string/messages_no_data_available"
+            android:textColor="@color/white"
+            android:textSize="14sp"
+            />
+
+
+    </RelativeLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+
+        >
+        <LinearLayout
+            android:id="@+id/info_bar_filter"
+            android:background="@color/colorPrimaryDarker"
+            android:layout_width="match_parent"
+
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="@dimen/baseline_card"
+            >
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_weight="4"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+                    <TextView
+                        android:text="@string/text_filtered"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:paddingRight="12dp"
+                        android:textColor="@color/white"/>
+                    <TextView
+                        android:id="@+id/item_ta_address_id"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
+                        android:textColor="@color/white"
+                        android:background="@color/colorPrimary"
+                        android:paddingLeft="2dp"
+                        android:paddingRight="2dp"
+                        />
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:paddingTop="10dp">
+                    <TextView
+                        android:id="@+id/filter_wt_balance"
+                        android:layout_width="0dp"
+                        android:layout_weight="5"
+                        android:layout_height="35dp"
+                        android:text="0"
+                        android:gravity="end"
+                        android:textAppearance="@style/Base.TextAppearance.AppCompat.Headline"
+                        android:paddingRight="2dp"
+                        android:textColor="@android:color/white"
+                        android:textStyle="bold" />
+                    <TextView
+                        android:id="@+id/filter_wt_balance_third"
+                        android:layout_width="18dp"
+                        android:layout_height="35dp"
+                        android:minWidth="18dp"
+                        android:text=" "
+                        android:alpha="0.7"
+                        android:textColor="@android:color/white"
+                        android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
+                        android:paddingRight="6dp"
+                        android:textStyle="bold" />
+                    <TextView
+                        android:id="@+id/filter_wt_balance_unit"
+                        android:layout_width="0dp"
+                        android:layout_weight="2"
+                        android:layout_height="35dp"
+                        android:text="i"
+                        android:textAppearance="@style/Base.TextAppearance.AppCompat.Headline"
+                        android:textColor="@color/colorLight"
+                        android:textStyle="bold" />
+
+                </LinearLayout>
+            </LinearLayout>
+            <TextView
+                android:id="@+id/item_ta_address_value"
+                android:layout_width="0dp"
+                android:layout_weight="8"
+                android:layout_height="wrap_content"
+                android:textColor="@color/whiteAlpha"
+                android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
+                android:typeface="monospace"
+                android:padding="6dp"/>
+        </LinearLayout>
+        <run.wallet.common.ui.SwipeRefreshLayout
+            android:id="@+id/wallet_transfers_swipe_container"
+            android:layout_width="500dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_height="0dp"
+            android:layout_weight="1">
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/wallet_transfers_recycler_view"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:clipToPadding="false"
+                android:paddingBottom="70dp">
+
+            </android.support.v7.widget.RecyclerView>
+        </run.wallet.common.ui.SwipeRefreshLayout>
+        <LinearLayout
+            android:id="@+id/info_bar_transfers"
+            android:background="@color/colorPrimaryDarker"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:isScrollContainer="true"
+            >
+
+        </LinearLayout>
+    </LinearLayout>
+    <include layout="@layout/first_load_pod"/>
+    <RelativeLayout
+        android:id="@+id/first_load_pod_confirm"
+        android:layout_width="match_parent"
+        android:gravity="center_vertical|center_horizontal"
+        android:layout_height="match_parent"
+        android:visibility="gone"
+        >
+        <TextView
+            android:id="@+id/confirm_user_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/whiteAlpha"
+            android:text="@string/confirm_message"
+            android:paddingRight="10dp"
+            android:gravity="center"/>
+
+        <android.support.v7.widget.AppCompatButton
+            android:id="@+id/fl_confirm_yes"
+            android:layout_below="@id/confirm_user_text"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/confirm_message_yes"
+            android:layout_margin="@dimen/baseline"
+            android:textColor="@android:color/white" />
+        <android.support.v7.widget.AppCompatButton
+            android:id="@+id/fl_confirm_no"
+            android:layout_below="@id/fl_confirm_yes"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/confirm_message_no"
+            android:layout_margin="@dimen/baseline"
+            android:textColor="@android:color/white" />
+    </RelativeLayout>
+</RelativeLayout>
+

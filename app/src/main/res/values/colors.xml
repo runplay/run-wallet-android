@@ -5,7 +5,7 @@
     <color name="colorPrimaryDarker">#474038</color>
     <color name="colorAccent">#72665A</color>
     <color name="colorSecondary">#958779</color>
-    <color name="colorMiddle">#afa8a0</color>
+    <color name="colorMiddle">#cfc8c0</color>
     <color name="colorLight">#ede5de</color>
     <color name="textColorPrimary">#694c2f</color>
     <color name="textColorSecondary">#463320</color>
@@ -22,6 +22,7 @@
     <color name="greenAlpha">#50009900</color>
 
     <color name="flatGreen">#D1DCD2</color>
+    <color name="flatGreenAlpha">#80D1DCD2</color>
     <color name="flatRed">#770000</color>
     <color name="redAlpha">#80770000</color>
 

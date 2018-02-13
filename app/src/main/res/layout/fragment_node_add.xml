@@ -43,7 +43,7 @@
                         android:layout_height="wrap_content"
                         android:hint="@string/settings_node_ip_title"
                         android:digits="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890.-"
-                        android:inputType="text" />
+                        android:inputType="textNoSuggestions" />
 
                 <LinearLayout
                     android:layout_width="match_parent"

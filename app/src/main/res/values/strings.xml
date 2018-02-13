@@ -38,8 +38,14 @@
     <string name="neighbor_ip">Neighbor IP:</string>
     <string name="next">Next</string>
     <string name="auto">Auto</string>
-
+    <string name="on">On</string>
+    <string name="off">Off</string>
+    <string name="forced">Forced</string>
+    <string name="clear">Clear</string>
+    <string name="add_more">+ Add</string>
+    <string name="pay">Pay</string>
     <string name="info_transfer">Transfer</string>
+    <string name="info_address_already">Edit existing payment address</string>
 
     <string name="info_nudge">Nudge</string>
     <string name="info_resend">Resend</string>
@@ -49,11 +55,15 @@
     <string name="info_new_attach">Attach</string>
     <string name="info_first_load">First load</string>
 
-
+    <string name="edit">Edit</string>
+    <string name="pay_now">Pay Now</string>
     <string name="volume">vol</string>
     <string name="price">price</string>
     <string name="from">From</string>
     <string name="remainder">Balance</string>
+    <string name="paste">Paste</string>
+    <string name="qr">QR</string>
+    <string name="message_fix_import">Fix import address values before proceeding</string>
 
     <string name="title_seeds">Seeds</string>
     <string name="wallet">Wallet</string>
@@ -176,6 +186,35 @@
     <string name="menu_node_no_remove">At last one node required, add one, then delete this node</string>
 
 
+    <!-- TOR -->
+    <string name="tor">Tor</string>
+    <string name="tor_title">Tor - Orbot</string>
+    <string name="tor_summary">You can enable the app to connect to iota nodes via Tor, all http, https traffic routed through the Orbot app</string>
+
+    <string name="tor_need">Tor required</string>
+    <string name="tor_need_orbot">Could not detect the Tor app</string>
+    <string name="tor_need_orbot_detail">To use Tor for all internet traffic in this app Orbot for Android app is required, you can get it on</string>
+    <string name="google_play">Google Play</string>
+    <string name="tor_show_nav">Show Tor in the Navigation bar</string>
+
+    <string name="tor_settings">Tor Settings</string>
+    <string name="tor_force">Toggle Tor</string>
+    <string name="tor_force_summary">Make app use Tor for all http and https internet traffic after a restart</string>
+
+    <string name="tor_setup">If you have specific proxy settings for Tor, you can set them here</string>
+    <string name="tor_host">host</string>
+    <string name="tor_port">port</string>
+    <string name="tor_info">Leave blank if no user and password needed</string>
+    <string name="tor_user">user</string>
+    <string name="tor_password">password</string>
+
+    <string name="tor_info_start">Tor start</string>
+    <string name="tor_info_connecting">Tor connecting</string>
+    <string name="tor_info_connected">Tor connected</string>
+
+    <string name="tor_message_restart">Restarting app now for new Tor settings</string>
+
+
 
     <string name="xchange_last">Last</string>
     <string name="xchange_high">High</string>
@@ -213,7 +252,8 @@
 
     <!-- transfer -->
     <string name="transfer_available">Available</string>
-    <string name="transfer_pending_in">Pending in</string>
+    <string name="transfer_pig_lock">Pig locked</string>
+
 
     <string name="message_messy_view">View Messy? see the settings to tidy it</string>
     <string name="message_tap_balance">tap me</string>
@@ -242,7 +282,7 @@
     <string name="node_add">Add Node</string>
     <string name="pig_set">Make Piggy bank address</string>
     <string name="pig_remove">Break Piggy bank address</string>
-    <string name="max_seeds">Sorry, Maximum of 4 Seeds allowed</string>
+    <string name="max_seeds">Sorry, Maximum of 5 Seeds allowed</string>
     <string name="pig_locked">Locked</string>
 
     <!-- Notification-->
@@ -344,7 +384,10 @@
     <string name="settings_first_range_summary">Number of empty Addresses the app will check after finding a balance before stopping</string>
 
     <string name="settings_local_pow_title">Local PoW</string>
-    <string name="settings_local_pow_summary">Do the Proof of work locally.</string>
+    <string name="settings_local_pow_summary">Do the Proof of work locally</string>
+
+
+    <string name="settings_tor_summary">Enable anonymous use of Iota through Tor</string>
 
     <string name="settings_cancelled">Double and No complete Transfers</string>
     <string name="settings_cancelled_summary">Show Double spend and No complete transfers in the \'Actions\' section</string>
@@ -471,30 +514,34 @@
 
     <string name="fragment_generate_qr_code_title">QR Code</string>
 
+
+
+
     <!-- App Shortcuts -->
     <string name="shortcut_generate_qr_code">Generate QR code</string>
     <string name="shortcut_send_transfer">Send transfer</string>
 
     <!-- Cards -->
-    <string name="card_label_time">Time:</string>
-    <string name="card_label_persistence">Status:</string>
+    <string name="card_label_time">Time</string>
+    <string name="card_label_persistence">Status</string>
     <string name="card_label_persistence_yes">Confirmed</string>
     <string name="card_label_internal">Internal</string>
     <string name="card_label_pending_in">Pending in</string>
     <string name="card_label_pending_out">Pending out</string>
     <string name="card_label_persistence_no">Pending</string>
-    <string name="card_label_message">Message:</string>
-    <string name="card_label_actions">Address actions:</string>
-    <string name="card_label_address">Address:</string>
-    <string name="card_label_tag">Tag:</string>
-    <string name="card_label_hash">Hash:</string>
-    <string name="card_label_signature">Signature:</string>
-    <string name="card_label_current_index">Current index:</string>
-    <string name="card_label_last_index">Last index:</string>
+    <string name="card_label_message">Message</string>
+    <string name="card_label_actions">My Address actions</string>
+    <string name="card_label_actions_other">Other Address actions</string>
+    <string name="card_label_address">Address</string>
+    <string name="card_label_tag">Tag</string>
+    <string name="card_label_hash">Hash</string>
+    <string name="card_label_signature">Signature</string>
+    <string name="card_label_current_index">Current index</string>
+    <string name="card_label_last_index">Last index</string>
     <string name="card_label_bundle">Bundle:</string>
     <string name="card_label_trunk_transaction">Trunk transaction:</string>
     <string name="card_label_branch_transaction">Branch transaction:</string>
-    <string name="card_label_nonce">Nonce:</string>
+    <string name="card_label_nonce">Nonce</string>
 
     <string name="help">Help and FAQ</string>
     <string name="help_aw_head">Active Wallet Area</string>

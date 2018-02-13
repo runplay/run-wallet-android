@@ -130,10 +130,8 @@ public class WalletTransfersItemDialog extends DialogFragment implements DialogI
 
                 } else if (!transfer.isCompleted()) {
                     Transfer transfer = Store.getCurrentTransferFromHash(hash);
-                    if(transfer!=null && maxNudgeAttempts!=0) {
+                    if(transfer!=null) {
                         AppService.nudgeTransaction(getActivity(),Store.getCurrentSeed(),transfer);
-                    } else {
-                        Snackbar.make(getActivity().findViewById(R.id.drawer_layout), getString(R.string.messages_transaction_already_confirmed), Snackbar.LENGTH_LONG).show();
                     }
 
                 } else  {

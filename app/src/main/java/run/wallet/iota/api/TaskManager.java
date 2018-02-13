@@ -74,7 +74,7 @@ public class TaskManager {
         return taskId;
     }
     public String getTag() {
-        return apiRequest.getClass().getName();
+        return apiRequest.getClass().getCanonicalName();
     }
     public static final AsyncTask getRunningTask(String tag) {
         return TM.runningTasks.get(tag);
@@ -84,7 +84,7 @@ public class TaskManager {
     }
 
     private static synchronized void addTask(IotaRequestTask iotaRequestTask, ApiRequest ir) {
-        String tag = ir.getClass().getName();
+        String tag = ir.getClass().getCanonicalName();
 
         if (!TM.runningTasks.containsKey(tag)) {
             TM.runningTasks.put(tag, iotaRequestTask);
@@ -141,7 +141,7 @@ public class TaskManager {
         TaskManager.addBasicTask(basicRequestTask, apiRequest);
     }
     private static synchronized void addBasicTask(BasicRequestTask basicRequestTask, ApiRequest ir) {
-        String tag = ir.getClass().getName();
+        String tag = ir.getClass().getCanonicalName();
 
         if (!TM.runningTasks.containsKey(tag)) {
             TM.runningTasks.put(tag, basicRequestTask);
@@ -159,7 +159,7 @@ public class TaskManager {
         TaskManager.addMessageTask(messageRequestTask, apiRequest);
     }
     private static synchronized void addMessageTask(MessageRequestTask requestTask, ApiRequest ir) {
-        String tag = ir.getClass().getName();
+        String tag = ir.getClass().getCanonicalName();
 
         if (!TM.runningTasks.containsKey(tag)) {
             TM.runningTasks.put(tag, requestTask);
