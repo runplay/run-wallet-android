@@ -191,15 +191,18 @@ public class ChooseSeedFragment extends Fragment implements WalletTabFragment.On
 
         }
         Currency cur = Store.getDefaultCurrency(getActivity());
-        Ticker ticker = Store.getTicker("IOTA:" + cur.getCurrencyCode());
+
         seedValue.setText(IotaToText.convertRawIotaAmountToDisplayText(displayBalance, true));
-        seedCurrency.setText(ticker.getIotaValString(displayBalance) + "\n" + cur.getSymbol());
-        DecimalFormat udf = df;
-        if (ticker.getLast() < 0.01)
-            udf = dfs;
-        xchangeLast.setText(udf.format(ticker.getLast()));
-        xchangeHigh.setText(udf.format(ticker.getHigh()));
-        xchangeLow.setText(udf.format(ticker.getLow()));
+        Ticker ticker = Store.getTicker("IOTA:" + cur.getCurrencyCode());
+        if(ticker!=null) {
+            seedCurrency.setText(ticker.getIotaValString(displayBalance) + "\n" + cur.getSymbol());
+            DecimalFormat udf = df;
+            if (ticker.getLast() < 0.01)
+                udf = dfs;
+            xchangeLast.setText(udf.format(ticker.getLast()));
+            xchangeHigh.setText(udf.format(ticker.getHigh()));
+            xchangeLow.setText(udf.format(ticker.getLow()));
+        }
             //Log.e("THIST","go 3");
         chart.setNoDataText(getString(R.string.messages_no_chart_data));
         chart.setNoDataTextColor(ContextCompat.getColor(getActivity(), R.color.white));
