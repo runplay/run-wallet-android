@@ -2,7 +2,7 @@
 ![alt tag](http://iota.runplay.com/img/icon.png "run IOTA wallet Logo")
 
 <b>run Iota</b> provides a fast, efficient and easy to manage Wallet for the IOTA currency
-<br/>Latest update adds Multi Adress transfer and TOR ability
+<br/>Latest update adds Multi Address transfer and TOR ability
 
 <h2>Features</h2>
 
@@ -12,9 +12,10 @@ Full of features<br/>
 ✅ <b>Multi Address Transfers</b> 🌿<br/>
 ✅ Automatic Seed balance discovery<br/>
 ✅ Automatic Address generating<br/>
-✅ Clear detail Address balance and Pending balance data<br/>
+✅ Clear detailed Address balance and Pending balance data<br/>
 ✅ Address <b>Pigs</b> 🐷 <b>sticky addresses</b> 🐷 keep any address from being used 🐷<br/>
 ✅ <b>TOR</b> enable private IOTOR (IOTA over TOR)<br/>
+✅ Customisable, different colour themes to style the app<br/>
 ✅ Transaction and address history<br/>
 ✅ Currency data and Charts 💵 💴 💶 💷<br/>
 ✅ Full Node control<br/>

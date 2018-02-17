@@ -56,6 +56,7 @@ import run.wallet.iota.api.requests.NudgeRequest;
 import run.wallet.iota.api.requests.ReplayBundleRequest;
 import run.wallet.iota.api.requests.SendTransferRequest;
 import run.wallet.iota.helper.AESCrypt;
+import run.wallet.iota.helper.AppTheme;
 import run.wallet.iota.helper.Constants;
 import run.wallet.iota.model.Address;
 import run.wallet.iota.model.Seeds;
@@ -106,6 +107,7 @@ public class UiManager {
 
     public static void displayInfoBar(Activity context, LinearLayout forView) {
         makeElements(context);
+        forView.setBackgroundColor(B.getColor(context,AppTheme.getPrimaryDark()));
         try {
             List<ApiRequest> attaching = AppService.getRunningTasks();
             List<LinearLayout> processing=new ArrayList<>();
@@ -207,7 +209,7 @@ public class UiManager {
     }
     private static void makeElements(Context context) {
         if(bgcolor==0) {
-            bgcolor= B.getColor(context,R.color.colorPrimary);
+            bgcolor= B.getColor(context, AppTheme.getPrimary());
             bglight=B.getColor(context,R.color.colorLight);
             white=B.getColor(context,R.color.white);
             red=B.getColor(context,R.color.flatRed);

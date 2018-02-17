@@ -22,7 +22,6 @@
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/colorSecondary"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
         <LinearLayout
             android:layout_width="match_parent"
@@ -203,7 +202,7 @@
                         android:gravity="center_vertical"
                         android:layout_gravity="center_vertical">
                         <TextView
-                            android:background="@color/colorPrimary"
+                            android:background="@color/blackAlpha50"
                             android:textColor="@color/white"
                             android:layout_marginEnd="6dp"
                             android:minWidth="24dp"
@@ -231,7 +230,7 @@
                         android:paddingBottom="@dimen/baseline_small"
                         android:gravity="center_vertical">
                         <TextView
-                            android:background="@color/colorPrimary"
+                            android:background="@color/blackAlpha50"
                             android:textColor="@color/white"
                             android:layout_marginEnd="6dp"
                             android:layout_marginTop="4dp"
@@ -492,6 +491,19 @@
                         android:layout_height="wrap_content" />
                     <TextView
                         android:text="@string/help_set_address_text"
+                        android:layout_width="match_parent"
+                        android:textAppearance="@style/Base.TextAppearance.AppCompat.Body1"
+                        android:layout_height="wrap_content"
+                        android:paddingBottom="@dimen/baseline_card"/>
+                    <TextView
+                        android:text="@string/help_set_tor"
+                        android:drawableStart="@drawable/tor"
+                        android:drawablePadding="10dp"
+                        android:layout_width="match_parent"
+                        android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
+                        android:layout_height="wrap_content" />
+                    <TextView
+                        android:text="@string/help_set_tor_text"
                         android:layout_width="match_parent"
                         android:textAppearance="@style/Base.TextAppearance.AppCompat.Body1"
                         android:layout_height="wrap_content"

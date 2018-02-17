@@ -32,7 +32,7 @@
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme"
+
         tools:ignore="GoogleAppIndexingWarning">
 
         <!-- Activities -->
@@ -50,7 +50,7 @@
             android:name="run.wallet.iota.ui.activity.MainActivity"
             android:label="@string/app_name"
             android:launchMode="singleTask"
-            android:theme="@style/AppTheme.NoActionBar"
+            android:theme="@style/AppTheme"
 
             android:windowSoftInputMode="adjustResize">
             <intent-filter>
@@ -82,7 +82,7 @@
         <activity
             android:name="run.wallet.iota.ui.activity.SettingsActivity"
             android:label="@string/app_settings"
-            android:theme="@style/AppTheme"
+            android:theme="@style/AppTheme.ActionBar"
             >
 
             <meta-data

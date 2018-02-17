@@ -21,7 +21,7 @@
             android:layout_height="wrap_content"
             android:gravity="center"
             android:text="@string/messages_first_load"
-            android:textColor="@color/white"
+            android:textColor="@color/black"
             android:paddingBottom="10dp"
             android:textSize="14sp"
             />
@@ -34,7 +34,7 @@
                 android:layout_weight="3"
                 android:gravity="end"
                 android:text="@string/first_load_predict"
-                android:textColor="@color/whiteAlpha"
+                android:textColor="@color/blackAlpha50"
                 android:paddingRight="10dp"
                 android:layout_gravity="end"/>
             <TextView
@@ -44,7 +44,7 @@
                 android:layout_height="wrap_content"
                 android:gravity="start"
                 android:textStyle="bold"
-                android:textColor="@color/white"
+                android:textColor="@color/blackAlpha50"
                 android:textSize="14sp"
                 android:paddingLeft="10dp"
                 />
@@ -57,7 +57,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="3"
                 android:gravity="end"
-                android:textColor="@color/whiteAlpha"
+                android:textColor="@color/blackAlpha50"
                 android:text="@string/first_load_addresses"
                 android:paddingRight="10dp"
                 android:layout_gravity="end"/>
@@ -68,7 +68,7 @@
                 android:layout_weight="2"
                 android:layout_height="wrap_content"
                 android:gravity="start"
-                android:textColor="@color/white"
+                android:textColor="@color/blackAlpha50"
                 android:textStyle="bold"
                 android:textSize="14sp"
                 android:paddingLeft="10dp"
@@ -83,7 +83,7 @@
                 android:layout_weight="3"
                 android:gravity="end"
                 android:text="@string/first_load_transfers"
-                android:textColor="@color/whiteAlpha"
+                android:textColor="@color/blackAlpha50"
                 android:paddingRight="10dp"
                 android:layout_gravity="end"/>
             <TextView
@@ -93,7 +93,7 @@
                 android:layout_height="wrap_content"
                 android:textStyle="bold"
                 android:gravity="start"
-                android:textColor="@color/white"
+                android:textColor="@color/blackAlpha50"
                 android:textSize="14sp"
                 android:paddingLeft="10dp"
                 />
@@ -107,7 +107,7 @@
             android:gravity="start"
             android:drawableTop="@drawable/first_load_relax"
             android:text="@string/first_load_relax"
-            android:textColor="@color/textColorPrimary"
+            android:textColor="@color/black"
             android:textSize="14sp"
             android:layout_marginTop="10dp"
             android:visibility="gone" />

@@ -1,12 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-
-    android:background="@color/colorSecondary">
+    >
     <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -83,7 +81,8 @@
                             android:text="5m"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:background="@color/colorPrimaryDarkAlpha"
+                            android:background="@color/blackAlpha25"
+                            android:alpha="0.5"
                             android:layout_marginRight="3dp"
                             android:layout_marginBottom="6dp"
                             android:padding="4dp"
@@ -95,7 +94,8 @@
                             android:text="15m"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:background="@color/colorPrimaryDarkAlpha"
+                            android:background="@color/blackAlpha25"
+                            android:alpha="0.5"
                             android:layout_marginRight="3dp"
                             android:layout_marginBottom="6dp"
                             android:padding="4dp"
@@ -107,7 +107,8 @@
                             android:text="30m"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:background="@color/colorPrimaryDarkAlpha"
+                            android:background="@color/blackAlpha25"
+                            android:alpha="0.5"
                             android:layout_marginRight="3dp"
                             android:layout_marginBottom="6dp"
                             android:padding="4dp"
@@ -119,7 +120,8 @@
                             android:text="1hr"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:background="@color/colorPrimaryDarkAlpha"
+                            android:background="@color/blackAlpha25"
+                            android:alpha="0.5"
                             android:layout_marginRight="3dp"
                             android:layout_marginBottom="6dp"
                             android:padding="4dp"
@@ -131,7 +133,8 @@
                             android:text="2hr"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:background="@color/colorPrimaryDarkAlpha"
+                            android:background="@color/blackAlpha25"
+                            android:alpha="0.5"
                             android:layout_marginRight="3dp"
                             android:layout_marginBottom="6dp"
                             android:padding="4dp"
@@ -155,7 +158,8 @@
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
                     android:padding="2dp"
-                    android:background="@color/colorPrimaryDarkAlpha"
+                    android:background="@color/blackAlpha25"
+                    android:alpha="0.5"
                     android:layout_marginLeft="3dp"
                     android:layout_marginBottom="3dp"
 
@@ -179,7 +183,8 @@
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
                     android:padding="2dp"
-                    android:background="@color/colorPrimaryDarkAlpha"
+                    android:background="@color/blackAlpha25"
+                    android:alpha="0.5"
                     android:layout_marginLeft="3dp"
                     android:layout_marginBottom="3dp"
                     >
@@ -201,7 +206,8 @@
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
                     android:padding="2dp"
-                    android:background="@color/colorPrimaryDarkAlpha"
+                    android:background="@color/blackAlpha25"
+                    android:alpha="0.5"
                     android:layout_marginLeft="3dp"
                     android:layout_marginBottom="3dp"
                     >
@@ -223,11 +229,11 @@
                 android:id="@+id/default_seed_click"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
-                android:background="@color/colorPrimaryDark"
+                android:background="@color/blackAlpha25"
+                android:alpha="0.5"
                 android:layout_alignParentBottom="true"
                 android:gravity="center"
                 android:orientation="horizontal"
-                android:alpha="0.7"
                 >
                 <TextView
                     android:id="@+id/default_seed_name"
@@ -272,6 +278,38 @@
                 android:paddingBottom="@dimen/baseline_card">
 
             </android.support.v7.widget.RecyclerView>
+            <RelativeLayout
+                android:id="@+id/choose_seed_none"
+                android:paddingTop="30dp"
+                android:visibility="gone"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+                <TextView
+                    android:id="@+id/choose_seed_no_msg"
+                    android:text="@string/choose_seed_no"
+                    android:textAppearance="@style/Base.TextAppearance.AppCompat.Subhead"
+                    android:gravity="center"
+                    android:padding="@dimen/baseline_card"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+                <TextView
+                    android:layout_below="@id/choose_seed_no_msg"
+                    android:text="@string/choose_seed_no_text"
+                    android:gravity="center_horizontal"
+                    android:textColor="@color/whiteAlpha"
+                    android:padding="@dimen/baseline_card"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+                <TextView
+                    android:layout_alignParentBottom="true"
+                    android:text="@string/choose_seed_none"
+                    android:gravity="center_horizontal"
+                    android:padding="@dimen/baseline_card"
+                    android:background="@color/whiteAlpha"
+
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+            </RelativeLayout>
             <android.support.design.widget.FloatingActionButton
                 android:id="@+id/fab_seed"
                 android:layout_width="wrap_content"

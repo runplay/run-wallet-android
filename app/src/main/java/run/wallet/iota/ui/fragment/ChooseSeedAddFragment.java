@@ -19,6 +19,7 @@
 
 package run.wallet.iota.ui.fragment;
 
+import android.app.Activity;
 import android.app.Fragment;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -34,6 +35,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
 
 import java.util.List;
 
@@ -44,12 +46,15 @@ import butterknife.OnEditorAction;
 import butterknife.Unbinder;
 import jota.utils.SeedRandomGenerator;
 import run.wallet.R;
+import run.wallet.common.B;
+import run.wallet.iota.helper.AppTheme;
 import run.wallet.iota.helper.Constants;
 import run.wallet.iota.helper.SeedValidator;
 import run.wallet.iota.model.Seeds;
 import run.wallet.iota.model.Store;
 import run.wallet.iota.ui.UiManager;
 import run.wallet.iota.ui.dialog.CopySeedDialog;
+import run.wallet.iota.ui.dialog.NoDescDialog;
 
 public class ChooseSeedAddFragment extends Fragment {
 
@@ -71,6 +76,7 @@ public class ChooseSeedAddFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_choose_add, container, false);
+        view.setBackgroundColor(B.getColor(getActivity(), AppTheme.getSecondary()));
         unbinder = ButterKnife.bind(this, view);
 
         //UiManager.setActionBarBackOnly(getActivity(),getString(R.string.seed_add),null);
@@ -87,7 +93,8 @@ public class ChooseSeedAddFragment extends Fragment {
         addSeedToolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.d("cek", "home selected");
+                InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Activity.INPUT_METHOD_SERVICE);
+                imm.hideSoftInputFromWindow(seedEditText.getWindowToken(),0);
                 getActivity().onBackPressed();
             }
         });
@@ -161,11 +168,26 @@ public class ChooseSeedAddFragment extends Fragment {
             }
         }
 
-        addSeed(seed);
+        if(!Store.isLoggedIn()) {
+            login(seed);
+        } else {
+            addSeed(seed);
+            getActivity().onBackPressed();
+        }
+    }
+    private void login(String seed) {
+        //UiManager.setKeyboard(getActivity(),seedEditText,false);
+        Bundle bundle = new Bundle();
+        bundle.putString("seed", seed);
+        if(generatedSeed!=null && generatedSeed.equals(seed)) {
+            bundle.putBoolean("isgen", true);
+        } else {
+            bundle.putBoolean("isgen", false);
+        }
+        NoDescDialog encryptSeedDialog = new NoDescDialog();
+        encryptSeedDialog.setArguments(bundle);
+        encryptSeedDialog.show(getActivity().getFragmentManager(), null);
 
-
-        getActivity().onBackPressed();
-        //UiManager.openFragment(getActivity(),ChooseSeedFragment.class);
     }
 
     private void addSeed(String seed) {

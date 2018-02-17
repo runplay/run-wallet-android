@@ -770,7 +770,6 @@ public class Store {
             ntsp.edit().clear().commit();
             store=new Store();
             Store.init(context,true);
-            Log.e("STORE","WIPED DATA & INIT: now has seed count: "+getSeedList().size());
         }
     }
     public static List<Nodes.Node> getNodes() {
@@ -795,8 +794,7 @@ public class Store {
     }
     public static void changeNode(Nodes.Node newnode) {
         store.currentNode=newnode;
-        //Log.e("SOTRE",store.currentNode.ip);
-        //store.nodeInfo=null;
+        Log.e("SOTRE",store.currentNode.ip);
         store.neighbours.clear();
     }
     public static void updateNode(Context context,Nodes.Node updateNode) {

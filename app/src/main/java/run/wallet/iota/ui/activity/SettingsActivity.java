@@ -15,6 +15,7 @@
  */
 package run.wallet.iota.ui.activity;
 
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -24,6 +25,8 @@ import android.util.Log;
 import android.view.MenuItem;
 
 import run.wallet.R;
+import run.wallet.common.B;
+import run.wallet.iota.helper.AppTheme;
 import run.wallet.iota.model.Store;
 import run.wallet.iota.service.AppService;
 import run.wallet.iota.ui.adapter.WalletAddressCardAdapter;
@@ -36,6 +39,8 @@ public class SettingsActivity extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        AppTheme.init(this);
+        AppTheme.setNavColors(this);
         setContentView(R.layout.activity_settings);
 
         getFragmentManager()
@@ -46,7 +51,9 @@ public class SettingsActivity extends AppCompatActivity {
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
             actionBar.setDisplayHomeAsUpEnabled(true);
+            actionBar.setBackgroundDrawable(new ColorDrawable(B.getColor(this,AppTheme.getPrimary())));
         }
+        AppTheme.setNavColors(this);
     }
     @Override
     public void onResume() {

@@ -36,7 +36,7 @@
                         android:textAppearance="@style/TextAppearance.AppCompat.Small"
                         android:singleLine="true"
                         android:textColor="@color/white"
-                        android:background="@color/colorPrimary"
+                        android:background="@color/blackAlpha50"
                         android:layout_margin="3dp"
                         android:padding="3dp" />
                     <TextView

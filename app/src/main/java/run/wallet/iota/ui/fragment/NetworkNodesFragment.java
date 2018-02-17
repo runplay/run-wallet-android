@@ -43,10 +43,12 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 import run.wallet.R;
+import run.wallet.common.B;
 import run.wallet.common.Sf;
 import run.wallet.common.json.JSONArray;
 import run.wallet.common.json.JSONObject;
 import run.wallet.iota.api.responses.NodeInfoResponse;
+import run.wallet.iota.helper.AppTheme;
 import run.wallet.iota.helper.Constants;
 import run.wallet.iota.helper.JSONUrlReader;
 import run.wallet.iota.model.Nodes;
@@ -60,7 +62,8 @@ public class NetworkNodesFragment extends Fragment
 
     @BindView(R.id.nodes_recycler_view)
     RecyclerView recyclerView;
-    //private List<Neighbor> neighbors;
+    @BindView(R.id.network_nodes_text_pod)
+    View nodesTextPod;
 
 
     private NodesListAdapter adapter;
@@ -70,7 +73,6 @@ public class NetworkNodesFragment extends Fragment
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //inputManager = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
         setHasOptionsMenu(true);
     }
 
@@ -78,18 +80,14 @@ public class NetworkNodesFragment extends Fragment
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_nodes, container, false);
         unbinder = ButterKnife.bind(this, view);
-        //swipeRefreshLayout = view.findViewById(R.id.neighbors_swipe_container);
         return view;
     }
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
-
+        nodesTextPod.setBackgroundColor(B.getColor(getActivity(), AppTheme.getSecondary()));
     }
-
-
 
     @Override
     public void onDestroyView() {
@@ -135,29 +133,7 @@ public class NetworkNodesFragment extends Fragment
         recyclerView.setAdapter(null);
         adapter.notifyDataSetChanged();
         recyclerView.setAdapter(adapter);
-
-
     }
 
 
-
-    @Override
-    public void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        //outState.putString(SEARCH_TEXT, searchView == null ? "" : searchView.getQuery().toString().isEmpty() ? "" : searchView.getQuery().toString());
-        //outState.putString(NEW_ADDRESS_TEXT, editTextNewAddress == null ? "" : editTextNewAddress.getText().toString().isEmpty() ? "" : editTextNewAddress.getText().toString());
-        //if(revealView!=null)
-        //    outState.putBoolean(REAVEAL_VIEW_STATE, revealView.isShown());
-
-    }
-
-    @SuppressLint("SetTextI18n")
-    @Override
-    public void onActivityCreated(@Nullable final Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        if (savedInstanceState != null) {
-
-        }
-
-    }
 }

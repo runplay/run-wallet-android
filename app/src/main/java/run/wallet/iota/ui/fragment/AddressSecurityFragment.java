@@ -51,9 +51,11 @@ import butterknife.OnEditorAction;
 import butterknife.Unbinder;
 import jota.utils.SeedRandomGenerator;
 import run.wallet.R;
+import run.wallet.common.B;
 import run.wallet.common.Sf;
 import run.wallet.iota.api.responses.AddressSecurityChangeResponse;
 import run.wallet.iota.api.responses.RefreshEventResponse;
+import run.wallet.iota.helper.AppTheme;
 import run.wallet.iota.helper.SeedValidator;
 import run.wallet.iota.model.Store;
 import run.wallet.iota.service.AppService;
@@ -88,6 +90,7 @@ public class AddressSecurityFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_address_security, container, false);
+        view.setBackgroundColor(B.getColor(getActivity(), AppTheme.getSecondary()));
         unbinder = ButterKnife.bind(this, view);
 
         //UiManager.setActionBarBackOnly(getActivity(),getString(R.string.seed_add),null);

@@ -40,7 +40,7 @@ public class RootDetectedDialog extends DialogFragment implements DialogInterfac
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
 
-        return new AlertDialog.Builder(getActivity(), R.style.AppCompatAlertDialogStyle)
+        return new AlertDialog.Builder(getActivity())
                 .setTitle(R.string.title_root_detected)
                 .setIcon(R.drawable.isrooted)
                 .setMessage(R.string.message_root_detected)

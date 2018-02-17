@@ -23,6 +23,11 @@
         android:key="preference_show_used"
         android:summary="@string/settings_used_summary"
         android:title="@string/settings_used" />
+    <Preference
+
+        android:key="preference_show_colors"
+        android:summary="@string/theme_text"
+        android:title="@string/theme_choose" />
     <ListPreference
         android:defaultValue="2"
         android:entries="@array/listAutoAttach"

@@ -68,7 +68,7 @@ public class NotificationHelper {
 
         Notification notification = new NotificationCompat.Builder(context, NOTIFICATION_CHANNEL)
                 .setSmallIcon(image)
-                .setColor(ContextCompat.getColor(context, R.color.colorAccent))
+                .setColor(ContextCompat.getColor(context, AppTheme.getAccent()))
                 .setContentTitle(title)
                 .setContentIntent(pendingIntent)
                 .setVibrate(vibrateLength)
@@ -97,7 +97,7 @@ public class NotificationHelper {
 
         Notification notification = new NotificationCompat.Builder(context, NOTIFICATION_CHANNEL)
                 .setSmallIcon(image)
-                .setColor(ContextCompat.getColor(context, R.color.colorAccent))
+                .setColor(ContextCompat.getColor(context, AppTheme.getAccent()))
                 .setContentTitle(title)
                 .setProgress(0, 0, true)
                 .setContentIntent(pendingIntent)

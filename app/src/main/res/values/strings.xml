@@ -185,6 +185,28 @@
     <string name="menu_node_list_summary">App will connect descending order to the first Node that is in Sync, move nodes to the top to be first connect priority</string>
     <string name="menu_node_no_remove">At last one node required, add one, then delete this node</string>
 
+    <string name="theme_choose">Change colour</string>
+    <string name="theme_text">Change the colour theme of the app</string>
+    <string name="theme_brand">Brownish</string>
+    <string name="theme_brand_text">run IOTA wallet Brown Theme coloured</string>
+    <string name="theme_blue">Blue Sea</string>
+    <string name="theme_blue_text">Dark and light Blue Theme coloured</string>
+    <string name="theme_pink">Pretty Pink</string>
+    <string name="theme_pink_text">Pink, sweet, playful, cute, romantic, feminine</string>
+    <string name="theme_dg">Night Garden</string>
+    <string name="theme_dg_text">Dark Green based Theme coloured</string>
+    <string name="theme_green">Go Green</string>
+    <string name="theme_green_text">Bold and Bright Green Theme coloured</string>
+    <string name="theme_dn">Twilight</string>
+    <string name="theme_dn_text">Dark and dusky theme colored</string>
+    <string name="theme_snow">Snow</string>
+    <string name="theme_snow_text">So soft and mellow White Theme</string>
+    <string name="theme_purple">Purple Haze</string>
+    <string name="theme_purple_text">Purple mellow Theme coloured</string>
+    <string name="theme_bw">Chaplin</string>
+    <string name="theme_bw_text">Black on White Theme coloured</string>
+    <string name="theme_red">Angry man</string>
+    <string name="theme_red_text">Red on White Theme coloured</string>
 
     <!-- TOR -->
     <string name="tor">Tor</string>
@@ -361,6 +383,7 @@
 
     <string name="settings_change_password_title">Change Password</string>
     <string name="settings_change_password_summary">Change current password</string>
+    <string name="settings_change_password_snackbar">No password set, Go create a Wallet first</string>
 
     <string name="settings_encrypt_seed_title">Protect seed</string>
     <string name="settings_encrypt_seed_summary">Set-up password protection</string>
@@ -459,17 +482,34 @@
 
     <!-- Welcome -->
     <string name="welcome_title">Welcome</string>
-    <string name="welcome_intro">run IOTA provides an easy to use fast wallet for your everyday IOTA use</string>
+    <string name="welcome_intro">run IOTA wallet, the easy to use fast wallet for your everyday IOTA use</string>
+    <string name="welcome_mulit_seed">✅ Multi Seed wallet</string>
+    <string name="welcome_multi_transfer">✅ Multi Address transfers</string>
+    <string name="welcome_title_advanced_address">✅ Advanced Address management</string>
+    <string name="welcome_fast_text">✅ Fast transactions</string>
+
+    <string name="welcome_aw">Active Wallet</string>
+    <string name="welcome_aw_summary">Create or Add your first Seed to see the wallet here</string>
+    <string name="welcome_aw_go">Go to the All Wallets section to create a new Wallet</string>
+    <string name="welcome_aw_btn">Add Wallet</string>
+    <string name="welcome_aw_alternative">Before you add your first Wallet Seed, you can change to your preferred settings</string>
+    <string name="welcome_aw_tor_text">IOTOR, IOTA over TOR</string>
+    <string name="welcome_aw_tor">Set Tor</string>
+    <string name="welcome_aw_other_text">Other app advanced and display settings</string>
+    <string name="welcome_aw_other">Settings</string>
 
 
     <string name="colour_change">Change app colour</string>
 
     <string name="colour_theme_blue_light">Sky</string>
-    <string name="colour_theme_blue_dark">Royal</string>
-    <string name="colour_theme_red">Urgent</string>
-    <string name="colour_theme_brown">Boring</string>
+    <string name="colour_theme_blue_dark">Blue Sea</string>
+    <string name="colour_theme_red">Angry man</string>
+    <string name="colour_theme_brown">Brownish</string>
 
 
+    <string name="choose_seed_none">Click + to create or add a Seed</string>
+    <string name="choose_seed_no">No Wallets</string>
+    <string name="choose_seed_no_text">Add a new or existing seed to create a wallet</string>
     <!-- Alert Dialog-->
     <string name="copy_address">Copy address</string>
     <string name="copy_hash">Copy hash</string>
@@ -596,6 +636,10 @@
     <string name="help_set_password_text">Change the password used to access the app</string>
     <string name="help_set_address">Address Security 🔐</string>
     <string name="help_set_address_text">Change the default Security value to use when generating addresses</string>
+
+    <string name="help_set_tor">Tor</string>
+    <string name="help_set_tor_text">Enable the app to use the Tor Orbot app for all http and https traffic</string>
+
     <string name="help_set_address_auto">Automatic Addresses 🎚</string>
     <string name="help_set_address_auto_text">Change the number of empty zero balance addresses to keep</string>
     <string name="help_set_nudge_auto">Nudge Attempts 🎚</string>

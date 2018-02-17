@@ -43,6 +43,7 @@ import jota.utils.IotaToText;
 import run.wallet.R;
 import run.wallet.common.B;
 import run.wallet.iota.api.requests.SendTransferRequest;
+import run.wallet.iota.helper.AppTheme;
 import run.wallet.iota.helper.Constants;
 import run.wallet.iota.model.Address;
 import run.wallet.iota.model.Seeds;
@@ -137,7 +138,7 @@ public class WalletAddressCardAdapter extends RecyclerView.Adapter<WalletAddress
                 if (address.getValue() > 0) {
                     holder.addressValue.setTextColor(B.getColor(context, R.color.green));
                     holder.addressValueThird.setTextColor(B.getColor(context, R.color.green));
-                    holder.addressValueUnit.setTextColor(B.getColor(context, R.color.colorPrimary));
+                    holder.addressValueUnit.setTextColor(B.getColor(context, AppTheme.getPrimary()));
                 } else {
                     holder.addressValue.setTextColor(B.getColor(context, R.color.grey));
                     holder.addressValueThird.setTextColor(B.getColor(context, R.color.grey));
@@ -179,7 +180,7 @@ public class WalletAddressCardAdapter extends RecyclerView.Adapter<WalletAddress
                 } else if (address.isPig()) {
                     holder.cardView.setCardBackgroundColor(B.getColor(context, R.color.whiteAlpha));
                     holder.addressImage.setImageResource(R.drawable.pig);
-                    holder.addressLabel.setTextColor(B.getColor(context, R.color.colorPrimaryDark));
+                    holder.addressLabel.setTextColor(B.getColor(context, AppTheme.getPrimaryDark()));
                 } else if (!address.isAttached()) {
                     holder.addressImage.setColorFilter(ContextCompat.getColor(context, R.color.flatGreen));
                     holder.addressLabel.setTextColor(B.getColor(context, R.color.grey));

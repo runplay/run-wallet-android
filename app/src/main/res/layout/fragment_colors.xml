@@ -1,0 +1,278 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <android.support.design.widget.AppBarLayout
+        android:id="@+id/welcome_tool"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:theme="@style/AppTheme.AppBarOverlay">
+
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/welcome_toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="?attr/colorPrimary"
+            app:popupTheme="@style/AppTheme.PopupOverlay"
+            app:title="@string/theme_choose" />
+
+    </android.support.design.widget.AppBarLayout>
+    <LinearLayout
+        android:layout_below="@id/welcome_tool"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+        <TextView
+            android:textColor="@color/blackAlpha50"
+            android:padding="6dp"
+            android:gravity="start"
+            android:text="@string/theme_choose"
+            android:layout_width="match_parent"
+            android:drawableEnd="@drawable/next"
+            android:layout_height="30dp" />
+        <ScrollView
+            android:id="@+id/welcome_colors"
+            android:layout_alignParentBottom="true"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingBottom="@dimen/baseline_card">
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+                <LinearLayout
+                    android:id="@+id/choose_theme_brand"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+                    <TextView
+                        android:background="@color/colorPrimary"
+                        android:textColor="@color/white"
+                        android:padding="6dp"
+                        android:layout_margin="6dp"
+                        android:gravity="center"
+                        android:text="@string/theme_brand"
+                        android:layout_width="150dp"
+                        android:layout_height="30dp" />
+                    <TextView
+                        android:textColor="@color/blackAlpha50"
+                        android:padding="6dp"
+                        android:gravity="center"
+                        android:text="@string/theme_brand_text"
+                        android:layout_width="wrap_content"
+                        android:layout_height="30dp" />
+                </LinearLayout>
+                <LinearLayout
+                    android:id="@+id/choose_theme_blue"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+                    <TextView
+
+                        android:background="@color/colorBluePrimary"
+                        android:textColor="@color/white"
+                        android:padding="6dp"
+                        android:gravity="center"
+                        android:layout_margin="6dp"
+                        android:text="@string/theme_blue"
+                        android:layout_width="150dp"
+                        android:layout_height="30dp" />
+                    <TextView
+                        android:textColor="@color/blackAlpha50"
+                        android:padding="6dp"
+                        android:gravity="center"
+                        android:text="@string/theme_blue_text"
+                        android:layout_width="wrap_content"
+                        android:layout_height="30dp" />
+                </LinearLayout>
+                <LinearLayout
+                    android:id="@+id/choose_theme_red"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+                    <TextView
+
+                        android:background="@color/colorRedPrimary"
+                        android:textColor="@color/white"
+                        android:padding="6dp"
+                        android:layout_margin="6dp"
+                        android:gravity="center"
+                        android:text="@string/theme_red"
+                        android:layout_width="150dp"
+                        android:layout_height="30dp" />
+                    <TextView
+                        android:textColor="@color/blackAlpha50"
+                        android:padding="6dp"
+                        android:gravity="center"
+                        android:text="@string/theme_red_text"
+                        android:layout_width="wrap_content"
+                        android:layout_height="30dp" />
+                </LinearLayout>
+                <LinearLayout
+                    android:id="@+id/choose_theme_pink"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+                    <TextView
+
+                        android:background="@color/colorPinkPrimary"
+                        android:textColor="@color/white"
+                        android:padding="6dp"
+                        android:layout_margin="6dp"
+                        android:gravity="center"
+                        android:text="@string/theme_pink"
+                        android:layout_width="150dp"
+                        android:layout_height="30dp" />
+                    <TextView
+                        android:textColor="@color/blackAlpha50"
+                        android:padding="6dp"
+                        android:gravity="center"
+                        android:text="@string/theme_pink_text"
+                        android:layout_width="wrap_content"
+                        android:layout_height="30dp" />
+                </LinearLayout>
+                <LinearLayout
+                    android:id="@+id/choose_theme_purple"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+                    <TextView
+
+                        android:background="@color/colorPurplePrimary"
+                        android:textColor="@color/white"
+                        android:padding="6dp"
+                        android:layout_margin="6dp"
+                        android:gravity="center"
+                        android:text="@string/theme_purple"
+                        android:layout_width="150dp"
+                        android:layout_height="30dp" />
+                    <TextView
+                        android:textColor="@color/blackAlpha50"
+                        android:padding="6dp"
+                        android:gravity="center"
+                        android:text="@string/theme_purple_text"
+                        android:layout_width="wrap_content"
+                        android:layout_height="30dp" />
+                </LinearLayout>
+                <LinearLayout
+                    android:id="@+id/choose_theme_dg"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+                    <TextView
+
+                        android:background="@color/colorDgPrimary"
+                        android:textColor="@color/white"
+                        android:padding="6dp"
+                        android:layout_margin="6dp"
+                        android:gravity="center"
+                        android:text="@string/theme_dg"
+                        android:layout_width="150dp"
+                        android:layout_height="30dp" />
+                    <TextView
+                        android:textColor="@color/blackAlpha50"
+                        android:padding="6dp"
+                        android:gravity="center"
+                        android:text="@string/theme_dg_text"
+                        android:layout_width="wrap_content"
+                        android:layout_height="30dp" />
+                </LinearLayout>
+                <LinearLayout
+                    android:id="@+id/choose_theme_bw"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+                    <TextView
+
+                        android:background="@color/colorBwPrimary"
+                        android:textColor="@color/white"
+                        android:padding="6dp"
+                        android:layout_margin="6dp"
+                        android:gravity="center"
+                        android:text="@string/theme_bw"
+                        android:layout_width="150dp"
+                        android:layout_height="30dp" />
+                    <TextView
+                        android:textColor="@color/blackAlpha50"
+                        android:padding="6dp"
+                        android:gravity="center"
+                        android:text="@string/theme_bw_text"
+                        android:layout_width="wrap_content"
+                        android:layout_height="30dp" />
+                </LinearLayout>
+                <LinearLayout
+                    android:id="@+id/choose_theme_green"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+                    <TextView
+
+                        android:background="@color/colorGreenPrimary"
+                        android:textColor="@color/white"
+                        android:padding="6dp"
+                        android:layout_margin="6dp"
+                        android:gravity="center"
+                        android:text="@string/theme_green"
+                        android:layout_width="150dp"
+                        android:layout_height="30dp" />
+                    <TextView
+                        android:textColor="@color/blackAlpha50"
+                        android:padding="6dp"
+                        android:gravity="center"
+                        android:text="@string/theme_green_text"
+                        android:layout_width="wrap_content"
+                        android:layout_height="30dp" />
+                </LinearLayout>
+                <LinearLayout
+                    android:id="@+id/choose_theme_dn"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+                    <TextView
+
+                        android:background="@color/colorDnPrimary"
+                        android:textColor="@color/white"
+                        android:padding="6dp"
+                        android:layout_margin="6dp"
+                        android:gravity="center"
+                        android:text="@string/theme_dn"
+                        android:layout_width="150dp"
+                        android:layout_height="30dp" />
+                    <TextView
+                        android:textColor="@color/blackAlpha50"
+                        android:padding="6dp"
+                        android:gravity="center"
+                        android:text="@string/theme_dn_text"
+                        android:layout_width="wrap_content"
+                        android:layout_height="30dp" />
+                </LinearLayout>
+                <LinearLayout
+                    android:id="@+id/choose_theme_snow"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+                    <TextView
+
+                        android:background="@color/colorSnowPrimary"
+                        android:textColor="@color/blackAlpha50"
+                        android:padding="6dp"
+                        android:layout_margin="6dp"
+                        android:gravity="center"
+                        android:text="@string/theme_snow"
+                        android:layout_width="150dp"
+                        android:layout_height="30dp" />
+                    <TextView
+                        android:textColor="@color/blackAlpha50"
+                        android:padding="6dp"
+                        android:gravity="center"
+                        android:text="@string/theme_snow_text"
+                        android:layout_width="wrap_content"
+                        android:layout_height="30dp" />
+                </LinearLayout>
+            </LinearLayout>
+        </ScrollView>
+    </LinearLayout>
+
+</RelativeLayout>

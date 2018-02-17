@@ -241,6 +241,8 @@ public class WalletTabFragment extends LoggedInFragment {
             Fragment currentFragment = adapter.getItem(viewPager.getCurrentItem());
             if (currentFragment != null && currentFragment instanceof WalletTabFragment.OnFabClickListener) {
                 ((OnFabClickListener) currentFragment).onFabClick();
+            } else {
+                Log.e("BAD","MR BADDY BAD");
             }
         //}
     }
@@ -408,6 +410,14 @@ public class WalletTabFragment extends LoggedInFragment {
         Store.setCurrentFragment(this.getClass());
         EventBus.getDefault().register(this);
         updateBalance();
+        if(Store.getCurrentWallet()==null) {
+            if(!AppService.isFirstTimeLoadRunning(getActivity()))
+                AppService.getFirstTimeLoad(getActivity());
+        } else if(Store.getCurrentWallet()!=null) {
+            if(Store.getCurrentWallet().getLastUpdate()<System.currentTimeMillis()- (Cal.MINUTES_1_IN_MILLIS*20)) {
+                AppService.getAccountData(getActivity(),Store.getCurrentSeed());
+            }
+        }
     }
     @Subscribe
     public void onEvent(SendTransferResponse str) {
@@ -415,19 +425,6 @@ public class WalletTabFragment extends LoggedInFragment {
     }
     @Subscribe
     public void onEvent(NodeInfoResponse nodeInfoResponse) {
-
-        if (nodeInfoResponse.isSyncOk()) {
-            if(Store.getCurrentWallet()==null) {
-                //Log.e("IOTA-FIRST","Call run first time: "+AppService.isFirstTimeLoadRunning(getActivity()));
-                if(!AppService.isFirstTimeLoadRunning(getActivity()))
-                    AppService.getFirstTimeLoad(getActivity());
-            } else if(Store.getCurrentWallet()!=null) {
-                if(Store.getCurrentWallet().getLastUpdate()<System.currentTimeMillis()- (Cal.MINUTES_1_IN_MILLIS*10)) {
-                   // Log.e("IOTA-WALLET-HOME","Call getAcoount data refresh");
-                    AppService.getAccountData(getActivity(),Store.getCurrentSeed());
-                }
-            }
-        }
         updateFab();
     }
     @Override

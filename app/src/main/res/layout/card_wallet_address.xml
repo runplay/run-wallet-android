@@ -44,7 +44,7 @@
                 android:layout_height="wrap_content"
                 android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
                 android:textColor="@color/white"
-                android:background="@color/colorPrimary"
+                android:background="@color/blackAlpha50"
                 android:paddingLeft="2dp"
                 android:paddingRight="2dp"
                 android:layout_alignParentBottom="true"/>
@@ -76,7 +76,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
-            android:background="@color/colorPrimary"
+            android:background="@color/blackAlpha50"
             android:text="s2"
             android:padding="2dp"
             android:textColor="@color/white"
@@ -121,7 +121,7 @@
                     android:layout_height="35dp"
                     android:text="i"
                     android:textAppearance="@style/Base.TextAppearance.AppCompat.Headline"
-                    android:textColor="@color/colorPrimary"
+                    android:textColor="@color/blackAlpha50"
                     android:textStyle="bold" />
             </LinearLayout>
             <TextView

@@ -72,6 +72,7 @@ public class Constants {
     public static final int REQUEST_CODE_LOGIN = 101;
     public static final int REQUEST_RESTART_KILL_APP =85;
     public static final int REQUEST_GO_TOR =8118;
+    public static final int REQUEST_GO_COLORS =8008;
 
     public static final int REQUEST_STORAGE_PERMISSION = 1;
     public static final int REQUEST_CAMERA_PERMISSION = 12;

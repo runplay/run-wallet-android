@@ -2,7 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorSecondary">
+    >
     <LinearLayout
         android:id="@+id/addresses_empty"
         android:layout_width="match_parent"
@@ -13,7 +13,7 @@
         <TextView
             android:drawableTop="@drawable/logo"
             android:id="@+id/addresses_empty_title"
-            android:textColor="@color/white"
+            android:textColor="@color/blackAlpha50"
             android:drawablePadding="10dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -25,7 +25,7 @@
         <TextView
             android:padding="20dp"
             android:id="@+id/addresses_empty_settings"
-            android:textColor="@color/grey"
+            android:textColor="@color/blackAlpha25"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
@@ -36,7 +36,7 @@
         <TextView
             android:drawableBottom="@drawable/tran_orange"
             android:id="@+id/addresses_empty_create"
-            android:textColor="@color/white"
+            android:textColor="@color/blackAlpha25"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
@@ -69,7 +69,6 @@
         </run.wallet.common.ui.SwipeRefreshLayout>
         <LinearLayout
             android:id="@+id/info_bar_addresses"
-            android:background="@color/colorPrimaryDarker"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
@@ -90,7 +89,7 @@
             android:id="@+id/confirm_user_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textColor="@color/whiteAlpha"
+            android:textColor="@color/blackAlpha50"
             android:text="@string/confirm_message"
             android:paddingRight="10dp"
             android:gravity="center"/>

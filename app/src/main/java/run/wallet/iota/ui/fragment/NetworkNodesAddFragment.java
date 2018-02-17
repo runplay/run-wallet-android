@@ -42,7 +42,9 @@ import butterknife.ButterKnife;
 import butterknife.OnEditorAction;
 import butterknife.Unbinder;
 import run.wallet.R;
+import run.wallet.common.B;
 import run.wallet.common.Sf;
+import run.wallet.iota.helper.AppTheme;
 import run.wallet.iota.helper.Utils;
 import run.wallet.iota.model.Nodes;
 import run.wallet.iota.model.Store;
@@ -66,6 +68,8 @@ public class NetworkNodesAddFragment extends Fragment {
 
     @BindView(R.id.node_add_list_all)
     RecyclerView listNodes;
+    @BindView(R.id.enter_pod)
+    View enterPod;
 
     //private boolean useHttp=true;
     private String[] protos = new String[]{"http","https","udp"};
@@ -93,6 +97,7 @@ public class NetworkNodesAddFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         ((AppCompatActivity) getActivity()).setSupportActionBar(addNodeToolbar);
         setHasOptionsMenu(false);
+        enterPod.setBackgroundColor(B.getColor(getActivity(), AppTheme.getSecondary()));
         addNodeToolbar.setNavigationIcon(getResources().getDrawable(R.drawable.md_nav_back));
         addNodeToolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
@@ -113,8 +118,6 @@ public class NetworkNodesAddFragment extends Fragment {
         addNodeBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
-// add node code
                 Nodes.Node node = new Nodes.Node();
                 node.ip=nodeAddress.getText().toString();
                 node.port= Sf.toInt(port.getText().toString());
@@ -125,8 +128,6 @@ public class NetworkNodesAddFragment extends Fragment {
                 Store.addNode(getActivity(),node.ip,node.port,node.protocol);
 
                 getActivity().onBackPressed();
-
-
             }
         });
         adapter=new AddNodesListAdapter(getActivity(),this);
@@ -171,13 +172,7 @@ public class NetworkNodesAddFragment extends Fragment {
     public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
         if ((actionId == EditorInfo.IME_ACTION_DONE)
                 || ((event.getKeyCode() == KeyEvent.KEYCODE_ENTER) && (event.getAction() == KeyEvent.ACTION_DOWN))) {
-            /*
-            if (editTextNewAddress.getText().toString().isEmpty()) {
-                Snackbar.make(getActivity().findViewById(R.id.drawer_layout), getString(R.string.messages_enter_neighbor_address), Snackbar.LENGTH_LONG)
-                        .setAction(null, null).show();
-                return false;
-            }
-            */
+
             addNode();
         }
         return true;

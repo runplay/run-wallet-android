@@ -5,11 +5,12 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 <TextView
+    android:id="@+id/network_nodes_text_pod"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:text="@string/menu_node_list_summary"
-    android:background="@color/colorPrimary"
     android:padding="@dimen/baseline_card"
+
     android:textAppearance="@style/TextAppearance.AppCompat.Small"
     />
 <android.support.v7.widget.RecyclerView

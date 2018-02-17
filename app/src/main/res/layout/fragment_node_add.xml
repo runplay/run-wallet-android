@@ -27,7 +27,6 @@
                 android:id="@+id/enter_pod"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@color/colorSecondary"
                 android:orientation="vertical"
                 android:padding="@dimen/baseline_card"
                 tools:ignore="contentDescription">
@@ -84,7 +83,7 @@
                         android:scaleType="fitCenter"
                         android:src="@drawable/logo"
 
-                        android:tint="@color/colorPrimary" />
+                        android:tint="@color/blackAlpha50" />
                     <android.support.v7.widget.AppCompatButton
                         android:id="@+id/node_add_choose_button"
                         android:text="@string/menu_node_add"

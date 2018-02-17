@@ -76,8 +76,12 @@ public class SettingsPasswordFragment extends PreferenceFragment {
                 }
                 break;
             case PREFERENCE_CHANGE_PASSWORD:
-                ChangeNoDescDialog changeSeedPasswordDialog = new ChangeNoDescDialog();
-                changeSeedPasswordDialog.show(getActivity().getFragmentManager(), null);
+                if(Store.isLoggedIn()) {
+                    ChangeNoDescDialog changeSeedPasswordDialog = new ChangeNoDescDialog();
+                    changeSeedPasswordDialog.show(getActivity().getFragmentManager(), null);
+                } else {
+                    Snackbar.make(getView(),R.string.settings_change_password_snackbar,Snackbar.LENGTH_LONG).show();
+                }
                 break;
             case PREFERENCE_WIPE_WALLETS:
                 AlertDialog alertDialog = new AlertDialog.Builder(getActivity())

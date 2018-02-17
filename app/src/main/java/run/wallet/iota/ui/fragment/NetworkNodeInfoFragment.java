@@ -55,6 +55,7 @@ import run.wallet.common.B;
 import run.wallet.iota.api.responses.NodeInfoResponse;
 import run.wallet.iota.api.responses.RefreshEventResponse;
 import run.wallet.iota.api.responses.error.NetworkError;
+import run.wallet.iota.helper.AppTheme;
 import run.wallet.iota.helper.Utils;
 import run.wallet.iota.model.NodeInfo;
 import run.wallet.iota.model.Store;
@@ -104,7 +105,9 @@ public class NetworkNodeInfoFragment extends BaseSwipeRefreshLayoutFragment impl
         chart.setNoDataTextColor(ContextCompat.getColor(getActivity(), R.color.colorLight));
         chart.setEntryLabelColor(ContextCompat.getColor(getActivity(), R.color.colorLight));
         Paint p = chart.getPaint(Chart.PAINT_INFO);
-        p.setColor(ContextCompat.getColor(getActivity(), R.color.colorAccent));
+        chart.setBackgroundColor(B.getColor(getActivity(),AppTheme.getSecondary()));
+        p.setColor(ContextCompat.getColor(getActivity(), AppTheme.getAccent()));
+        list.setBackgroundColor(B.getColor(getActivity(),R.color.whiteAlpha75));
         initializeChart();
     }
 
@@ -258,7 +261,7 @@ public class NetworkNodeInfoFragment extends BaseSwipeRefreshLayoutFragment impl
     private SpannableString generateCenterSpannableText() {
         SpannableString s = new SpannableString("");
         s.setSpan(new RelativeSizeSpan(0.75f), 0, 0, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-        s.setSpan(new ForegroundColorSpan(ContextCompat.getColor(getActivity(), R.color.colorAccent)), 0, s.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        s.setSpan(new ForegroundColorSpan(ContextCompat.getColor(getActivity(), AppTheme.getAccent())), 0, s.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
         return s;
     }
 
@@ -277,7 +280,7 @@ public class NetworkNodeInfoFragment extends BaseSwipeRefreshLayoutFragment impl
         // add a lot of colors
 
         ArrayList<Integer> colors = new ArrayList<>();
-        colors.add(B.getColor(getActivity(),R.color.colorPrimaryDark));
+        colors.add(B.getColor(getActivity(),AppTheme.getPrimaryDark()));
         colors.add(B.getColor(getActivity(),R.color.colorLight));
         colors.add(B.getColor(getActivity(),R.color.white));
         //for (int c : ColorTemplate.PASTEL_COLORS)
@@ -290,12 +293,12 @@ public class NetworkNodeInfoFragment extends BaseSwipeRefreshLayoutFragment impl
         dataSet.setValueLinePart2Length(0.4f);
         dataSet.setXValuePosition(PieDataSet.ValuePosition.OUTSIDE_SLICE);
         dataSet.setYValuePosition(PieDataSet.ValuePosition.OUTSIDE_SLICE);
-        dataSet.setValueTextColor(ContextCompat.getColor(getActivity(), R.color.colorPrimary));
+        dataSet.setValueTextColor(ContextCompat.getColor(getActivity(), AppTheme.getPrimary()));
 
         PieData data = new PieData(dataSet);
         data.setValueFormatter(new PercentFormatter());
         data.setValueTextSize(12f);
-        data.setValueTextColor(ContextCompat.getColor(getActivity(), R.color.colorPrimary));
+        data.setValueTextColor(ContextCompat.getColor(getActivity(), AppTheme.getPrimary()));
         chart.setData(data);
 
         // undo all highlights

@@ -2,6 +2,7 @@ package run.wallet.iota.ui.activity;
 
 import android.content.Intent;
 
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 
 import android.os.Handler;
@@ -12,6 +13,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import run.wallet.R;
+import run.wallet.common.B;
+import run.wallet.iota.helper.AppTheme;
 import run.wallet.iota.helper.TorHelper;
 
 public class SplashActivity extends AppCompatActivity {
@@ -21,10 +24,8 @@ public class SplashActivity extends AppCompatActivity {
     TextView splashTorInfo;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
-        // Start home activity
         TorHelper.init(this,null);
         if(!TorHelper.isForce()) {
             goStart();
@@ -38,6 +39,7 @@ public class SplashActivity extends AppCompatActivity {
     @Override
     public void onResume() {
         super.onResume();
+
         splashTor=findViewById(R.id.splash_tor);
         splashTorInfo=findViewById(R.id.splash_tor_status);
         handler.postDelayed(new Runnable() {

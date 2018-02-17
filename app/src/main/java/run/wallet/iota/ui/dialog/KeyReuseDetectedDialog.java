@@ -53,7 +53,7 @@ public class KeyReuseDetectedDialog extends DialogFragment implements DialogInte
             }
         }
 
-        return new AlertDialog.Builder(getActivity(), R.style.AppCompatAlertDialogStyle)
+        return new AlertDialog.Builder(getActivity())
                 .setTitle(title)
                 .setMessage(message)
                 .setCancelable(false)

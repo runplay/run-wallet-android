@@ -41,9 +41,10 @@ public class NodeInfoResponse extends ApiResponse {
     private final int transactionsToRequest;
 
     public boolean isSyncOk() {
-        int dev=Math.abs(getLatestMilestoneIndex() -getLatestSolidSubtangleMilestoneIndex());
         if(getLatestMilestoneIndex()==243000)
             return false;
+        int dev=getLatestMilestoneIndex() -getLatestSolidSubtangleMilestoneIndex();
+
         // allow 1 out of sync as it could have just jumped a milstone and is just catching up (usually only takes a little bit for a balanced already node)
         if (dev<2) {
             return true;

@@ -2,7 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorSecondary">
+    >
     <LinearLayout
         android:id="@+id/transfers_empty"
         android:layout_width="match_parent"
@@ -14,7 +14,7 @@
         <TextView
             android:drawableTop="@drawable/logo"
             android:id="@+id/transfers_empty_title"
-            android:textColor="@color/white"
+            android:textColor="@color/blackAlpha50"
             android:drawablePadding="10dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -26,7 +26,7 @@
         <TextView
             android:padding="20dp"
             android:id="@+id/transfers_empty_settings"
-            android:textColor="@color/grey"
+            android:textColor="@color/blackAlpha25"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
@@ -40,7 +40,7 @@
             android:paddingRight="50dp"
             android:drawableBottom="@drawable/tran_orange"
             android:id="@+id/transfers_empty_create"
-            android:textColor="@color/grey"
+            android:textColor="@color/blackAlpha25"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
@@ -80,7 +80,6 @@
         >
         <LinearLayout
             android:id="@+id/info_bar_filter"
-            android:background="@color/colorPrimaryDarker"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
@@ -107,7 +106,7 @@
                         android:layout_height="wrap_content"
                         android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
                         android:textColor="@color/white"
-                        android:background="@color/colorPrimary"
+                        android:background="@color/blackAlpha50"
                         android:paddingLeft="2dp"
                         android:paddingRight="2dp"
                         />
@@ -179,7 +178,6 @@
         </run.wallet.common.ui.SwipeRefreshLayout>
         <LinearLayout
             android:id="@+id/info_bar_transfers"
-            android:background="@color/colorPrimaryDarker"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
@@ -200,7 +198,7 @@
             android:id="@+id/confirm_user_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textColor="@color/whiteAlpha"
+            android:textColor="@color/blackAlpha50"
             android:text="@string/confirm_message"
             android:paddingRight="10dp"
             android:gravity="center"/>
@@ -212,7 +210,7 @@
             android:layout_height="wrap_content"
             android:text="@string/confirm_message_yes"
             android:layout_margin="@dimen/baseline"
-            android:textColor="@android:color/white" />
+            android:textColor="@color/white" />
         <android.support.v7.widget.AppCompatButton
             android:id="@+id/fl_confirm_no"
             android:layout_below="@id/fl_confirm_yes"
@@ -220,7 +218,7 @@
             android:layout_height="wrap_content"
             android:text="@string/confirm_message_no"
             android:layout_margin="@dimen/baseline"
-            android:textColor="@android:color/white" />
+            android:textColor="@color/white" />
     </RelativeLayout>
 </RelativeLayout>
 

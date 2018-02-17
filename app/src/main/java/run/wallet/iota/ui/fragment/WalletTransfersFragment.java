@@ -41,6 +41,7 @@ import org.greenrobot.eventbus.Subscribe;
 
 import jota.utils.IotaToText;
 import run.wallet.R;
+import run.wallet.common.B;
 import run.wallet.iota.api.handler.GetFirstLoadRequestHandler;
 import run.wallet.iota.api.requests.ReplayBundleRequest;
 import run.wallet.iota.api.responses.ApiResponse;
@@ -51,6 +52,7 @@ import run.wallet.iota.api.responses.NudgeResponse;
 import run.wallet.iota.api.responses.RefreshEventResponse;
 import run.wallet.iota.api.responses.SendTransferResponse;
 import run.wallet.iota.api.responses.error.NetworkError;
+import run.wallet.iota.helper.AppTheme;
 import run.wallet.iota.model.Address;
 import run.wallet.iota.model.Store;
 import run.wallet.iota.service.AppService;
@@ -174,6 +176,7 @@ public class WalletTransfersFragment extends BaseSwipeRefreshLayoutFragment impl
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_wallet_transfers, container, false);
+        view.setBackgroundColor(B.getColor(getActivity(),AppTheme.getSecondary()));
         unbinder = ButterKnife.bind(this, view);
         swipeRefreshLayout = view.findViewById(R.id.wallet_transfers_swipe_container);
         return view;
@@ -182,6 +185,7 @@ public class WalletTransfersFragment extends BaseSwipeRefreshLayoutFragment impl
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
         NavigationView navigationView = getActivity().findViewById(R.id.nav_view);
         navigationView.getMenu().findItem(R.id.nav_wallet).setChecked(true);
         yesButton.setOnClickListener(new View.OnClickListener() {
@@ -215,13 +219,11 @@ public class WalletTransfersFragment extends BaseSwipeRefreshLayoutFragment impl
         attachingHandler.postDelayed(runAttaching,500);
 
         if(Store.getCurrentWallet()==null) {
-            //firstLoadPod.setVisibility(View.VISIBLE);
             firstLoad.postDelayed(runFirstLoad,500);
         } else {
             firstLoadPod.setVisibility(View.GONE);
             firstLoad.removeCallbacks(runFirstLoad);
             confirmPod.setVisibility(View.GONE);
-            //tvEmpty.setVisibility(adapter.getItemCount() == 0 ? View.VISIBLE : View.GONE);
 
         }
     }
@@ -255,15 +257,15 @@ public class WalletTransfersFragment extends BaseSwipeRefreshLayoutFragment impl
     }
 
     private void getAccountData() {
-        //if (!swipeRefreshLayout.isRefreshing()) {
-            AppService.getAccountData(getActivity(),Store.getCurrentSeed());
-            swipeRefreshLayout.post(new Runnable() {
-                @Override
-                public void run() {
-                    swipeRefreshLayout.setRefreshing(true);
-                }
-            });
-        //}
+
+        AppService.getAccountData(getActivity(),Store.getCurrentSeed());
+        swipeRefreshLayout.post(new Runnable() {
+            @Override
+            public void run() {
+                swipeRefreshLayout.setRefreshing(true);
+            }
+        });
+
     }
 
 
@@ -356,6 +358,7 @@ public class WalletTransfersFragment extends BaseSwipeRefreshLayoutFragment impl
                 Address address = Store.isAlreadyAddress(WalletTransfersCardAdapter.getFilterAddress(),Store.getAddresses());
                 if(address!=null) {
                     filterBar.setVisibility(View.VISIBLE);
+                    filterBar.setBackgroundColor(AppTheme.getColorPrimaryDark(getActivity()));
                     IotaToText.IotaDisplayData data=IotaToText.getIotaDisplayData(address.getValue());
                     filterAddress.setText(address.getAddress());
                     filterId.setText(WalletTransfersCardAdapter.getFilterAddressId());
@@ -375,27 +378,19 @@ public class WalletTransfersFragment extends BaseSwipeRefreshLayoutFragment impl
     @Override
     public void onFabClick() {
         NodeInfoResponse info=Store.getNodeInfo();
-        boolean okgo=true;
         if(info==null) {
             AppService.getNodeInfo(getActivity());
         } else {
             if (info.isSyncOk()) {
                 if(AppService.countTransferRunningTasks(Store.getCurrentSeed())==0) {
-                    Fragment fragment = new SnTrFragment();
-                    Fragment parentFragment = getParentFragment();
-                    if (parentFragment != null) {
-                        parentFragment.getFragmentManager().beginTransaction()
-                                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
-                                .add(R.id.container, fragment, null)
-                                .addToBackStack(null)
-                                .commit();
-                    }
+                    UiManager.openFragmentBackStack(getActivity(),SnTrFragment.class);
                 } else {
-                    Snackbar.make(getView(), R.string.messages_wait_for_transfer, Snackbar.LENGTH_LONG).show();
+                    Snackbar.make(getActivity().findViewById(R.id.drawer_layout), R.string.messages_wait_for_transfer, Snackbar.LENGTH_LONG).show();
                 }
 
             }  else {
-                Snackbar.make(getView(), R.string.messages_not_fully_synced_yet, Snackbar.LENGTH_LONG).show();
+                AppService.getNodeInfo(getActivity());
+                Snackbar.make(getActivity().findViewById(R.id.drawer_layout), R.string.messages_not_fully_synced_yet, Snackbar.LENGTH_LONG).show();
             }
         }
 
@@ -416,10 +411,7 @@ public class WalletTransfersFragment extends BaseSwipeRefreshLayoutFragment impl
     @Override
     public void onRefresh() {
         super.onRefresh();
-        //Log.e("TRAN-FRAG","onRefresh()");
         AppService.getAccountData(getActivity(),Store.getCurrentSeed(),true);
-        //AppService.getNodeInfo(getActivity());
-        //AppService.getNodeInfo(getActivity());
     }
 
 }

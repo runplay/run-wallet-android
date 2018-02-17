@@ -4,7 +4,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:clickable="true"
-    android:background="@color/colorLight"
     android:orientation="vertical">
 
     <android.support.design.widget.AppBarLayout
@@ -163,7 +162,7 @@
                                 android:layout_height="30dp"
                                 android:src="@drawable/message"
                                 style="@style/AppButtonWhite"
-                                android:background="@color/colorPrimary"
+                                android:background="@color/blackAlpha50"
                                 android:textColor="@color/white"
                                 android:layout_margin="3dp"
                                 android:layout_gravity="center"
@@ -453,7 +452,7 @@
                                 android:layout_width="0dp"
                                 android:layout_weight="2"
                                 android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
-                                android:textColor="@color/colorPrimaryDark"
+                                android:textColor="@color/blackAlpha50"
                                 android:layout_height="wrap_content" />
                             <LinearLayout
                                 android:layout_width="0dp"
@@ -511,7 +510,7 @@
                                 android:layout_width="0dp"
                                 android:layout_weight="2"
                                 android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
-                                android:textColor="@color/colorPrimaryDark"
+                                android:textColor="@color/blackAlpha50"
                                 android:layout_height="wrap_content" />
                             <LinearLayout
                                 android:id="@+id/new_transfer_remainder_address"
@@ -540,7 +539,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
-            android:background="@color/colorLight"
+            android:background="@color/whiteAlpha"
             >
             <android.support.v7.widget.AppCompatButton
                 android:id="@+id/new_transfer_next"
@@ -561,7 +560,7 @@
             android:layout_height="wrap_content"
             android:visibility="gone"
             android:layout_alignParentBottom="true"
-            android:background="@color/colorLight"
+            android:background="@color/whiteAlpha"
             >
             <android.support.v7.widget.AppCompatButton
                 android:id="@+id/new_transfer_back"

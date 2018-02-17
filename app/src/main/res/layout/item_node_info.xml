@@ -28,7 +28,7 @@
         android:layout_gravity="center_vertical"
         android:layout_weight="1"
         android:padding="@dimen/baseline_small"
-        android:textColor="@color/colorPrimaryDark"
+        android:textColor="@color/black"
         tools:text="1.1.1" />
 
 </LinearLayout>

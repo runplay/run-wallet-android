@@ -65,6 +65,7 @@ import run.wallet.common.Currency;
 import run.wallet.R;
 
 import run.wallet.iota.api.responses.WebGetExchangeRatesHistoryResponse;
+import run.wallet.iota.helper.AppTheme;
 import run.wallet.iota.helper.Constants;
 import run.wallet.iota.model.Store;
 import run.wallet.iota.model.Tick;
@@ -114,6 +115,8 @@ public class ChooseSeedFragment extends Fragment implements WalletTabFragment.On
     TextView xchange1hr;
     @BindView(R.id.xchange_2h)
     TextView xchange2hr;
+    @BindView(R.id.choose_seed_none)
+    View chooseNone;
 
 
     @BindView(R.id.xchange_list_currencies)
@@ -130,6 +133,8 @@ public class ChooseSeedFragment extends Fragment implements WalletTabFragment.On
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_choose_seed, container, false);
+        view.setBackgroundColor(B.getColor(getActivity(),AppTheme.getSecondary()));
+
         unbinder = ButterKnife.bind(this, view);
         //swipeRefreshLayout = view.findViewById(R.id.wallet_addresses_swipe_container);
         return view;
@@ -141,7 +146,7 @@ public class ChooseSeedFragment extends Fragment implements WalletTabFragment.On
         setHasOptionsMenu(true);
         setAdapter();
         fabSeed.setVisibility(View.VISIBLE);
-
+        defaultClick.setBackgroundColor(B.getColor(getActivity(),AppTheme.getPrimaryDark()));
         setupXchangeBtns();
         defaultClick.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -178,25 +183,29 @@ public class ChooseSeedFragment extends Fragment implements WalletTabFragment.On
     private DecimalFormat df=new DecimalFormat("#,###,##0.00");
     private DecimalFormat dfs=new DecimalFormat("#,###,##0.0000");
     private void drawChart() {
+        long displayBalance=0L;
         if(Store.getCurrentWallet()!=null) {
+
             seedName.setText(Store.getCurrentSeed().name);
-            seedValue.setText(IotaToText.convertRawIotaAmountToDisplayText(Store.getCurrentWallet().getBalanceDisplay(), true));
-            Currency cur = Store.getDefaultCurrency(getActivity());
-            Ticker ticker = Store.getTicker("IOTA:" + cur.getCurrencyCode());
-            seedCurrency.setText(ticker.getIotaValString(Store.getCurrentWallet().getBalanceDisplay()) + "\n" + cur.getSymbol());
-            DecimalFormat udf = df;
-            if (ticker.getLast() < 0.01)
-                udf = dfs;
-            xchangeLast.setText(udf.format(ticker.getLast()));
-            xchangeHigh.setText(udf.format(ticker.getHigh()));
-            xchangeLow.setText(udf.format(ticker.getLow()));
+            displayBalance=Store.getCurrentWallet().getBalanceDisplay();
+
         }
+        Currency cur = Store.getDefaultCurrency(getActivity());
+        Ticker ticker = Store.getTicker("IOTA:" + cur.getCurrencyCode());
+        seedValue.setText(IotaToText.convertRawIotaAmountToDisplayText(displayBalance, true));
+        seedCurrency.setText(ticker.getIotaValString(displayBalance) + "\n" + cur.getSymbol());
+        DecimalFormat udf = df;
+        if (ticker.getLast() < 0.01)
+            udf = dfs;
+        xchangeLast.setText(udf.format(ticker.getLast()));
+        xchangeHigh.setText(udf.format(ticker.getHigh()));
+        xchangeLow.setText(udf.format(ticker.getLow()));
             //Log.e("THIST","go 3");
         chart.setNoDataText(getString(R.string.messages_no_chart_data));
         chart.setNoDataTextColor(ContextCompat.getColor(getActivity(), R.color.white));
         chart.setGridBackgroundColor(ContextCompat.getColor(getActivity(), R.color.colorLight));
         Paint p = chart.getPaint(Chart.PAINT_INFO);
-        p.setColor(ContextCompat.getColor(getActivity(), R.color.colorPrimaryDark));
+        p.setColor(ContextCompat.getColor(getActivity(), AppTheme.getPrimaryDark()));
         chart.getDescription().setEnabled(false);
         chart.setDragDecelerationFrictionCoef(0.95f);
         //chart.setExtraOffsets(15.f, 15.f, 15.f, 15.f);
@@ -252,8 +261,6 @@ public class ChooseSeedFragment extends Fragment implements WalletTabFragment.On
                 else if (tmpvol < minvol)
                     minvol = tmpvol;
 
-
-                // turn your data into Entry objects
                 Entry e = new Entry(i * 10, Double.valueOf(last).floatValue());
                 entries.add(e);
 
@@ -271,26 +278,19 @@ public class ChooseSeedFragment extends Fragment implements WalletTabFragment.On
 
 
             LineDataSet dataSet = new LineDataSet(entries, "IOTA:" + Store.getDefaultCurrency(getActivity()).getCurrencyCode()); // add entries to dataset
-            //dataSet.setCircleRadius(1f);
             dataSet.setDrawCircleHole(false);
             dataSet.setDrawCircles(false);
-            //.setCircleColor(B.getColor(getActivity(),R.color.colorLight));
-            //dataSet.setCircleColorHole(B.getColor(getActivity(),R.color.colorLight));
             dataSet.setDrawFilled(true);
-            dataSet.setFillColor(getResources().getColor(R.color.colorPrimaryDarker));
+            dataSet.setFillColor(getResources().getColor(AppTheme.getPrimaryDark()));
             dataSet.setFillAlpha(100);
-            dataSet.setColor(B.getColor(getActivity(), R.color.colorPrimary));
-
+            dataSet.setColor(B.getColor(getActivity(), AppTheme.getPrimary()));
 
             LineDataSet idataSet = new LineDataSet(entriesvol, "Vol"); // add entries to dataset
-            //idataSet.setCircleRadius(1f);
-            //idataSet.setCircleColor(B.getColor(getActivity(),R.color.colorPrimaryDark));
-            //idataSet.setCircleColorHole(B.getColor(getActivity(),R.color.colorPrimaryDark));
             idataSet.setDrawCircleHole(false);
             idataSet.setDrawCircles(false);
             idataSet.setDrawFilled(true);
             idataSet.setFillColor(getResources().getColor(R.color.colorMiddle));
-            idataSet.setColor(B.getColor(getActivity(), R.color.colorPrimaryDark));
+            idataSet.setColor(B.getColor(getActivity(), AppTheme.getPrimaryDark()));
             idataSet.setFillAlpha(100);
 
             ArrayList<ILineDataSet> dataSets = new ArrayList<ILineDataSet>();
@@ -299,9 +299,6 @@ public class ChooseSeedFragment extends Fragment implements WalletTabFragment.On
 
             LineData lineData = new LineData(dataSets);
             chart.setData(lineData);
-
-
-            //lineData.addDataSet(idataSet);
             float gomin = Double.valueOf(0).floatValue();
             float gomax = +Double.valueOf(max * 1.4).floatValue();
 
@@ -334,7 +331,11 @@ public class ChooseSeedFragment extends Fragment implements WalletTabFragment.On
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(adapter);
-        //tvEmpty.setVisibility(seedlist.size() == 0 ? View.VISIBLE : View.GONE);
+        if(adapter.getItemCount()>0) {
+            chooseNone.setVisibility(View.GONE);
+        } else {
+            chooseNone.setVisibility(View.VISIBLE);
+        }
     }
 
     @OnClick(R.id.fab_seed)

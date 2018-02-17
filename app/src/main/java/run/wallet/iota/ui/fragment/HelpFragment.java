@@ -43,6 +43,8 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
 import run.wallet.R;
+import run.wallet.common.B;
+import run.wallet.iota.helper.AppTheme;
 import run.wallet.iota.helper.Constants;
 import run.wallet.iota.model.QRCode;
 import run.wallet.iota.model.Store;
@@ -63,6 +65,7 @@ public class HelpFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_help, container, false);
+        view.setBackgroundColor(B.getColor(getActivity(), AppTheme.getSecondary()));
         unbinder = ButterKnife.bind(this, view);
         return view;
     }

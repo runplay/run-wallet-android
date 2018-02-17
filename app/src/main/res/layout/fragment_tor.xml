@@ -22,7 +22,6 @@
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/colorSecondary"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
         <LinearLayout
             android:layout_width="match_parent"
@@ -240,6 +239,7 @@
                         <android.support.v7.widget.AppCompatButton
                             android:id="@+id/google_play_button"
                             android:text="@string/google_play"
+                            style="@style/AppButton"
                             android:drawablePadding="6dp"
                             android:layout_width="wrap_content"
                             android:textAppearance="@style/Base.TextAppearance.AppCompat.Body1"

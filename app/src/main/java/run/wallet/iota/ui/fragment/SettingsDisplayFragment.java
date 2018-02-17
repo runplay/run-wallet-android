@@ -34,6 +34,7 @@ import run.wallet.iota.ui.adapter.WalletTransfersCardAdapter;
 
 public class SettingsDisplayFragment extends PreferenceFragment {
 
+    private static final String PREF_COLOR="preference_show_colors";
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -58,6 +59,11 @@ public class SettingsDisplayFragment extends PreferenceFragment {
             case Constants.PREFERENCES_SHOW_USED:
                 WalletAddressCardAdapter.load(getActivity(), true);
                 break;
+            case PREF_COLOR:
+                getActivity().setResult(Constants.REQUEST_GO_COLORS);
+                getActivity().finish();
+                break;
+
         }
         return super.onPreferenceTreeClick(preferenceScreen, preference);
     }

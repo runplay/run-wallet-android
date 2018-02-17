@@ -30,6 +30,7 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.pm.ShortcutInfo;
 import android.content.pm.ShortcutManager;
+import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Icon;
 import android.net.Uri;
 import android.os.Build;
@@ -60,6 +61,7 @@ import run.wallet.R;
 import run.wallet.common.B;
 import run.wallet.iota.api.TaskManager;
 import run.wallet.iota.api.responses.error.NetworkError;
+import run.wallet.iota.helper.AppTheme;
 import run.wallet.iota.helper.Constants;
 import run.wallet.iota.helper.NotificationHelper;
 import run.wallet.iota.helper.RootDetector;
@@ -75,6 +77,7 @@ import run.wallet.iota.ui.adapter.WalletTransfersCardAdapter;
 import run.wallet.iota.ui.dialog.RootDetectedDialog;
 import run.wallet.iota.ui.fragment.AboutFragment;
 import run.wallet.iota.ui.fragment.ChooseSeedFragment;
+import run.wallet.iota.ui.fragment.ColorFragment;
 import run.wallet.iota.ui.fragment.GenerateQRCodeFragment;
 import run.wallet.iota.ui.fragment.HelpFragment;
 import run.wallet.iota.ui.fragment.NetworkNeighborsFragment;
@@ -97,6 +100,7 @@ import java.util.Arrays;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import run.wallet.iota.ui.fragment.WelcomeFragment;
 
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
@@ -126,21 +130,29 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
+        AppTheme.init(this);
+
+        setTheme(AppTheme.getTheme());
+        AppTheme.setNavColors(this);
+
+        getWindow().setBackgroundDrawable(new ColorDrawable(B.getColor(this,AppTheme.getSecondary())));
         super.onCreate(savedInstanceState);
+        prefs = PreferenceManager.getDefaultSharedPreferences(this);
         Store.init(this,false);
         TorHelper.init(this,null);
         setContentView(R.layout.activity_main);
-        getWindow().getDecorView().setBackgroundColor(getResources().getColor(R.color.colorPrimary));
         ButterKnife.bind(this);
-        setNavColors();
+
 
         if (!AppService.isAppServiceRunning(this)) {
             Intent service = new Intent(this, AppService.class);
             this.startService(service);
         }
         navigationView.setNavigationItemSelectedListener(this);
+        navigationView.getHeaderView(0).setBackground(B.getDrawable(this,AppTheme.getNavDrawableId()));
+        //navigationView.setBackground(B.getDrawable(this,AppTheme.getNavDrawableId()));
 
-        prefs = PreferenceManager.getDefaultSharedPreferences(this);
         inputManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
 
         if (savedInstanceState == null || Store.getCurrentSeed() == null) {
@@ -158,19 +170,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             }
         }
 
-        if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            this.getWindow().setStatusBarColor(B.getColor(this, R.color.colorPrimaryDark));
-        }
+
         drawer.addDrawerListener(drawerListener);
         AppService.getNodeInfo(this);
     }
-    @SuppressWarnings("deprecation")
-    private void setNavColors() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            getWindow().setNavigationBarColor(B.getColor(this, R.color.colorPrimary));
-            getWindow().setStatusBarColor(B.getColor(this, R.color.colorPrimary));
-        }
-    }
+
     @Override
     public void setSupportActionBar(@Nullable Toolbar toolbar) {
         if (toolbar != null) {
@@ -328,10 +332,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     private void showLogoutNavigationItem() {
-        //navigationView.getMenu().findItem(R.id.nav_logout).setVisible(Store.isLoggedIn());
-        navigationView.getMenu().findItem(R.id.nav_choose_wallet).setVisible(Store.isLoggedIn());
-        //navigationView.getMenu().findItem(R.id.nav_messaging).setVisible(Store.isLoggedIn());
-        navigationView.getMenu().findItem(R.id.nav_settings).setVisible(Store.isLoggedIn());
         navigationView.getMenu().findItem(R.id.nav_tor).setVisible(TorHelper.isTorNav());
     }
 
@@ -339,35 +339,29 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         Fragment fragment = null;
         getFragmentManager().popBackStack();
+
         switch (item.getItemId()) {
             case R.id.nav_wallet:
-                if(!Store.isLoggedIn()) {
-                    String encSeed = prefs.getString(Constants.PREFERENCE_ENC_PASS, "");
-                    if (!encSeed.isEmpty() && Store.getCurrentSeed()!=null) {
 
-                        showLogoutNavigationItem();
+                showLogoutNavigationItem();
+                if(Store.getCurrentSeed()!=null) {
+                    if(!Store.isLoggedIn()) {
                         UiManager.checkPin(this);
-                        //fragment = new PasswordLoginFragment();
                         killFragments = true;
-                    } else if (Store.getCurrentSeed() == null) {
-
-                        showLogoutNavigationItem();
-                        fragment = new SeedLoginFragment();
+                    } else {
                         killFragments = true;
+                        fragment = new WalletTabFragment();
                     }
-                } else
-                {
-                    showLogoutNavigationItem();
+                } else {
                     killFragments = true;
-                    fragment = new WalletTabFragment();
+                    fragment = new WelcomeFragment();
                 }
                 break;
 
             case R.id.nav_choose_wallet:
-                if (Store.isLoggedIn()) {
-                    fragment = new ChooseSeedFragment();
-                    killFragments = true;
-                }
+                fragment = new ChooseSeedFragment();
+                killFragments = true;
+
                 break;
 
             case R.id.nav_node_info:
@@ -502,6 +496,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 inputManager.hideSoftInputFromWindow(getWindow().getDecorView().getWindowToken(), 0);
                 navigationView.getMenu().performIdentifierAction(R.id.nav_wallet, 0);
                 break;
+
             case Constants.REQUEST_RESTART_KILL_APP:
                 FragmentManager fragman=getFragmentManager();
                 FragmentTransaction fragmentTransaction = fragman.beginTransaction();
@@ -519,10 +514,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 WalletAddressCardAdapter.clear();
                 WalletTransfersCardAdapter.clear();
                 inputManager.hideSoftInputFromWindow(getWindow().getDecorView().getWindowToken(), 0);
-                UiManager.openFragment(this,SeedLoginFragment.class);
+                UiManager.openFragment(this,WelcomeFragment.class);
                 break;
             case Constants.REQUEST_GO_TOR:
                 UiManager.openFragmentBackStack(this, TorFragment.class);
+                break;
+            case Constants.REQUEST_GO_COLORS:
+                UiManager.openFragmentBackStack(this, ColorFragment.class);
                 break;
         }
         if (data != null) {

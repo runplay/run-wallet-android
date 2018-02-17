@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:gravity="center_horizontal"
-    android:background="@color/colorSecondary">
+    >
     <LinearLayout
         android:id="@+id/transfers_empty"
         android:layout_width="match_parent"
@@ -83,9 +83,7 @@
         >
         <LinearLayout
             android:id="@+id/info_bar_filter"
-            android:background="@color/colorPrimaryDarker"
             android:layout_width="match_parent"
-
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:padding="@dimen/baseline_card"
@@ -111,7 +109,7 @@
                         android:layout_height="wrap_content"
                         android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
                         android:textColor="@color/white"
-                        android:background="@color/colorPrimary"
+                        android:background="@color/blackAlpha50"
                         android:paddingLeft="2dp"
                         android:paddingRight="2dp"
                         />
@@ -183,7 +181,6 @@
         </run.wallet.common.ui.SwipeRefreshLayout>
         <LinearLayout
             android:id="@+id/info_bar_transfers"
-            android:background="@color/colorPrimaryDarker"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
@@ -204,7 +201,7 @@
             android:id="@+id/confirm_user_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textColor="@color/whiteAlpha"
+            android:textColor="@color/blackAlpha50"
             android:text="@string/confirm_message"
             android:paddingRight="10dp"
             android:gravity="center"/>

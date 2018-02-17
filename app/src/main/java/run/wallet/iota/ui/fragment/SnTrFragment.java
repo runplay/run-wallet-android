@@ -73,6 +73,7 @@ import jota.utils.Checksum;
 import run.wallet.R;
 import run.wallet.common.B;
 import run.wallet.common.Sf;
+import run.wallet.iota.helper.AppTheme;
 import run.wallet.iota.helper.Constants;
 import run.wallet.iota.helper.PermissionRequestHelper;
 import run.wallet.iota.model.Address;
@@ -243,6 +244,7 @@ public class SnTrFragment extends Fragment {
     @Override
     public View onCreateView(final LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_new_transfer, container, false);
+        view.setBackgroundColor(B.getColor(getActivity(),AppTheme.getSecondary()));
         unbinder = ButterKnife.bind(this, view);
         return view;
     }
@@ -498,7 +500,6 @@ public class SnTrFragment extends Fragment {
                     checkAddress.setAlpha(0.2F);
                 }
                 if(value>0 && balances.available>=value) {
-                    //amountEditText.setBackgroundColor(B.getColor(getActivity(),R.color.white));
                     checkValue.setAlpha(1F);
                 } else {
                     checkValue.setAlpha(0.2F);
@@ -564,15 +565,6 @@ public class SnTrFragment extends Fragment {
             btnPaste.setAlpha(0.5F);
         }
         populatePaytoAddresses(true);
-        /*
-        if(PayPacket.getPayTo().isEmpty()) {
-            amountEditText.setBackgroundColor(B.getColor(getActivity(),R.color.flatGreenAlpha));
-            addressEditText.setBackgroundColor(B.getColor(getActivity(),R.color.flatGreenAlpha));
-        } else {
-            amountEditText.setBackgroundColor(B.getColor(getActivity(),R.color.white));
-            addressEditText.setBackgroundColor(B.getColor(getActivity(),R.color.white));
-        }
-        */
     }
     @Override
     public void onPause() {
@@ -711,7 +703,7 @@ public class SnTrFragment extends Fragment {
     }
     private void fillFromAddresses() {
         fromAddresses.removeAllViews();
-        int bgcolor=B.getColor(getActivity(),R.color.colorPrimary);
+        int bgcolor=B.getColor(getActivity(), AppTheme.getPrimary());
         int white=B.getColor(getActivity(),R.color.white);
         //Log.e("FROM-ADD","add: "+PayPacket.getPayFrom().size());
         for(Address address: PayPacket.getPayFrom()) {
@@ -751,7 +743,7 @@ public class SnTrFragment extends Fragment {
     }
     private void fillBalanceAddress() {
         remainderAddress.removeAllViews();
-        int bgcolor=B.getColor(getActivity(),R.color.colorPrimary);
+        int bgcolor=B.getColor(getActivity(),AppTheme.getPrimary());
         int white=B.getColor(getActivity(),R.color.white);
         int green=B.getColor(getActivity(),R.color.green);
         long fromAddTotal=0L;
@@ -982,8 +974,6 @@ public class SnTrFragment extends Fragment {
             }
         } catch(Exception e) {}
         if(address.length()==81 && address.matches("^[A-Z9]+$")) {
-            //Log.e("VALIDATE","GOOD: "+validAddress.length()+" -- "+validAddress.matches("^[A-Z9]+$"));
-            //addressEditText.setBackgroundColor(B.getColor(getActivity(),R.color.white));
             return true;
         }
         return false;
@@ -1030,7 +1020,7 @@ public class SnTrFragment extends Fragment {
 
         listAddresses.removeAllViews();
         Context context=getActivity();
-        int bgcolor= B.getColor(context, R.color.colorPrimary);
+        int bgcolor= B.getColor(context, AppTheme.getPrimary());
         int bglight=B.getColor(context,R.color.colorLight);
         int green=B.getColor(context,R.color.green);
 

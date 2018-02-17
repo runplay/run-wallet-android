@@ -33,6 +33,7 @@ import run.wallet.common.ActivityMan;
 import run.wallet.common.B;
 import run.wallet.common.Cal;
 import run.wallet.iota.api.responses.NodeInfoResponse;
+import run.wallet.iota.helper.AppTheme;
 import run.wallet.iota.helper.Constants;
 import run.wallet.iota.helper.Utils;
 import run.wallet.iota.model.Address;
@@ -190,7 +191,7 @@ public class TransferViewManager {
                 holder.fBalance.setText((value > 0 ? "+" : "") + fdata.value);
                 holder.fUnit.setText(fdata.unit);
                 holder.fThird.setText(fdata.thirdDecimal);
-                holder.fUnit.setTextColor(ContextCompat.getColor(context, R.color.colorPrimary));
+                holder.fUnit.setTextColor(ContextCompat.getColor(context, AppTheme.getPrimary()));
                 if (value > 0) {
                     holder.fBalance.setTextColor(ContextCompat.getColor(context, R.color.green));
                     holder.fThird.setTextColor(ContextCompat.getColor(context, R.color.green));
@@ -264,7 +265,7 @@ public class TransferViewManager {
             if(transfer.getValue()<0) {
                 holder.balance.setTextColor(ContextCompat.getColor(context, R.color.flatRed));
                 holder.balanceThird.setTextColor(ContextCompat.getColor(context, R.color.flatRed));
-                holder.balanceUnit.setTextColor(ContextCompat.getColor(context, R.color.colorPrimary));
+                holder.balanceUnit.setTextColor(ContextCompat.getColor(context, AppTheme.getPrimary()));
             } else if(transfer.isInternal()) {
                 holder.alternativeValueLabel.setText(context.getString(R.string.card_label_internal));
                 holder.imgTran.setImageResource(R.drawable.tran_green);
@@ -313,7 +314,7 @@ public class TransferViewManager {
             holder.imgTran.setImageResource(R.drawable.ic_iota_in);
             holder.balance.setTextColor(ContextCompat.getColor(context, R.color.green));
             holder.balanceThird.setTextColor(ContextCompat.getColor(context, R.color.green));
-            holder.balanceUnit.setTextColor(ContextCompat.getColor(context, R.color.colorPrimary));
+            holder.balanceUnit.setTextColor(ContextCompat.getColor(context, AppTheme.getPrimary()));
         } else {
             holder.confirmCheck.setVisibility(View.VISIBLE);
             holder.confirmCheck.setText("");
@@ -323,7 +324,7 @@ public class TransferViewManager {
             holder.imgTran.setImageResource(R.drawable.ic_iota_out);
             holder.balance.setTextColor(ContextCompat.getColor(context, R.color.flatRed));
             holder.balanceThird.setTextColor(ContextCompat.getColor(context, R.color.flatRed));
-            holder.balanceUnit.setTextColor(ContextCompat.getColor(context, R.color.colorPrimary));
+            holder.balanceUnit.setTextColor(ContextCompat.getColor(context, AppTheme.getPrimary()));
         }
 
         TransferViewManager.populateTransferTransactions(context,holder.transferTransactions,transfer.getTransactions(),false);
@@ -362,7 +363,7 @@ public class TransferViewManager {
     private static void populateTransferTransactions(Context context, LinearLayout uselayout, List<TransferTransaction> transactions, boolean isOtherTransactions) {
         uselayout.removeAllViews();
 
-        int bgcolor= B.getColor(context, R.color.colorPrimary);
+        int bgcolor= B.getColor(context, AppTheme.getPrimary());
         int bglight=B.getColor(context,R.color.colorLight);
         int white=B.getColor(context,R.color.white);
         int red=B.getColor(context,R.color.flatRed);
@@ -427,7 +428,7 @@ public class TransferViewManager {
     public static void populateTransferTransactionOuts(Activity context, LinearLayout uselayout, List<TransferTransaction> transactions, Transfer transfer) {
         uselayout.removeAllViews();
 
-        int bgcolor = B.getColor(context, R.color.colorPrimary);
+        int bgcolor = B.getColor(context, AppTheme.getPrimary());
         int bglight = B.getColor(context, R.color.colorLight);
         int white = B.getColor(context, R.color.white);
         int red = B.getColor(context, R.color.flatRed);

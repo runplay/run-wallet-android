@@ -523,7 +523,6 @@ public final class AppService extends Service {
         if(request!=null && taskManager !=null) {
             taskManager.startNewRequestTask(request);
             if(SERVICE!=null) {
-                //Log.e("APPSERV","Mark task start: "+taskManager.getTaskId()+" - "+request.getClass().getCanonicalName());
                 SERVICE.tasks.put(taskManager.getTaskId(), request);
             }
         }
@@ -532,7 +531,6 @@ public final class AppService extends Service {
         if(request!=null && taskManager !=null) {
             taskManager.startNewBasicRequestTask(request);
             if(SERVICE!=null) {
-                //Log.e("APPSERV","Mark task start: "+taskManager.getTaskId()+" - "+request.getClass().getCanonicalName());
                 SERVICE.tasks.put(taskManager.getTaskId(), request);
             }
         }
@@ -541,13 +539,11 @@ public final class AppService extends Service {
         if(request!=null && taskManager !=null) {
             taskManager.startNewMessageTask(request);
             if(SERVICE!=null) {
-                //Log.e("APPSERV","Mark MSG task start: "+taskManager.getTaskId()+" - "+request.getClass().getCanonicalName());
                 SERVICE.tasks.put(taskManager.getTaskId(), request);
             }
         }
     }
     public static void markTaskFinished(long taskId) {
-        //Log.e("APPSERV","Mark task finished: "+taskId);
         if(SERVICE!=null) {
             SERVICE.tasks.remove(taskId);
         }
@@ -603,29 +599,11 @@ public final class AppService extends Service {
             }
         }
     }
-    /*
-    public static void auditAddressesWithDelay(Context context, Seeds.Seed seed) {
-        if(Validator.isValidCaller() && seed!=null) {
-            Handler godelay=new Handler();
-            //godelay.pre
-            godelay.postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    if(AppService.countSeedRunningTasks(seed)==0) {
-                        TaskManager rt = new TaskManager(context);
-                        AuditAddressesRequest gtr = new AuditAddressesRequest(seed);
-                        runTask(rt, gtr);
-                    }
-                }
-            },1000);
-        }
-    }
-    */
+
     public static void getFirstTimeLoad(Context context) {
         if(Validator.isValidCaller() && Store.getCurrentSeed()!=null) {
             TaskManager rt = new TaskManager(context);
             GetFirstLoadRequest gna = new GetFirstLoadRequest(Store.getCurrentSeed());
-
             runTask(rt,gna);
         }
     }
@@ -643,8 +621,6 @@ public final class AppService extends Service {
                     gna.setForce(force);
                     runTask(rt, gna);
                 }
-            } else {
-                //Log.e("GETACC","DO NOT GET ACCOUNT, task laready running: "+SERVICE.lastAccountCall +"___"+ System.currentTimeMillis());
             }
         }
     }

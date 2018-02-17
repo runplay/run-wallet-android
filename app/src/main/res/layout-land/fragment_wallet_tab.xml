@@ -161,8 +161,9 @@
                 android:id="@+id/wallet_tabs"
                 android:layout_width="0dp"
                 android:layout_weight="5"
-                android:layout_height="48dp"
-                android:background="?colorPrimary"
+                android:layout_height="match_parent"
+
+                android:background="?colorPrimaryDark"
                 android:fillViewport="true"
                 app:tabGravity="fill"
                 app:tabMaxWidth="0dp"

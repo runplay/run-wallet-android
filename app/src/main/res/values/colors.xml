@@ -1,21 +1,106 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="colorPrimary">#8F8070</color>
-    <color name="colorPrimaryDark">#72665A</color>
-    <color name="colorPrimaryDarker">#474038</color>
+    <color name="colorPrimaryDark">#817365</color>
     <color name="colorAccent">#72665A</color>
-    <color name="colorSecondary">#958779</color>
+    <color name="colorSecondary">#a19487</color>
     <color name="colorMiddle">#cfc8c0</color>
     <color name="colorLight">#ede5de</color>
-    <color name="textColorPrimary">#694c2f</color>
+    <color name="textColorPrimary">#5F4339</color>
     <color name="textColorSecondary">#463320</color>
-    <color name="colorPrimaryDarkAlpha">#8072665A</color>
+
+    <color name="colorBluePrimary">#3F51B5</color>
+    <color name="colorBluePrimaryDark">#243966</color>
+    <color name="colorBlueAccent">#607D8B</color>
+    <color name="colorBlueSecondary">#97A6CE</color>
+    <color name="colorBlueMiddle">#cfc8c0</color>
+    <color name="colorBlueLight">#ede5de</color>
+    <color name="textColorBluePrimary">#1A237E</color>
+    <color name="textColorBlueSecondary">#000051</color>
+
+    <color name="colorPinkPrimary">#CC68B3</color>
+    <color name="colorPinkPrimaryDark">#BF3B9E</color>
+    <color name="colorPinkAccent">#CC66FF</color>
+    <color name="colorPinkSecondary">#E8CADE</color>
+    <color name="colorPinkMiddle">#cfc8c0</color>
+    <color name="colorPinkLight">#ede5de</color>
+    <color name="textColorPinkPrimary">#850665</color>
+    <color name="textColorPinkSecondary">#490437</color>
+
+    <color name="colorDgPrimary">#003333</color>
+    <color name="colorDgPrimaryDark">#182424</color>
+    <color name="colorDgAccent">#006666</color>
+    <color name="colorDgSecondary">#395C5C</color>
+    <color name="colorDgMiddle">#cfc8c0</color>
+    <color name="colorDgLight">#ede5de</color>
+    <color name="textColorDgPrimary">#001A1A</color>
+    <color name="textColorDgSecondary">#A6A632</color>
+
+    <color name="colorGreenPrimary">#429A42</color>
+    <color name="colorGreenPrimaryDark">#1E871E</color>
+    <color name="colorGreenAccent">#004D4D</color>
+    <color name="colorGreenSecondary">#deedde</color>
+    <color name="colorGreenMiddle">#cfc8c0</color>
+    <color name="colorGreenLight">#ede5de</color>
+    <color name="textColorGreenPrimary">#25A725</color>
+    <color name="textColorGreenSecondary">#0D3F0D</color>
+
+    <color name="colorDnPrimary">#070f16</color>
+    <color name="colorDnPrimaryDark">#050113</color>
+    <color name="colorDnAccent">#2d5c55</color>
+    <color name="colorDnSecondary">#687277</color>
+    <color name="colorDnMiddle">#cfc8c0</color>
+    <color name="colorDnLight">#ede5de</color>
+    <color name="textColorDnPrimary">#1B4E4D</color>
+    <color name="textColorDnSecondary">#5e673c</color>
+
+    <color name="colorSnowPrimary">#BDBDBD</color>
+    <color name="colorSnowPrimaryDark">#9B9B9B</color>
+    <color name="colorSnowAccent">#BEBEBE</color>
+    <color name="colorSnowSecondary">#FEFEFE</color>
+    <color name="colorSnowMiddle">#CCCCCC</color>
+    <color name="colorSnowLight">#EEEEEE</color>
+    <color name="textColorSnowPrimary">#666666</color>
+    <color name="textColorSnowSecondary">#999999</color>
+
+    <color name="colorPurplePrimary">#431c7d</color>
+    <color name="colorPurplePrimaryDark">#290066</color>
+    <color name="colorPurpleAccent">#6868BE</color>
+    <color name="colorPurpleSecondary">#f6f2fc</color>
+    <color name="colorPurpleMiddle">#CCCCCC</color>
+    <color name="colorPurpleLight">#EEEEEE</color>
+    <color name="textColorPurplePrimary">#6666DD</color>
+    <color name="textColorPurpleSecondary">#9999FF</color>
+
+    <color name="colorRedPrimary">#e60000</color>
+    <color name="colorRedPrimaryDark">#990000</color>
+    <color name="colorRedAccent">#ff0000</color>
+    <color name="colorRedSecondary">#ffe6e6</color>
+    <color name="colorRedMiddle">#CCCCCC</color>
+    <color name="colorRedLight">#EEEEEE</color>
+    <color name="textColorRedPrimary">#800000</color>
+    <color name="textColorRedSecondary">#4d0000</color>
+
+    <color name="colorBwPrimary">#323232</color>
+    <color name="colorBwPrimaryDark">#101010</color>
+    <color name="colorBwAccent">#545454</color>
+    <color name="colorBwSecondary">#e8e8e8</color>
+    <color name="colorBwMiddle">#CCCCCC</color>
+    <color name="colorBwLight">#EEEEEE</color>
+    <color name="textColorBwPrimary">#666666</color>
+    <color name="textColorBwSecondary">#999999</color>
+
 
     <color name="grey">#CDCDCD</color>
     <color name="greyDark">#888888</color>
 
     <color name="white">#FEFEFE</color>
     <color name="whiteAlpha">#40FFFFFF</color>
+    <color name="whiteAlpha50">#80FFFFFF</color>
+    <color name="whiteAlpha75">#B0FFFFFF</color>
+    <color name="black">#000000</color>
+    <color name="blackAlpha50">#80000000</color>
+    <color name="blackAlpha25">#30000000</color>
     <color name="textDark">#333333</color>
     <color name="green">#009900</color>
 
@@ -29,14 +114,4 @@
     <color name="divider">#1f000000</color>
     <color name="overlay">#80ABA18E</color>
 
-
-    <color name="colorPrimaryLightBlue">#000099</color>
-    <color name="colorPrimaryDarkLightBlue">#0000CC</color>
-    <color name="colorPrimaryDarkerLightBlue">#0000FF</color>
-    <color name="colorAccentLightBlue">#003399</color>
-    <color name="colorSecondaryLightBlue">#958779</color>
-    <color name="colorMiddleLightBlue">#afa8a0</color>
-    <color name="colorLightLightBlue">#6666FF</color>
-    <color name="textColorPrimaryLightBlue">#3333FF</color>
-    <color name="textColorSecondaryLightBlue">#6666FF</color>
 </resources>

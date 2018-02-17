@@ -2,7 +2,10 @@
 
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
-        <!-- Customize your theme here. -->
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+        <item name="android:windowDrawsSystemBarBackgrounds">true</item>
+
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
@@ -13,10 +16,137 @@
         <item name="android:textColorSecondary">@color/textColorSecondary</item>
     </style>
 
-    <style name="AppTheme.NoActionBar">>
+    <style name="AppTheme.ActionBar" parent="Theme.AppCompat.Light.DarkActionBar">
+        <item name="windowActionBar">true</item>
+        <item name="windowNoTitle">false</item>
+        <item name="android:windowDrawsSystemBarBackgrounds">true</item>
+    </style>
+
+
+    <style name="AppThemeBlue" parent="Theme.AppCompat.Light.DarkActionBar">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
         <item name="android:windowDrawsSystemBarBackgrounds">true</item>
-        <item name="android:statusBarColor">@android:color/transparent</item>
+
+        <item name="colorPrimary">@color/colorBluePrimary</item>
+        <item name="colorPrimaryDark">@color/colorBluePrimaryDark</item>
+        <item name="colorAccent">@color/colorBlueAccent</item>
+        <item name="colorButtonNormal">@color/colorBluePrimary</item>
+        <item name="android:colorButtonNormal">@color/colorBluePrimary</item>
+        <item name="preferenceTheme">@style/PreferenceThemeOverlay.v14.Material</item>
+        <item name="android:textColorPrimary">@color/textColorBluePrimary</item>
+        <item name="android:textColorSecondary">@color/textColorBlueSecondary</item>
+    </style>
+    <style name="AppThemePink" parent="Theme.AppCompat.Light.DarkActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+        <item name="android:windowDrawsSystemBarBackgrounds">true</item>
+
+        <item name="colorPrimary">@color/colorPinkPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPinkPrimaryDark</item>
+        <item name="colorAccent">@color/colorPinkAccent</item>
+        <item name="colorButtonNormal">@color/colorPinkPrimary</item>
+        <item name="android:colorButtonNormal">@color/colorPinkPrimary</item>
+        <item name="preferenceTheme">@style/PreferenceThemeOverlay.v14.Material</item>
+        <item name="android:textColorPrimary">@color/textColorPinkPrimary</item>
+        <item name="android:textColorSecondary">@color/textColorPinkSecondary</item>
+    </style>
+    <style name="AppThemeDg" parent="Theme.AppCompat.Light.DarkActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+        <item name="android:windowDrawsSystemBarBackgrounds">true</item>
+
+        <item name="colorPrimary">@color/colorDgPrimary</item>
+        <item name="colorPrimaryDark">@color/colorDgPrimaryDark</item>
+        <item name="colorAccent">@color/colorDgAccent</item>
+        <item name="colorButtonNormal">@color/colorDgPrimary</item>
+        <item name="android:colorButtonNormal">@color/colorDgPrimary</item>
+        <item name="preferenceTheme">@style/PreferenceThemeOverlay.v14.Material</item>
+        <item name="android:textColorPrimary">@color/textColorDgPrimary</item>
+        <item name="android:textColorSecondary">@color/textColorDgSecondary</item>
+    </style>
+    <style name="AppThemeGreen" parent="Theme.AppCompat.Light.DarkActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+        <item name="android:windowDrawsSystemBarBackgrounds">true</item>
+
+        <item name="colorPrimary">@color/colorGreenPrimary</item>
+        <item name="colorPrimaryDark">@color/colorGreenPrimaryDark</item>
+        <item name="colorAccent">@color/colorGreenAccent</item>
+        <item name="colorButtonNormal">@color/colorGreenPrimary</item>
+        <item name="android:colorButtonNormal">@color/colorGreenPrimary</item>
+        <item name="preferenceTheme">@style/PreferenceThemeOverlay.v14.Material</item>
+        <item name="android:textColorPrimary">@color/textColorGreenPrimary</item>
+        <item name="android:textColorSecondary">@color/textColorGreenSecondary</item>
+    </style>
+    <style name="AppThemeDn" parent="Theme.AppCompat.Light.DarkActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+        <item name="android:windowDrawsSystemBarBackgrounds">true</item>
+
+        <item name="colorPrimary">@color/colorDnPrimary</item>
+        <item name="colorPrimaryDark">@color/colorDnPrimaryDark</item>
+        <item name="colorAccent">@color/colorDnAccent</item>
+        <item name="colorButtonNormal">@color/colorDnPrimary</item>
+        <item name="android:colorButtonNormal">@color/colorDnPrimary</item>
+        <item name="preferenceTheme">@style/PreferenceThemeOverlay.v14.Material</item>
+        <item name="android:textColorPrimary">@color/textColorDnPrimary</item>
+        <item name="android:textColorSecondary">@color/textColorDnSecondary</item>
+    </style>
+    <style name="AppThemeSnow" parent="Theme.AppCompat.Light">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+        <item name="android:windowDrawsSystemBarBackgrounds">true</item>
+
+        <item name="colorPrimary">@color/colorSnowPrimary</item>
+        <item name="colorPrimaryDark">@color/colorSnowPrimaryDark</item>
+        <item name="colorAccent">@color/colorSnowAccent</item>
+        <item name="colorButtonNormal">@color/colorSnowPrimary</item>
+        <item name="android:colorButtonNormal">@color/colorSnowPrimary</item>
+        <item name="preferenceTheme">@style/PreferenceThemeOverlay.v14.Material</item>
+        <item name="android:textColorPrimary">@color/textColorSnowPrimary</item>
+        <item name="android:textColorSecondary">@color/textColorSnowSecondary</item>
+    </style>
+    <style name="AppThemeRed" parent="Theme.AppCompat.Light">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+        <item name="android:windowDrawsSystemBarBackgrounds">true</item>
+
+        <item name="colorPrimary">@color/colorRedPrimary</item>
+        <item name="colorPrimaryDark">@color/colorRedPrimaryDark</item>
+        <item name="colorAccent">@color/colorRedAccent</item>
+        <item name="colorButtonNormal">@color/colorRedPrimary</item>
+        <item name="android:colorButtonNormal">@color/colorRedPrimary</item>
+        <item name="preferenceTheme">@style/PreferenceThemeOverlay.v14.Material</item>
+        <item name="android:textColorPrimary">@color/textColorRedPrimary</item>
+        <item name="android:textColorSecondary">@color/textColorRedSecondary</item>
+    </style>
+    <style name="AppThemePurple" parent="Theme.AppCompat.Light">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+        <item name="android:windowDrawsSystemBarBackgrounds">true</item>
+
+        <item name="colorPrimary">@color/colorPurplePrimary</item>
+        <item name="colorPrimaryDark">@color/colorPurplePrimaryDark</item>
+        <item name="colorAccent">@color/colorPurpleAccent</item>
+        <item name="colorButtonNormal">@color/colorPurplePrimary</item>
+        <item name="android:colorButtonNormal">@color/colorPurplePrimary</item>
+        <item name="preferenceTheme">@style/PreferenceThemeOverlay.v14.Material</item>
+        <item name="android:textColorPrimary">@color/textColorPurplePrimary</item>
+        <item name="android:textColorSecondary">@color/textColorPurpleSecondary</item>
+    </style>
+    <style name="AppThemeBw" parent="Theme.AppCompat.Light">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+        <item name="android:windowDrawsSystemBarBackgrounds">true</item>
+
+        <item name="colorPrimary">@color/colorBwPrimary</item>
+        <item name="colorPrimaryDark">@color/colorBwPrimaryDark</item>
+        <item name="colorAccent">@color/colorBwAccent</item>
+        <item name="colorButtonNormal">@color/colorBwPrimary</item>
+        <item name="android:colorButtonNormal">@color/colorBwPrimary</item>
+        <item name="preferenceTheme">@style/PreferenceThemeOverlay.v14.Material</item>
+        <item name="android:textColorPrimary">@color/textColorBwPrimary</item>
+        <item name="android:textColorSecondary">@color/textColorBwSecondary</item>
     </style>
 </resources>

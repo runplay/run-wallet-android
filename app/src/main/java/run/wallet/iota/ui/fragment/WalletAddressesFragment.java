@@ -38,6 +38,7 @@ import org.greenrobot.eventbus.Subscribe;
 
 import jota.utils.IotaToText;
 import run.wallet.R;
+import run.wallet.common.B;
 import run.wallet.iota.api.handler.GetFirstLoadRequestHandler;
 import run.wallet.iota.api.responses.AddressSecurityChangeResponse;
 import run.wallet.iota.api.responses.ApiResponse;
@@ -49,6 +50,8 @@ import run.wallet.iota.api.responses.NudgeResponse;
 import run.wallet.iota.api.responses.RefreshEventResponse;
 import run.wallet.iota.api.responses.SendTransferResponse;
 import run.wallet.iota.api.responses.error.NetworkError;
+import run.wallet.iota.helper.AppTheme;
+import run.wallet.iota.model.Address;
 import run.wallet.iota.model.Store;
 import run.wallet.iota.service.AppService;
 import run.wallet.iota.ui.UiManager;
@@ -142,6 +145,7 @@ public class WalletAddressesFragment extends BaseSwipeRefreshLayoutFragment  {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_wallet_addresses, container, false);
+        view.setBackgroundColor(B.getColor(getActivity(), AppTheme.getSecondary()));
         unbinder = ButterKnife.bind(this, view);
         swipeRefreshLayout = view.findViewById(R.id.wallet_addresses_swipe_container);
         return view;
@@ -196,8 +200,18 @@ public class WalletAddressesFragment extends BaseSwipeRefreshLayoutFragment  {
             firstLoadPod.setVisibility(View.GONE);
             confirmPod.setVisibility(View.GONE);
             emptyAddresses.setVisibility(View.GONE);
-
-
+        }
+        if(Store.getCurrentWallet()!=null) {
+            int countemptyattached = 0;
+            for (Address address : Store.getAddresses()) {
+                if (address.isAttached() && address.getValue() == 0 && !address.isUsed() && !address.isPig()) {
+                    countemptyattached++;
+                }
+            }
+            int countmin = Store.getAutoAttach();
+            if (countemptyattached < countmin) {
+                AppService.auditAddresses(getActivity(), Store.getCurrentSeed());
+            }
         }
     }
     @Override

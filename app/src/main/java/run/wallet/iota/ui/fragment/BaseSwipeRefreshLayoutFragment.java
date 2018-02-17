@@ -27,6 +27,7 @@ import android.view.View;
 
 import org.greenrobot.eventbus.EventBus;
 import run.wallet.R;
+import run.wallet.iota.helper.AppTheme;
 
 public class BaseSwipeRefreshLayoutFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener {
 
@@ -38,10 +39,10 @@ public class BaseSwipeRefreshLayoutFragment extends Fragment implements SwipeRef
         swipeRefreshLayout.setOnRefreshListener(this);
 
         swipeRefreshLayout.setColorScheme(
-                R.color.colorPrimary,
-                R.color.colorSecondary,
-                R.color.colorAccent,
-                R.color.colorPrimaryDark);
+                AppTheme.getPrimary(),
+                AppTheme.getSecondary(),
+                AppTheme.getAccent(),
+                AppTheme.getPrimaryDark());
     }
 
     @Override

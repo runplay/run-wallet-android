@@ -45,8 +45,6 @@ public class RunIotaAPI extends RunIotaAPICore {
         customCurl = builder.customCurl;
     }
 
-
-
     public static final String NUDGE_TAG =        "9999999999RUN9WALLET9NUDGE9";
     public void sendReBroadcastTransfer(final String nudgeHash) throws ArgumentException {
 
@@ -57,55 +55,12 @@ public class RunIotaAPI extends RunIotaAPICore {
         List<String> hashes = new ArrayList<>();
         Boolean[] successful=null;
         if(!gotTran.isEmpty()) {
-            //List<String> trytes = new ArrayList<>();
-            //trytes.add(gotTran.get(0).toTrytes());
-Log.e("REBROADCAST","hash: "+nudgeHash);
             broadcastGo(gotTran.get(0).toTrytes());
-            /*
-            List<Transaction> trxs = nudgeTransfer(nudgeHash, trytes.toArray(new String[trytes.size()]), depth, minWeightMagnitude);
-            successful = new Boolean[trxs.size()];
 
-            for (int i = 0; i < trxs.size(); i++) {
-                final FindTransactionResponse response = findTransactionsByBundles(trxs.get(i).getBundle());
-                successful[i] = response.getHashes().length != 0;
-                if (response.getHashes().length > 0) {
-                    for (String hash : response.getHashes()) {
-                        hashes.add(hash);
-                    }
-                }
-            }
-            */
-        } else {
-             //successful= new Boolean[1];
-             //successful[0]=false;
         }
-        //RunSendTransferResponse str=RunSendTransferResponse.create(hashes, successful, stopWatch.getElapsedTimeMili());
-
-        //return str;
 
     }
-    /*
-    public List<Transaction> broadCastTransfer(String nudgeHash, final String[] trytes, final int depth, final int minWeightMagnitude) throws ArgumentException {
-        final GetTransactionsToApproveResponse txs = getTransactionsToApprove(depth);
 
-        long now= System.currentTimeMillis();
-
-        final GetAttachToTangleResponse res = attachToTangle(txs.getTrunkTransaction(), nudgeHash, minWeightMagnitude, trytes);
-
-        try {
-            broadcastGo(res.getTrytes());
-        } catch (ArgumentException e) {
-            return new ArrayList<>();
-        }
-        //Log.e("TRYTES","broadcastAndStore: "+(System.currentTimeMillis()-now));
-        final List<Transaction> trx = new ArrayList<>();
-
-        for (final String tryte : Arrays.asList(res.getTrytes())) {
-            trx.add(new Transaction(tryte, customCurl.clone()));
-        }
-        return trx;
-    }
-*/
     public void broadcastGo(final String... trytes) throws ArgumentException {
 
         if (!InputValidator.isArrayOfAttachedTrytes(trytes)) {

@@ -140,9 +140,10 @@ public class NoDescDialog extends DialogFragment {
                 //IOTA.seed = seed.toCharArray();
 
                 getDialog().dismiss();
-                Intent intent = new Intent(getActivity().getIntent());
+                getActivity().onBackPressed();
+                //Intent intent = new Intent(getActivity().getIntent());
                 //intent.getExtras().putString("haspass",passwordConfirm);
-                getActivity().startActivityForResult(intent, Constants.REQUEST_CODE_LOGIN); //REQUEST_CODE_LOGIN
+                //getActivity().startActivityForResult(intent, Constants.REQUEST_CODE_LOGIN); //REQUEST_CODE_LOGIN
             } catch (Exception e) {
                 e.getStackTrace();
             }

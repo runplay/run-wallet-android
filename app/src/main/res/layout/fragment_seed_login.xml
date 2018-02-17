@@ -38,7 +38,7 @@
                 android:layout_gravity="center_horizontal"
                 android:scaleType="fitCenter"
                 android:src="@drawable/logo"
-                android:tint="@color/colorPrimary" />
+                android:tint="@color/blackAlpha50" />
 
             <android.support.design.widget.TextInputLayout
                 android:id="@+id/seed_login_seed_text_input_layout"

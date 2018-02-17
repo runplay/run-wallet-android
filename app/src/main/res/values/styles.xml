@@ -2,41 +2,40 @@
     <style name="SplashTheme" parent="Theme.AppCompat.NoActionBar">
         <item name="android:windowBackground">@drawable/splash</item>
     </style>
+
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
         <!-- Customize your theme here. -->
-        <item name="android:windowBackground">@color/colorPrimary</item>
-        <item name="android:colorBackground">@color/colorPrimary</item>
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+        <item name="android:windowBackground">@color/colorSecondary</item>
+        <item name="android:colorBackground">@color/colorSecondary</item>
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
-        <item name="preferenceTheme">@style/PreferenceThemeOverlay</item>
         <item name="android:textColorPrimary">@color/textColorPrimary</item>
         <item name="android:textColorSecondary">@color/textColorSecondary</item>
+        <item name="colorButtonNormal">@color/colorPrimary</item>
+        <item name="android:colorButtonNormal">@color/colorPrimary</item>
+        <item name="preferenceTheme">@style/PreferenceThemeOverlay</item>
+    </style>
+    <style name="AppTheme.ActionBar" parent="Theme.AppCompat.Light.DarkActionBar">
+        <item name="windowActionBar">true</item>
+        <item name="buttonStyle">@style/AppButton</item>
     </style>
     <style name="PinDialog">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">match_parent</item>
-        <!-- No backgrounds, titles or window float -->
-        <item name="android:windowBackground">@color/colorPrimary</item>
         <item name="android:windowNoTitle">true</item>
         <item name="android:windowIsFloating">false</item>
-        <item name="android:colorBackground">@color/colorPrimary</item>
-        <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-        <item name="colorAccent">@color/colorAccent</item>
-        <item name="preferenceTheme">@style/PreferenceThemeOverlay</item>
-        <item name="android:textColorPrimary">@color/textColorPrimary</item>
-        <item name="android:textColorSecondary">@color/textColorSecondary</item>
+
     </style>
     <style name="AppButton" parent="AppTheme">
         <item name="android:layout_margin">0dp</item>
         <item name="android:textColor">@color/white</item>
-        <item name="android:backgroundTint">@color/colorPrimary</item>
         <item name="android:padding">3dp</item>
         <item name="android:paddingStart">6dp</item>
         <item name="android:paddingEnd">6dp</item>
-        <item name="android:colorBackground">@color/colorLight</item>
     </style>
     <style name="AppButtonWhite" parent="AppTheme">
         <item name="android:layout_margin">0dp</item>
@@ -47,12 +46,7 @@
         <item name="android:paddingStart">6dp</item>
         <item name="android:paddingEnd">6dp</item>
     </style>
-    <style name="AppTheme.NoActionBar">
-        <item name="android:windowBackground">@color/colorPrimary</item>
-        <item name="windowActionBar">false</item>
-        <item name="windowNoTitle">true</item>
-        <item name="buttonStyle">@style/AppButton</item>
-    </style>
+
 
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
 
@@ -82,31 +76,5 @@
         <item name="windowNoTitle">true</item>
     </style>
 
-    <style name="AppCompatAlertDialogStyle" parent="Theme.AppCompat.Light.Dialog.Alert">
-        <item name="colorAccent">#444444</item>
-        <item name="android:buttonStyle">@style/DialogButton</item>
-        <item name="android:textColorPrimary">#000000</item>
-        <item name="android:textColorSecondary">#777777</item>
-        <item name="android:background">@color/colorSecondary</item>
-    </style>
-    <style name="DialogButton">
-        <item name="android:textSize">16sp</item>
-        <item name="android:textStyle">bold</item>
-    </style>
 
-
-
-    <style name="AppThemeLightBlue" parent="Theme.AppCompat.Light.NoActionBar">
-        <!-- Customize your theme here. -->
-        <item name="windowActionBar">false</item>
-        <item name="android:windowBackground">@color/colorPrimaryLightBlue</item>
-        <item name="android:colorBackground">@color/colorPrimaryLightBlue</item>
-        <item name="colorPrimary">@color/colorPrimaryLightBlue</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryDarkLightBlue</item>
-        <item name="colorAccent">@color/colorAccent</item>
-        <item name="colorButtonNormal">@color/colorPrimaryDarkLightBlue</item>
-        <item name="preferenceTheme">@style/PreferenceThemeOverlay</item>
-        <item name="android:textColorPrimary">@color/textColorPrimary</item>
-        <item name="android:textColorSecondary">@color/textColorSecondary</item>
-    </style>
 </resources>

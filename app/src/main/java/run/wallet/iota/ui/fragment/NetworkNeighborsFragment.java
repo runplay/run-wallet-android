@@ -51,6 +51,7 @@ import android.widget.TextView;
 
 import org.greenrobot.eventbus.Subscribe;
 import run.wallet.R;
+import run.wallet.common.B;
 import run.wallet.iota.api.TaskManager;
 import run.wallet.iota.api.requests.AddNeighborsRequest;
 import run.wallet.iota.api.requests.GetNeighborsRequest;
@@ -126,7 +127,7 @@ public class NetworkNeighborsFragment extends BaseSwipeRefreshLayoutFragment
         super.onViewCreated(view, savedInstanceState);
 
         fabAddButton.setVisibility(View.VISIBLE);
-
+        recyclerView.setBackgroundColor(B.getColor(getActivity(),R.color.whiteAlpha75));
         revealView.setVisibility(View.INVISIBLE);
         isEditTextVisible = false;
 
@@ -281,9 +282,10 @@ public class NetworkNeighborsFragment extends BaseSwipeRefreshLayoutFragment
             recyclerView.setAdapter(adapter);
 
         } else {
+            recyclerView.setAdapter(adapter);
             adapter.notifyDataSetChanged();
         }
-        getNeighbors();
+
         if(adapter.getItemCount()==0) {
             tvEmpty.setVisibility(View.VISIBLE);
         } else {
