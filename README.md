@@ -52,8 +52,13 @@ IOTA: 9PPMLVNEGQEZLCKTPDSCMKNKNDPMHUTC9PMOAKHGNGOVVTXOTRA99JFPVAAXHPUM99DGLUHOYL
 
 <h2>Screens</h2>
 Here are some screenshots of the app
-![alt tag](http://iota.runplay.com/img/gp_tablet1s.png "Promotion image")
+
+![alt tag](http://iota.runplay.com/img/gp-tablet1s.png "Promotion image")
+
 ![alt tag](http://iota.runplay.com/img/wallet-screen2s.png "Transfers screenshot detailing all actions and status")
+
 ![alt tag](http://iota.runplay.com/img/wallet-screen1s.png "Addresses screenshot with balances and pending balances")
+
 ![alt tag](http://iota.runplay.com/img/wallet-screen3s.png "All wallets (seed) screenshot")
+
 ![alt tag](http://iota.runplay.com/img/wallet-screen4s.png "Send new transfer screenshot")
