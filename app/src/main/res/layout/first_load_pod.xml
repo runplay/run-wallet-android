@@ -15,7 +15,7 @@
 
         android:orientation="vertical">
         <TextView
-            android:drawableTop="@drawable/logo"
+            android:drawableTop="@drawable/logo_primary"
             android:id="@+id/tv_first_load"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

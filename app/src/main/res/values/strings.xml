@@ -86,7 +86,7 @@
     <!-- Messages-->
     <string name="messages_shortcuts_not_available">Please login first.</string>
     <string name="messages_invalid_search">Please enter a valid bundle, tag, address, approvees or transaction.</string>
-    <string name="messages_enter_neighbor_address">Valid IOTA node required (ip/www):(port)</string>
+    <string name="messages_enter_neighbor_address">Valid IOTA node required (ip/www) + (port)</string>
     <string name="messages_neighbor_address_forgiven">IP-Address already added.</string>
     <string name="messages_network_remote_error">Node issue, trying again / switching to a new node.</string>
     <string name="messages_network_access_error">Sorry, command is not available on this node, try switching.</string>
@@ -144,7 +144,7 @@
     <string name="messages_feature_coming_soon">Coming soon, will detail why double spend transfer</string>
 
     <string name="messages_no_data_available">Nothing to show</string>
-    <string name="messages_no_neighbours">This Node likes to keep its neighbours private</string>
+    <string name="messages_no_neighbours">Shh... This Node likes to keep its neighbours private</string>
 
     <string name="addresses_empty_title">Addresses empty</string>
     <string name="addresses_empty_settings">Addresses are created automatically, you can change how many empty addresses you see in the settings</string>
@@ -502,9 +502,9 @@
     <string name="colour_change">Change app colour</string>
 
     <string name="colour_theme_blue_light">Sky</string>
-    <string name="colour_theme_blue_dark">Blue Sea</string>
-    <string name="colour_theme_red">Angry man</string>
-    <string name="colour_theme_brown">Brownish</string>
+    <string name="colour_theme_blue_dark">Royal</string>
+    <string name="colour_theme_red">Urgent</string>
+    <string name="colour_theme_brown">Boring</string>
 
 
     <string name="choose_seed_none">Click + to create or add a Seed</string>
@@ -649,7 +649,7 @@
     <string name="help_set_delete">Delete data ❌</string>
     <string name="help_set_delete_text">Wipe all data and log out of the app, make sure you have a full backup of all Seeds before doing</string>
     <string name="help_set_pow">Local POW 💪🏾</string>
-    <string name="help_set_pow_text">Do calculations for Transfers on this device, on mobile phones this usually makes Iota transfers slower</string>
+    <string name="help_set_pow_text">Do calculations for Transfers on this device before sending</string>
     <string name="help_set_currency">Currency 💵</string>
     <string name="help_set_currency_text">Change the default currency to compare your IOTA to</string>
 

@@ -509,26 +509,27 @@ public class UiManager {
         activity.getFragmentManager().popBackStack();
     }
     public static boolean openFragment(Activity activity, Class<? extends Fragment> fragment) {
-        //if(!activity.isDestroyed()) {
-        FragmentManager fm = activity.getFragmentManager();
-        FragmentTransaction tr = fm.beginTransaction();
-        tr.replace(R.id.container, Fragment.instantiate(activity, fragment.getName()),fragment.getClass().getCanonicalName());
+        if(activity!=null && !activity.isDestroyed()) {
+            FragmentManager fm = activity.getFragmentManager();
+            FragmentTransaction tr = fm.beginTransaction();
+            tr.replace(R.id.container, Fragment.instantiate(activity, fragment.getName()),fragment.getClass().getCanonicalName());
 
-        tr.commit();
-        //}
+            tr.commit();
+        }
         return true;
     }
     public static boolean openFragmentBackStack(Activity activity,Class<? extends Fragment> fragment) {
-        //FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
-        FragmentManager fm = activity.getFragmentManager();
-        FragmentTransaction tr = fm.beginTransaction();
-        tr.setCustomAnimations(R.animator.fade_in, R.animator.fade_out,
-                R.animator.fade_in, R.animator.fade_out);
+        if(activity!=null && !activity.isDestroyed()) {
+            FragmentManager fm = activity.getFragmentManager();
+            FragmentTransaction tr = fm.beginTransaction();
+            tr.setCustomAnimations(R.animator.fade_in, R.animator.fade_out,
+                    R.animator.fade_in, R.animator.fade_out);
 
-        //String tag = fragment.getClass().getCanonicalName();
-        tr.replace(R.id.container, Fragment.instantiate(activity, fragment.getName()), fragment.getClass().getCanonicalName());
-        tr.addToBackStack(null);
-        tr.commit();
+            //String tag = fragment.getClass().getCanonicalName();
+            tr.replace(R.id.container, Fragment.instantiate(activity, fragment.getName()), fragment.getClass().getCanonicalName());
+            tr.addToBackStack(null);
+            tr.commit();
+        }
         return true;
     }
 }

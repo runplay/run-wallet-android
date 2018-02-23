@@ -22,7 +22,6 @@
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/colorSecondary"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
         <LinearLayout
@@ -37,15 +36,16 @@
                 android:id="@+id/generate_qr_code_address_input_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingTop="72dp"
                 app:errorEnabled="true"
-                app:hintTextAppearance="@style/TextLabel">
+                app:hintTextAppearance="@style/Base.TextAppearance.AppCompat.Small">
 
                 <android.support.design.widget.TextInputEditText
                     android:id="@+id/generate_qr_code_address_input"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="@string/address"
+                    android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
+                    android:typeface="monospace"
                     android:digits="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ9"
                     android:maxLength="90"
                     android:inputType="textNoSuggestions" />
@@ -57,8 +57,8 @@
                 android:id="@+id/generate_qr_code_amount_input_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/baseline"
-                app:hintTextAppearance="@style/TextLabel">
+                android:layout_marginTop="@dimen/baseline_small"
+                app:hintTextAppearance="@style/Base.TextAppearance.AppCompat.Small">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -92,7 +92,7 @@
                 android:id="@+id/generate_qr_code_message_input_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/baseline_typo"
+                android:layout_marginTop="@dimen/baseline_small"
                 app:hintTextAppearance="@style/TextLabel">
 
                 <android.support.design.widget.TextInputEditText
@@ -110,7 +110,7 @@
                 android:id="@+id/generate_qr_code_tag_input_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/baseline_typo"
+                android:layout_marginTop="@dimen/baseline_small"
                 app:hintTextAppearance="@style/TextLabel">
 
                 <android.support.design.widget.TextInputEditText

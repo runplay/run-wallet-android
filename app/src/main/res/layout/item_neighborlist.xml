@@ -20,7 +20,7 @@
             android:orientation="horizontal"
             android:id="@+id/neighbour_head"
             android:padding="4dp"
-
+            android:background="@color/whiteAlpha50"
             >
             <TextView
                 android:id="@+id/item_neighbor_address"
@@ -30,7 +30,7 @@
                 android:textStyle="bold"
                 android:textColor="@color/blackAlpha50"
                 android:singleLine="true"
-                android:paddingLeft="24dp"
+                android:paddingLeft="@dimen/baseline_card"
                 android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                 />
             <TextView

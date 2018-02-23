@@ -193,7 +193,11 @@ public class WalletAddressCardAdapter extends RecyclerView.Adapter<WalletAddress
     }
 
     private Address getItem(int position) {
-        return addresses.get(position+1);
+        int index=position+1;
+        if(index<addresses.size()) {
+            return addresses.get(index);
+        }
+        return null;
     }
 
     public void setAdapterList(List<Address> addresses) {

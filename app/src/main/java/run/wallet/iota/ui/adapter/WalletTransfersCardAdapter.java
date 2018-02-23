@@ -171,11 +171,11 @@ public class WalletTransfersCardAdapter extends RecyclerView.Adapter<TransferVie
     }
 
     private Transfer getItem(int position) {
-        try {
-            return transfers.get(position + 1);
-        }catch(Exception e){}
+        int index=position+1;
+        if(index<transfers.size()) {
+            return transfers.get(index);
+        }
         return  null;
-
     }
 
 

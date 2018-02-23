@@ -14,7 +14,7 @@
         android:visibility="gone"
         android:padding="6dp"
         android:orientation="horizontal"
-        android:background="@color/whiteAlpha"
+        android:background="@color/whiteAlpha75"
         >
         <TextView
             android:id="@+id/item_wt_filtered_balance"

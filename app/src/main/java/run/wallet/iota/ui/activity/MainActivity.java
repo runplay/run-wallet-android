@@ -163,6 +163,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 UiManager.openFragment(this,currentFrag);
             }
         }
+
         if (!prefs.getBoolean(Constants.PREFERENCE_RUN_WITH_ROOT, false)) {
             if (RootDetector.isDeviceRooted()) {
                 RootDetectedDialog dialog = new RootDetectedDialog();
@@ -215,12 +216,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         String errorMessage = null;
         switch (error.getErrorType()) {
             case REMOTE_NODE_ERROR:
-                AppService.getNodeInfo(this);
+                //AppService.getNodeInfo(this);
                 break;
             case NETWORK_ERROR:
                 errorMessage = getString(R.string.messages_network_error);
                 break;
             case ACCESS_ERROR:
+                // depreciated.. should remove, but check first..
                 if(error.getMessage()!=null && !error.getMessage().contains("getNeigh")) {
                     errorMessage = getString(R.string.messages_network_access_error);
                 }
@@ -229,6 +231,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 errorMessage = getString(R.string.messages_invalid_hash_error);
                 break;
             case EXCHANGE_RATE_ERROR:
+                // depreciated.. should remove, but check first..
                 errorMessage = getString(R.string.messages_exchange_rate_error);
                 break;
 
@@ -485,14 +488,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        switch (requestCode) {
-            case Constants.REQUEST_CODE_LOGIN:
-                inputManager.hideSoftInputFromWindow(getWindow().getDecorView().getWindowToken(), 0);
-                navigationView.getMenu().performIdentifierAction(R.id.nav_wallet, 0);
-                break;
-        }
         switch (resultCode) {
             case Constants.REQUEST_CODE_LOGIN:
+            case 0:
                 inputManager.hideSoftInputFromWindow(getWindow().getDecorView().getWindowToken(), 0);
                 navigationView.getMenu().performIdentifierAction(R.id.nav_wallet, 0);
                 break;
@@ -557,6 +555,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         try {
             EventBus.getDefault().register(this);
         } catch (EventBusException e) {}
+
         showLogoutNavigationItem();
         updateDynamicShortcuts();
         AppService.setIsAppStarted(this, true);

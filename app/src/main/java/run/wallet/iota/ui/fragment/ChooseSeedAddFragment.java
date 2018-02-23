@@ -21,6 +21,7 @@ package run.wallet.iota.ui.fragment;
 
 import android.app.Activity;
 import android.app.Fragment;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
@@ -172,6 +173,8 @@ public class ChooseSeedAddFragment extends Fragment {
             login(seed);
         } else {
             addSeed(seed);
+            InputMethodManager inputManager = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+            inputManager.hideSoftInputFromWindow(seedEditText.getWindowToken(), 0);
             getActivity().onBackPressed();
         }
     }

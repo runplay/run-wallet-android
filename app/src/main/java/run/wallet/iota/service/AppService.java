@@ -275,14 +275,16 @@ public final class AppService extends Service {
     @Override
     public void onDestroy() {
         super.onDestroy();
-		unregisterReceiver(areceiver);
-		unregisterReceiver(aoreceiver);
-		unregisterReceiver(receiver);
-		unregisterReceiver(breceiver);
-		unregisterReceiver(ubreceiver);
-        Log.e("SERVICE","SHUTDOIWN CALLED: "+System.currentTimeMillis());
-		Intent pservice = new Intent(this, OnAlarmReceiver.class);
-		stopService(pservice);
+        try {
+            unregisterReceiver(areceiver);
+            unregisterReceiver(aoreceiver);
+            unregisterReceiver(receiver);
+            unregisterReceiver(breceiver);
+            unregisterReceiver(ubreceiver);
+
+            Intent pservice = new Intent(this, OnAlarmReceiver.class);
+            stopService(pservice);
+        } catch(Exception e){}
 		syncDataHandler=null;
     }
 
@@ -345,6 +347,7 @@ public final class AppService extends Service {
     }
 
     public static void startRegularRefresh() {
+
         if(SERVICE.syncDataHandler!=null)
             SERVICE.syncDataHandler.removeCallbacks(SERVICE.syncDataThread);
     	if(SERVICE.syncDataThread==null) {
@@ -381,8 +384,10 @@ public final class AppService extends Service {
 		@Override
 		protected void onPostExecute(Boolean result) {
 			isrefreshing=false;
-            SERVICE.syncDataHandler.removeCallbacks(SERVICE.syncDataThread);
-            SERVICE.syncDataHandler.postDelayed(SERVICE.syncDataThread, MILLIS_SYNC_DATA);
+			try {
+                SERVICE.syncDataHandler.removeCallbacks(SERVICE.syncDataThread);
+                SERVICE.syncDataHandler.postDelayed(SERVICE.syncDataThread, MILLIS_SYNC_DATA);
+            } catch(Exception e) {}
 		}
 	}
 

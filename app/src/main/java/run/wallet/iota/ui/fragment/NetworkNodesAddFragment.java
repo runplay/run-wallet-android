@@ -20,20 +20,26 @@
 package run.wallet.iota.ui.fragment;
 
 import android.app.Fragment;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TextInputEditText;
+import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.AppCompatButton;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Adapter;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -53,11 +59,12 @@ import run.wallet.iota.ui.adapter.AddNodesListAdapter;
 public class NetworkNodesAddFragment extends Fragment {
 
     @BindView(R.id.node_add_choose_button)
-    AppCompatButton addNodeBtn;
+    Button addNodeBtn;
 
     @BindView(R.id.node_add_toolbar)
     Toolbar addNodeToolbar;
-
+    @BindView(R.id.node_add_address_layout)
+    TextInputLayout addressLayout;
     @BindView(R.id.node_add_address_input)
     TextInputEditText nodeAddress;
 
@@ -72,7 +79,7 @@ public class NetworkNodesAddFragment extends Fragment {
     View enterPod;
 
     //private boolean useHttp=true;
-    private String[] protos = new String[]{"http","https","udp"};
+    private String[] protos = new String[]{"http","https"};
 
     private Unbinder unbinder;
 
@@ -89,7 +96,6 @@ public class NetworkNodesAddFragment extends Fragment {
         nodeAddress.setText(ip);
         protocol.setText(proto);
         port.setText(useport);
-
     }
 
     @Override
@@ -122,12 +128,33 @@ public class NetworkNodesAddFragment extends Fragment {
                 node.ip=nodeAddress.getText().toString();
                 node.port= Sf.toInt(port.getText().toString());
                 node.protocol=protocol.getText().toString();
-
                 node.ip= Utils.stripHttp(node.ip);
 
-                Store.addNode(getActivity(),node.ip,node.port,node.protocol);
+                if(node.ip.length()>3 && node.ip.contains(".") && node.port>0) {
 
-                getActivity().onBackPressed();
+                    Store.addNode(getActivity(), node.ip, node.port, node.protocol);
+
+                    getActivity().onBackPressed();
+                } else {
+                    addressLayout.setError(getString(R.string.messages_enter_neighbor_address));
+                }
+            }
+        });
+        nodeAddress.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                //nodeAddress.
+                addressLayout.setError(null);
             }
         });
         adapter=new AddNodesListAdapter(getActivity(),this);
@@ -139,12 +166,16 @@ public class NetworkNodesAddFragment extends Fragment {
         super.onResume();
         protocol.setText("http");
     }
+    @Override
+    public void onPause() {
+        super.onPause();
+        InputMethodManager inputManager = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+        inputManager.hideSoftInputFromWindow(nodeAddress.getWindowToken(), 0);
+    }
     private void changeProtocol() {
         String use=protocol.getText().toString();
-        if(use.equals("udp")) {
+        if(use.equals("https")) {
             protocol.setText(protos[0]);
-        } else if(use.equals("https")) {
-            protocol.setText(protos[2]);
         } else {
             protocol.setText(protos[1]);
         }

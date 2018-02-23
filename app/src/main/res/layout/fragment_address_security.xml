@@ -38,7 +38,7 @@
             android:layout_height="60dp"
             android:layout_gravity="center_horizontal"
             android:scaleType="fitCenter"
-            android:drawableTop="@drawable/logo"
+            android:drawableTop="@drawable/logo_primary"
             android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
             android:tint="@color/blackAlpha50" />
         <TextView

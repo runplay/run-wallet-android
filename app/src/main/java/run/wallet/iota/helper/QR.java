@@ -83,7 +83,7 @@ public class QR {
 
         int size = 260;
         if( size > 1){
-            Log.e("QR", "size is set manually");
+            //Log.e("QR", "size is set manually");
             size = 260;
         }
 
@@ -125,7 +125,7 @@ public class QR {
             public void run() {
                 int size = showView.getMeasuredWidth();
                 if( size > 1){
-                    Log.e("QR", "size is set manually");
+                    //Log.e("QR", "size is set manually");
                     size = 260;
                 }
 

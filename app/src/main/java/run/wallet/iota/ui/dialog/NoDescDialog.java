@@ -135,15 +135,11 @@ public class NoDescDialog extends DialogFragment {
 
                 prefs.edit().putInt(Constants.PREFERENCE_PASS_LENGTH,passwordConfirm.length()).commit();
                 boolean islog=Store.login(rawpass);
-                //Log.e("ENC-SEEd","is loggedin: "+passwordConfirm.length());
-                //prefs.edit().putString(Constants.PREFERENCE_ENC_PASS, aes.encrypt(seed)).apply();
-                //IOTA.seed = seed.toCharArray();
-
+                InputMethodManager inputManager = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+                inputManager.hideSoftInputFromWindow(textInputLayoutPassword.getWindowToken(), 0);
                 getDialog().dismiss();
                 getActivity().onBackPressed();
-                //Intent intent = new Intent(getActivity().getIntent());
-                //intent.getExtras().putString("haspass",passwordConfirm);
-                //getActivity().startActivityForResult(intent, Constants.REQUEST_CODE_LOGIN); //REQUEST_CODE_LOGIN
+
             } catch (Exception e) {
                 e.getStackTrace();
             }
