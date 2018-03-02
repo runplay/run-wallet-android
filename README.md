@@ -2,7 +2,7 @@
 ![alt tag](http://iota.runplay.com/img/icon.png "run IOTA wallet Logo")
 
 <b>run Iota</b> provides a fast, efficient and easy to manage Wallet for the IOTA currency
-<br/>Latest update adds Multi Address transfer and TOR ability
+<br/>
 
 <h2>Features</h2>
 
@@ -26,8 +26,15 @@ Full of features<br/>
 Code originally based on the IOTA foundation wallet
 https://github.com/iotaledger/android-wallet-app
 <br/>
+<br/>
+<h2>Updates</h2>
 
-
+v1.3.790 - Edit Wallet section created, Added one extra Theme, Rate App prompt added<br/>
+v1.3.780 - Bug fixes identified in Google Play console<br/>
+v1.3.770 - Welcome section added and opened the app to full app browsing without Seed<br/>
+v1.3.770 - Colour Themes, 10 different app colours styles to choose from<br/>
+v1.3.660 - Multi Address transfer and TOR ability<br/>
+<br/><br/>
 <h2>Download</h2>
 
 <a href='https://play.google.com/store/apps/details?id=run.wallet'><img alt='Get it on Google Play' src='https://play.google.com/intl/en_us/badges/images/generic/en_badge_web_generic.png' width="323" height="125"/></a></a>
