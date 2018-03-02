@@ -96,8 +96,8 @@ public class RunIotaAPI extends RunIotaAPICore {
                 }
             }
         }
-
-        sendReBroadcastTransfer(nudgeHash);
+        // Removed as is having no positive effect on nudges
+        //sendReBroadcastTransfer(nudgeHash);
 
         RunSendTransferResponse str=RunSendTransferResponse.create(hashes, successful, stopWatch.getElapsedTimeMili());
 
@@ -118,7 +118,6 @@ public class RunIotaAPI extends RunIotaAPICore {
         } catch (ArgumentException e) {
             return new ArrayList<>();
         }
-        //Log.e("TRYTES","broadcastAndStore: "+(System.currentTimeMillis()-now));
         final List<Transaction> trx = new ArrayList<>();
 
         for (final String tryte : Arrays.asList(res.getTrytes())) {
@@ -149,10 +148,8 @@ public class RunIotaAPI extends RunIotaAPICore {
         // and return the list of all addresses
         if (total != 0) {
             for (int i = index; i < index + total; i++) {
-                //Log.e("RIOTA-API","call new address, checksum is: "+checksum);
                 allAddresses.add(RunIotaApiUtils.newAddress(seed, security, i, checksum, customCurl.clone()));
             }
-            //Log.e("RIOTA-API","returning new address");
             return GetNewAddressResponse.create(allAddresses, stopWatch.getElapsedTimeMili());
         }
 
@@ -331,16 +328,13 @@ public class RunIotaAPI extends RunIotaAPICore {
 
         // attach to tangle - do pow
         long now= System.currentTimeMillis();
-        //Log.e("TRYTES","ATTACH TO TANGLE: "+now);
 
         final GetAttachToTangleResponse res = attachToTangle(txs.getTrunkTransaction(), txs.getBranchTransaction(), minWeightMagnitude, trytes);
-        //Log.e("TRYTES","attachToTangle: "+(System.currentTimeMillis()-now));
         try {
             broadcastAndStore(res.getTrytes());
         } catch (ArgumentException e) {
             return new ArrayList<>();
         }
-        //Log.e("TRYTES","broadcastAndStore: "+(System.currentTimeMillis()-now));
         final List<Transaction> trx = new ArrayList<>();
 
         for (final String tryte : Arrays.asList(res.getTrytes())) {
@@ -455,21 +449,17 @@ public class RunIotaAPI extends RunIotaAPICore {
      */
     public List<String> prepareTransfers(String seed, int security, final List<Transfer> transfers, String remainder, List<Input> inputs, boolean validateInputs) throws ArgumentException {
 
-        //Log.e("PT","PT1");
         // validate seed
         if ((!InputValidator.isValidSeed(seed))) {
             throw new IllegalStateException(INVALID_SEED_INPUT_ERROR);
         }
-        //Log.e("PT","PT2");
         if (security < 1) {
             throw new ArgumentException(INVALID_SECURITY_LEVEL_INPUT_ERROR);
         }
-        //Log.e("PT","PT3");
         // Input validation of transfers object
         if (!InputValidator.isTransfersCollectionValid(transfers)) {
             throw new ArgumentException(INVALID_TRANSFERS_INPUT_ERROR);
         }
-        //Log.e("PT","PT4");
         // Create a new bundle
         final Bundle bundle = new Bundle();
         final List<String> signatureFragments = new ArrayList<>();
@@ -479,17 +469,14 @@ public class RunIotaAPI extends RunIotaAPICore {
         //  Iterate over all transfers, get totalValue
         //  and prepare the signatureFragments, message and tag
         for (final Transfer transfer : transfers) {
-            //Log.e("PT","PT-loop");
             // remove the checksum of the address if provided
             if (Checksum.isValidChecksum(transfer.getAddress())) {
                 transfer.setAddress(Checksum.removeChecksum(transfer.getAddress()));
             }
-            //Log.e("PT","PT-loop1");
             int signatureMessageLength = 1;
 
             // If message longer than 2187 trytes, increase signatureMessageLength (add 2nd transaction)
             if (transfer.getMessage().length() > Constants.MESSAGE_LENGTH) {
-                //Log.e("PT","PT-loop2");
                 // Get total length, message / maxLength (2187 trytes)
                 signatureMessageLength += Math.floor(transfer.getMessage().length() / Constants.MESSAGE_LENGTH);
 
@@ -516,7 +503,6 @@ public class RunIotaAPI extends RunIotaAPICore {
                 }
                 signatureFragments.add(fragment);
             }
-            //Log.e("PT","PT-loop3");
             tag = transfer.getTag();
 
             // pad for required 27 tryte length
@@ -524,7 +510,6 @@ public class RunIotaAPI extends RunIotaAPICore {
                 tag = StringUtils.rightPad(tag, Constants.TAG_LENGTH, '9');
             }
 
-            //Log.e("PT","PT-loop4");
             // get current timestamp in seconds
             long timestamp = (long) Math.floor(Calendar.getInstance().getTimeInMillis() / 1000);
 
@@ -533,62 +518,12 @@ public class RunIotaAPI extends RunIotaAPICore {
             // Sum up total value
             totalValue += transfer.getValue();
         }
-        //Log.e("PREP","inputs size: "+inputs.size());
         // Get inputs if we are sending tokens
         if (totalValue != 0) {
 
             if (inputs != null && !inputs.isEmpty()) {
                 //Log.e("PREP","inputs... OKKKKKK: "+remainder);
                 return addRemainder(seed, security, inputs, bundle, tag, totalValue, remainder, signatureFragments);
-                //  Case 1: user provided inputs
-                //  Validate the inputs by calling getBalances
-
-            /*
-
-
-                if (!validateInputs) {
-                    return addRemainder(seed, security, inputs, bundle, tag, totalValue, remainder, signatureFragments);
-                }
-                // Get list if addresses of the provided inputs
-                List<String> inputsAddresses = new ArrayList<>();
-                for (final Input i : inputs) {
-                    Log.e("PREP","input: "+i.getAddress());
-                    inputsAddresses.add(i.getAddress());
-                }
-
-
-                GetBalancesResponse balancesResponse = getBalances(100, inputsAddresses);
-                String[] balances = balancesResponse.getBalances();
-
-                List<Input> confirmedInputs = new ArrayList<>();
-                long totalBalance = 0;
-
-                for (int i = 0; i < balances.length; i++) {
-                    long thisBalance = Long.parseLong(balances[i]);
-
-                    // If input has balance, add it to confirmedInputs
-                    if (thisBalance > 0) {
-                        totalBalance += thisBalance;
-                        Input inputEl = inputs.get(i);
-                        inputEl.setBalance(thisBalance);
-                        confirmedInputs.add(inputEl);
-
-                        // if we've already reached the intended input value, break out of loop
-                        if (totalBalance >= totalValue) {
-                            log.info("Total balance already reached ");
-                            break;
-                        }
-                    }
-
-                }
-
-                // Return not enough balance error
-                if (totalValue > totalBalance) {
-                    throw new IllegalStateException(NOT_ENOUGH_BALANCE_ERROR);
-                }
-                return addRemainder(seed, security, confirmedInputs, bundle, tag, totalValue, remainder, signatureFragments);
-*/
-
             }
             else {
                 //Log.e("PREP","SHOULD NOT DISPLAY THIS MESSAGE 1");
@@ -915,23 +850,18 @@ public class RunIotaAPI extends RunIotaAPICore {
     public SendTransferResponse sendTransfer(String seed, int security, int depth, int minWeightMagnitude, final List<Transfer> transfers, List<Input> inputs, String remainderAddress, boolean validateInputs, boolean validateInputAddresses) throws ArgumentException {
 
         StopWatch stopWatch = new StopWatch();
-        //Log.e("SEND_TRAN","PREPARE: "+remainderAddress);
         List<String> trytes = prepareTransfers(seed, security, transfers, remainderAddress, inputs, validateInputs);
-        //Log.e("SEND_TRAN","PREPED");
         if (validateInputAddresses) {
             //Log.e("SEND_TRAN","VALIDATE INP ADD CALLED... should not be calling");
             validateTransfersAddresses(seed, security, trytes);
         }
-        //Log.e("SEND_TRAN","CALL TO SEND: (sec) "+stopWatch.getElapsedTimeSecs());
         List<Transaction> trxs = sendTrytes(trytes.toArray(new String[trytes.size()]), depth, minWeightMagnitude);
-        //Log.e("SEND_TRAN","SENT: (sec) "+stopWatch.getElapsedTimeSecs());
         Boolean[] successful = new Boolean[trxs.size()];
 
         for (int i = 0; i < trxs.size(); i++) {
             final FindTransactionResponse response = findTransactionsByBundles(trxs.get(i).getBundle());
             successful[i] = response.getHashes().length != 0;
         }
-        //Log.e("SEND_TRAN","FOUND TRANSACTIONS: (sec) "+stopWatch.getElapsedTimeSecs());
         return SendTransferResponse.create(trxs, successful, stopWatch.getElapsedTimeMili());
     }
 
@@ -1210,7 +1140,6 @@ public class RunIotaAPI extends RunIotaAPICore {
                                      final long totalValue,
                                      final String remainderAddress,
                                      final List<String> signatureFragments) throws ArgumentException {
-        //Log.e("REMAINDER","BUNDLE (1) SIZE: "+bundle.getTransactions().size());
         long totalTransferValue = totalValue;
         for (int i = 0; i < inputs.size(); i++) {
             //Log.e("REMAINDER",inputs.get(i).getBalance()+": "+inputs.get(i).getAddress());
@@ -1222,23 +1151,17 @@ public class RunIotaAPI extends RunIotaAPICore {
             bundle.addEntry(security, inputs.get(i).getAddress(), toSubtract, tag, timestamp);
             // If there is a remainder value
             // Add extra output to send remaining funds to
-            //Log.e("REMAINDER","SECURITY: "+security);
-            //Log.e("REMAINDER","BUNDLE SIZE: "+bundle.getTransactions().size());
             if (thisBalance >= totalTransferValue) {
                 long remainder = thisBalance - totalTransferValue;
-                //Log.e("REMAINDER","rem: "+remainder);
                 // If user has provided remainder address
                 // Use it to send remaining funds to
                 if (remainder > 0 && remainderAddress != null) {
                     // Remainder bundle entry
-                    //Log.e("REMAINDER","address not null ok: "+remainder+"="+remainderAddress);
                     bundle.addEntry(1, remainderAddress, remainder, tag, timestamp);
-                    //Log.e("REMAINDER","BUNDLE SIZE: "+bundle.getTransactions().size());
                     // Final function for signing inputs
                     return RunIotaApiUtils.signInputsAndReturn(seed, inputs, bundle, signatureFragments, customCurl.clone());
                 } else if (remainder > 0) {
                     // Generate a new Address by calling getNewAddress
-                    //Log.e("REMAINDER","rem add: "+remainder);
                     GetNewAddressResponse res = getNewAddress(seed, security, 0, false, 0, false);
                     // Remainder bundle entry
                     bundle.addEntry(1, res.getAddresses().get(0), remainder, tag, timestamp);
@@ -1246,7 +1169,6 @@ public class RunIotaAPI extends RunIotaAPICore {
                     // Final function for signing inputs
                     return RunIotaApiUtils.signInputsAndReturn(seed, inputs, bundle, signatureFragments, customCurl.clone());
                 } else {
-                    //Log.e("REMAINDER","no rem: "+remainder);
                     // If there is no remainder, do not add transaction to bundle
                     // simply sign and return
                     return RunIotaApiUtils.signInputsAndReturn(seed, inputs, bundle, signatureFragments, customCurl.clone());
@@ -1256,7 +1178,6 @@ public class RunIotaAPI extends RunIotaAPICore {
                 // the inputs balance
             } else {
                 totalTransferValue -= thisBalance;
-                //Log.e("REMAINDER","BAAAAD: "+totalTransferValue);
             }
         }
         throw new IllegalStateException(NOT_ENOUGH_BALANCE_ERROR);

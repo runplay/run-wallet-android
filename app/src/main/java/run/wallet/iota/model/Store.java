@@ -89,6 +89,7 @@ public class Store {
     }
     private Address tmpCacheAddress;
     private Transfer tmpCacheTransfer;
+    private Seeds.Seed tmpCacheSeed;
 
     private Store() {}
 
@@ -107,6 +108,9 @@ public class Store {
         }
     }
 
+    public static void saveSeeds(Context context) {
+        store.seeds.save(context);
+    }
     public static void reinit(Context context) {
         jointInit(context);
     }
@@ -176,6 +180,12 @@ public class Store {
     }
     public static Transfer getCacheTransfer() {
         return store.tmpCacheTransfer;
+    }
+    public static void setCacheSeed(Seeds.Seed seed) {
+        store.tmpCacheSeed=seed;
+    }
+    public static Seeds.Seed getCacheSeed() {
+        return store.tmpCacheSeed;
     }
 
     public static int getBalanceDisplayType() {
@@ -828,6 +838,9 @@ public class Store {
     }
     public static void removeSeed(Context context, String seedId) {
         store.seeds.removeSeed(context,seedId);
+    }
+    public static void setDefaultSeed(Seeds.Seed seed) {
+        store.seeds.setDefault(seed);
     }
     private static Seeds.Seed getDefaultSeed() {
         if(Validator.isValidCaller()) {

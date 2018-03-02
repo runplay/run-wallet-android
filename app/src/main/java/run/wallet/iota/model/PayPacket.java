@@ -90,8 +90,9 @@ public class PayPacket {
         public long locked;
         private AvailableBalances(){}
     }
-    public static AvailableBalances calculateAvailableBalances() {
-        List<Address> stored=Store.getAddresses();
+    public static synchronized AvailableBalances calculateAvailableBalances() {
+        List<Address> stored=new ArrayList<>();
+        stored.addAll(Store.getAddresses());
         AvailableBalances balances=new AvailableBalances();
         for(Address address: stored) {
             if(!address.isPig() && !address.isUsed() && address.getValue()>0 && address.getPendingValue()==0) {

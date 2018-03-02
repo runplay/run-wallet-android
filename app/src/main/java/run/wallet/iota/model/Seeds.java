@@ -45,7 +45,7 @@ public class Seeds {
         }
 
         public String getShortValue() {
-            return String.valueOf(value).substring(0,9);
+            return String.valueOf(value).substring(0,9)+"***";
         }
         public String getSystemShortValue() {
             return String.valueOf(value).substring(0,16);
@@ -53,6 +53,20 @@ public class Seeds {
     }
 
 
+    protected void setDefault(Seed seed) {
+        List<Seed> tmpseeds = new ArrayList<>();
+        tmpseeds.addAll(seeds);
+        seeds.clear();
+        seed.isdefault=true;
+        seeds.add(seed);
+        for(Seed ts: tmpseeds) {
+            if(!ts.id.equals(seed.id)) {
+                ts.isdefault=false;
+                seeds.add(ts);
+            }
+        }
+
+    }
     protected final Seed getSeedById(String id) {
         for(Seed seed: seeds) {
             if(seed.id.equals(id))

@@ -33,7 +33,6 @@ import android.content.pm.ShortcutManager;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Icon;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.provider.Settings;
@@ -47,8 +46,9 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.preference.PreferenceManager;
+
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
+import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
@@ -57,6 +57,10 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.EventBusException;
 import org.greenrobot.eventbus.Subscribe;
 
+import run.wallet.common.rate.AppRate;
+import run.wallet.common.rate.OnClickButtonListener;
+import run.wallet.common.rate.PreferenceHelper;
+import run.wallet.common.rate.StoreType;
 import run.wallet.R;
 import run.wallet.common.B;
 import run.wallet.iota.api.TaskManager;
@@ -68,7 +72,6 @@ import run.wallet.iota.helper.RootDetector;
 import run.wallet.iota.helper.TorHelper;
 import run.wallet.iota.model.QRCode;
 import run.wallet.iota.model.Store;
-import run.wallet.iota.security.SignatureCheck;
 import run.wallet.iota.security.Validator;
 import run.wallet.iota.service.AppService;
 import run.wallet.iota.ui.UiManager;
@@ -104,11 +107,7 @@ import run.wallet.iota.ui.fragment.WelcomeFragment;
 
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
-/*
-    static {
-        AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
-    }
-    */
+
     private static final String STATE_CURRENT_FRAGMENT_TAG = "CURRENT_FRAGMENT_TAG";
     private static final String STATE_IS_LOGGED_IN_TAG = "IS_LOGGED_IN_TAG";
     private static final String SHORTCUT_ID_GENERATE_QR_CODE = "generateQrCode";
@@ -120,17 +119,18 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     @BindView(R.id.nav_view)
     NavigationView navigationView;
 
+    private MainActivity activity;
 
     private SharedPreferences prefs;
     private InputMethodManager inputManager;
     private String currentFragmentTag = null;
     private boolean killFragments = false;
     private OnBackPressedClickListener onBackPressedClickListener;
-    //private StartupDialog startDialog;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-
+        activity=this;
         AppTheme.init(this);
 
         setTheme(AppTheme.getTheme());
@@ -143,7 +143,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         TorHelper.init(this,null);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
-
 
         if (!AppService.isAppServiceRunning(this)) {
             Intent service = new Intent(this, AppService.class);
@@ -174,16 +173,37 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         drawer.addDrawerListener(drawerListener);
         AppService.getNodeInfo(this);
+
     }
 
     @Override
     public void setSupportActionBar(@Nullable Toolbar toolbar) {
         if (toolbar != null) {
-            super.setSupportActionBar(toolbar);
-            ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                    this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-            drawer.addDrawerListener(toggle);
-            toggle.syncState();
+
+
+            if(AppTheme.isLgbota()) {
+                ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+                        this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+                toggle.setDrawerIndicatorEnabled(false); //disable "hamburger to arrow" drawable
+                toggle.setHomeAsUpIndicator(R.drawable.lgbt); //set your own
+                drawer.addDrawerListener(toggle);
+
+                toggle.setToolbarNavigationClickListener(new View.OnClickListener() {
+
+                    @Override
+                    public void onClick(View view) {
+                        drawer.openDrawer(Gravity.LEFT);
+                    }
+                });
+                toggle.syncState();
+            } else {
+                super.setSupportActionBar(toolbar);
+                ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+                        this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+                drawer.addDrawerListener(toggle);
+                toggle.syncState();
+            }
+
         }
     }
 
@@ -354,6 +374,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     } else {
                         killFragments = true;
                         fragment = new WalletTabFragment();
+                        appRate();
                     }
                 } else {
                     killFragments = true;
@@ -614,5 +635,35 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     public interface OnBackPressedClickListener {
         void onBackPressedClickListener();
+    }
+    private void appRate() {
+        Handler rateHandler = new Handler();
+        rateHandler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                AppRate.with(activity)
+                        .setStoreType(StoreType.GOOGLEPLAY) //default is Google, other option is Amazon
+                        .setInstallDays(4) // 4
+                        .setLaunchTimes(15) // 15
+                        .setRemindInterval(5) // 5
+                        .setShowLaterButton(true) // default true.
+                        .setDebug(false) // default false.
+                        .setCancelable(false) // default false.
+                        .setOnClickButtonListener(new OnClickButtonListener() { // callback listener.
+                            @Override
+                            public void onClickButton(int which) {
+                                //Log.d(hotchemi.android.rate.sample.MainActivity.class.getName(), Integer.toString(which));
+                            }
+                        })
+                        .setTitle(R.string.new_rate_dialog_title)
+                        .setTextLater(R.string.new_rate_dialog_later)
+                        .setTextNever(R.string.new_rate_dialog_never)
+                        .setTextRateNow(R.string.new_rate_dialog_ok)
+                        .monitor();
+
+                AppRate.showRateDialogIfMeetsConditions(activity);
+            }
+        },3000);
+
     }
 }

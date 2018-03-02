@@ -36,7 +36,7 @@ public class SeedValidator {
             else if (seed.length() < SEED_LENGTH_MIN)
                 return context.getString(R.string.messages_invalid_characters_seed) + " " + context.getString(R.string.messages_seed_to_short);
             else
-            return context.getString(R.string.messages_invalid_characters_seed);
+                return context.getString(R.string.messages_invalid_characters_seed);
 
         } else if (seed.matches(".*[A-Z].*") && seed.matches(".*[a-z].*")) {
             if (seed.length() > SEED_LENGTH_MAX)

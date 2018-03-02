@@ -90,6 +90,15 @@
     <color name="textColorBwPrimary">#666666</color>
     <color name="textColorBwSecondary">#999999</color>
 
+    <color name="colorLgbotaPrimary">#008026</color>
+    <color name="colorLgbotaPrimaryDark">#ff8c00</color>
+    <color name="colorLgbotaAccent">#e40303</color>
+    <color name="colorLgbotaSecondary">#ffed81</color>
+    <color name="colorLgbotaMiddle">#CCCCCC</color>
+    <color name="colorLgbotaLight">#ffede2</color>
+    <color name="textColorLgbotaPrimary">#750787</color>
+    <color name="textColorLgbotaSecondary">#004dff</color>
+
 
     <color name="grey">#CDCDCD</color>
     <color name="greyDark">#888888</color>

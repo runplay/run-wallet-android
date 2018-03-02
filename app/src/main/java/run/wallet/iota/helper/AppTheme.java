@@ -27,23 +27,42 @@ public class AppTheme {
     public static final int THEME_RED=7;
     public static final int THEME_BW=8;
     public static final int THEME_PURPLE=9;
+    public static final int THEME_LGBOTA=10;
 
     private static int THEME=0;
     public static void init(Context context) {
         SharedPreferences prefs= PreferenceManager.getDefaultSharedPreferences(context);
         THEME = prefs.getInt("pref_theme",0);
     }
+
+    public static final boolean isLgbota() {
+        if(THEME==THEME_LGBOTA)
+            return true;
+        return false;
+    }
     @SuppressWarnings("deprecation")
     public static void setNavColors(Activity activity) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            activity.getWindow().setNavigationBarColor(B.getColor(activity, getPrimary()));
-            activity.getWindow().setStatusBarColor(B.getColor(activity, getPrimaryDark()));
+            if(isLgbota()) {
+                activity.getWindow().setNavigationBarColor(B.getColor(activity, getPrimary()));
+                activity.getWindow().setStatusBarColor(B.getColor(activity, R.color.textColorLgbotaPrimary));
+            } else {
+                activity.getWindow().setNavigationBarColor(B.getColor(activity, getPrimary()));
+                activity.getWindow().setStatusBarColor(B.getColor(activity, getPrimaryDark()));
+            }
         }
     }
     public static void setTheme(Context context, int THEME_) {
         THEME=THEME_;
         SharedPreferences prefs= PreferenceManager.getDefaultSharedPreferences(context);
         prefs.edit().putInt("pref_theme",THEME).commit();
+    }
+    public static int getPigRdrawable() {
+        switch(THEME) {
+            case THEME_LGBOTA:
+                return R.drawable.piglbgt;
+        }
+        return R.drawable.pig;
     }
     public static final int getTheme() {
         switch(THEME) {
@@ -67,6 +86,8 @@ public class AppTheme {
                 return R.style.AppThemeBw;
             case THEME_PURPLE:
                 return R.style.AppThemePurple;
+            case THEME_LGBOTA:
+                return R.style.AppThemeLgbota;
         }
         return R.style.AppTheme;
     }
@@ -95,6 +116,8 @@ public class AppTheme {
                 return R.color.colorBwPrimary;
             case THEME_PURPLE:
                 return R.color.colorPurplePrimary;
+            case THEME_LGBOTA:
+                return R.color.colorLgbotaPrimary;
         }
         return R.color.colorPrimary;
     }
@@ -123,6 +146,8 @@ public class AppTheme {
                 return R.color.colorBwPrimaryDark;
             case THEME_PURPLE:
                 return R.color.colorPurplePrimaryDark;
+            case THEME_LGBOTA:
+                return R.color.colorLgbotaPrimaryDark;
         }
         return R.color.colorPrimaryDark;
     }
@@ -148,6 +173,8 @@ public class AppTheme {
                 return R.color.colorBwAccent;
             case THEME_PURPLE:
                 return R.color.colorPurpleAccent;
+            case THEME_LGBOTA:
+                return R.color.colorLgbotaAccent;
         }
         return R.color.colorAccent;
     }
@@ -173,6 +200,8 @@ public class AppTheme {
                 return R.color.colorBwSecondary;
             case THEME_PURPLE:
                 return R.color.colorPurpleSecondary;
+            case THEME_LGBOTA:
+                return R.color.colorLgbotaSecondary;
         }
         return R.color.colorSecondary;
     }
@@ -198,6 +227,8 @@ public class AppTheme {
                 return R.drawable.side_nav_bar_bw;
             case THEME_PURPLE:
                 return R.drawable.side_nav_bar_purple;
+            case THEME_LGBOTA:
+                return R.color.colorLgbotaPrimary;
         }
         return R.drawable.side_nav_bar;
     }

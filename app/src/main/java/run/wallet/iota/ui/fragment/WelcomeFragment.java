@@ -90,6 +90,8 @@ public class WelcomeFragment extends Fragment {
     View btnBw;
     @BindView(R.id.choose_theme_purple)
     View btnPurple;
+    @BindView(R.id.choose_theme_lgbota)
+    View btnLgbt;
 
     @BindView(R.id.welcome_colors)
     HorizontalScrollView scrollColors;
@@ -147,6 +149,7 @@ public class WelcomeFragment extends Fragment {
         btnRed.setOnClickListener(v-> {AppTheme.setTheme(getActivity(),AppTheme.THEME_RED); getActivity().recreate();});
         btnPurple.setOnClickListener(v-> {AppTheme.setTheme(getActivity(),AppTheme.THEME_PURPLE); getActivity().recreate();});
         btnBw.setOnClickListener(v-> {AppTheme.setTheme(getActivity(),AppTheme.THEME_BW); getActivity().recreate();});
+        btnLgbt.setOnClickListener(v-> {AppTheme.setTheme(getActivity(),AppTheme.THEME_LGBOTA); getActivity().recreate();});
         scrollColors.setScrollX(pos);
     }
     private void showWelcome() {

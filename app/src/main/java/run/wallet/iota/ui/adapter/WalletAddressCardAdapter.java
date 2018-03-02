@@ -130,6 +130,7 @@ public class WalletAddressCardAdapter extends RecyclerView.Adapter<WalletAddress
 
                 IotaToText.IotaDisplayData data = IotaToText.getIotaDisplayData(address.getValue());
                 holder.addressId.setText("a" + address.getIndexName());
+                holder.addressId.setBackgroundColor(B.getColor(context,AppTheme.getPrimary()));
                 holder.addressValue.setText(data.value);
                 holder.addressValueThird.setText(data.thirdDecimal);
                 holder.addressValueUnit.setText(data.unit);
@@ -146,6 +147,7 @@ public class WalletAddressCardAdapter extends RecyclerView.Adapter<WalletAddress
                     //holder.rawValue.setVisibility(View.GONE);
                 }
                 holder.securityValue.setText("s" + address.getSecurity());
+                holder.securityValue.setBackgroundColor(B.getColor(context,AppTheme.getPrimary()));
                 holder.rawValue.setTextColor(B.getColor(context, R.color.greyDark));
                 holder.rawValue.setCompoundDrawables(null, null, null, null);
 
@@ -179,7 +181,7 @@ public class WalletAddressCardAdapter extends RecyclerView.Adapter<WalletAddress
                     holder.addressValue.setPaintFlags(holder.addressLabel.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
                 } else if (address.isPig()) {
                     holder.cardView.setCardBackgroundColor(B.getColor(context, R.color.whiteAlpha));
-                    holder.addressImage.setImageResource(R.drawable.pig);
+                    holder.addressImage.setImageResource(AppTheme.getPigRdrawable());
                     holder.addressLabel.setTextColor(B.getColor(context, AppTheme.getPrimaryDark()));
                 } else if (!address.isAttached()) {
                     holder.addressImage.setColorFilter(ContextCompat.getColor(context, R.color.flatGreen));

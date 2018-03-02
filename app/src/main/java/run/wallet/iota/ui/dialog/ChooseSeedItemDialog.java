@@ -37,6 +37,7 @@ import run.wallet.iota.model.Store;
 import run.wallet.iota.ui.UiManager;
 import run.wallet.iota.ui.adapter.WalletAddressCardAdapter;
 import run.wallet.iota.ui.adapter.WalletTransfersCardAdapter;
+import run.wallet.iota.ui.fragment.ChooseSeedEditFragment;
 import run.wallet.iota.ui.fragment.WalletAddressesFragment;
 import run.wallet.iota.ui.fragment.WalletTabFragment;
 import run.wallet.iota.ui.fragment.WalletTransfersFragment;
@@ -102,21 +103,16 @@ public class ChooseSeedItemDialog extends DialogFragment implements DialogInterf
                 UiManager.openFragment(getActivity(), WalletTabFragment.class);
                 break;
             case 1:
-                ShowNoDescDialog showSeedDialog = new ShowNoDescDialog();
-                showSeedDialog.setSeed(seed);
-                getDialog().dismiss();
-                showSeedDialog.show(getActivity().getFragmentManager(), null);
+                Store.setCacheSeed(seed);
+                UiManager.openFragmentBackStack(getActivity(), ChooseSeedEditFragment.class);
                 break;
             case 2:
                 if(Store.getSeedList().size()>1) {
-                    DeleteSeedDialog deleedDialog = new DeleteSeedDialog();
-                    deleedDialog.setSeed(seed);
-                    deleedDialog.setOnDismissListener(onDismissListener2);
+                    DeleteSeedDialog deletedDialog = new DeleteSeedDialog();
+                    deletedDialog.setSeed(seed);
+                    deletedDialog.setOnDismissListener(onDismissListener2);
                     getDialog().dismiss();
-                    deleedDialog.show(getActivity().getFragmentManager(), null);
-
-
-                    //getDialog().dismiss();
+                    deletedDialog.show(getActivity().getFragmentManager(), null);
                 } else {
                     Snackbar.make(getActivity().findViewById(R.id.drawer_layout), R.string.min_seed_req, Snackbar.LENGTH_LONG).show();
                 }

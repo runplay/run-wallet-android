@@ -66,7 +66,7 @@ public class IotaApiProvider implements ApiProvider {
 
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context.getApplicationContext());
 
-        if (prefs.getBoolean(Constants.PREFERENCES_LOCAL_POW, true))
+        if (prefs.getBoolean(Constants.PREFERENCES_LOCAL_POW, false))
             this.iotaApi = new RunIotaAPI.Builder().localPoW(new PearlDiverLocalPoW()).protocol(protocol).host(host).port(((Integer) port).toString()).build();
         else
             this.iotaApi = new RunIotaAPI.Builder().protocol(protocol).host(host).port(((Integer) port).toString()).build();

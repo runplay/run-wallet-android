@@ -110,26 +110,27 @@
                         android:layout_width="wrap_content"
                         android:layout_height="30dp" />
                 </LinearLayout>
+
                 <LinearLayout
-                    android:id="@+id/choose_theme_pink"
+                    android:id="@+id/choose_theme_lgbota"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical">
                     <TextView
 
-                        android:background="@color/colorPinkPrimary"
+                        android:background="@color/colorLgbotaPrimary"
                         android:textColor="@color/white"
                         android:padding="6dp"
                         android:layout_margin="6dp"
                         android:gravity="center"
-                        android:text="@string/theme_pink"
+                        android:text="@string/theme_lgbota"
                         android:layout_width="150dp"
                         android:layout_height="30dp" />
                     <TextView
                         android:textColor="@color/blackAlpha50"
                         android:padding="6dp"
                         android:gravity="center"
-                        android:text="@string/theme_pink_text"
+                        android:text="@string/theme_lgbota_text"
                         android:layout_width="wrap_content"
                         android:layout_height="30dp" />
                 </LinearLayout>
@@ -153,6 +154,29 @@
                         android:padding="6dp"
                         android:gravity="center"
                         android:text="@string/theme_purple_text"
+                        android:layout_width="wrap_content"
+                        android:layout_height="30dp" />
+                </LinearLayout>
+                <LinearLayout
+                    android:id="@+id/choose_theme_pink"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+                    <TextView
+
+                        android:background="@color/colorPinkPrimary"
+                        android:textColor="@color/white"
+                        android:padding="6dp"
+                        android:layout_margin="6dp"
+                        android:gravity="center"
+                        android:text="@string/theme_pink"
+                        android:layout_width="150dp"
+                        android:layout_height="30dp" />
+                    <TextView
+                        android:textColor="@color/blackAlpha50"
+                        android:padding="6dp"
+                        android:gravity="center"
+                        android:text="@string/theme_pink_text"
                         android:layout_width="wrap_content"
                         android:layout_height="30dp" />
                 </LinearLayout>

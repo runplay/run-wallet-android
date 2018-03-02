@@ -44,6 +44,7 @@
     <string name="clear">Clear</string>
     <string name="add_more">+ Add</string>
     <string name="pay">Pay</string>
+    <string name="view">View</string>
     <string name="info_transfer">Transfer</string>
     <string name="info_address_already">Edit existing payment address</string>
 
@@ -205,8 +206,10 @@
     <string name="theme_purple_text">Purple mellow Theme coloured</string>
     <string name="theme_bw">Chaplin</string>
     <string name="theme_bw_text">Black on White Theme coloured</string>
-    <string name="theme_red">Angry man</string>
+    <string name="theme_red">Rage</string>
     <string name="theme_red_text">Red on White Theme coloured</string>
+    <string name="theme_lgbota">LGBOTA</string>
+    <string name="theme_lgbota_text">LGBT Theme colour</string>
 
     <!-- TOR -->
     <string name="tor">Tor</string>
@@ -298,7 +301,8 @@
     <string name="message_do_not_nudge">Do not nudge</string>
     <string name="seed_use">Make Active Wallet</string>
     <string name="seed_add">Add Seed</string>
-    <string name="seed_edit">View Wallet Seed</string>
+    <string name="seed_view">View Wallet Seed</string>
+    <string name="seed_edit">Edit Wallet</string>
     <string name="seed_remove">Remove Seed</string>
     <string name="seed_add_wallet">Add Seed Wallet</string>
     <string name="node_add">Add Node</string>
@@ -551,11 +555,19 @@
     <string name="fragment_wallet_title">Wallet</string>
 
     <string name="title_remove_seed">Remove Seed</string>
-
+    <string name="title_edit_wallet">Edit Wallet</string>
+    <string name="title_edit_default">Set this Wallet to Default</string>
+    <string name="title_edit_isdefault">Wallet is Default</string>
+    <string name="title_edit_summary">Change wallet name, default, or view the Seed</string>
     <string name="fragment_generate_qr_code_title">QR Code</string>
+    <string name="fragment_generate_qr_code_active">Generating QR Code</string>
 
-
-
+    <!-- rate app -->
+    <string name="new_rate_dialog_title">Rate run IOTA️</string>
+    <string name="new_rate_dialog_message">If you find run IOTA useful, why not help with a Rating...</string>
+    <string name="new_rate_dialog_never">🖖 No thanks</string>
+    <string name="new_rate_dialog_later">⏲ Later</string>
+    <string name="new_rate_dialog_ok">👍 Rate now</string>
 
     <!-- App Shortcuts -->
     <string name="shortcut_generate_qr_code">Generate QR code</string>
@@ -654,7 +666,7 @@
     <string name="help_set_currency_text">Change the default currency to compare your IOTA to</string>
 
     <string name="help_beta">Beta 🔨🔧</string>
-    <string name="help_beta_text">run IOTA is considered still under development, this is the first release and has only been tested with a limited number of devices internally</string>
+    <string name="help_beta_text">run IOTA is an Open Beta app.</string>
     <string name="help_beta_contact">If you have any issues, get in contact, 🐞 bugs can be fixed 🔧</string>
 
 </resources>

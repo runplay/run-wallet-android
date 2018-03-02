@@ -70,7 +70,7 @@ public class ChooseSeedAdapter extends RecyclerView.Adapter<ChooseSeedAdapter.Vi
         holder.isDefault = address.isdefault;
         holder.setIsRecyclable(false);
         holder.seed=address;
-        holder.addressLabel.setText(address.getShortValue()+"***");
+        holder.addressLabel.setText(address.getShortValue());
         holder.seedName.setText(address.name);
 
         Wallet wallet = Store.getWallet(address);

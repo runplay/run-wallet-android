@@ -22,9 +22,11 @@ package run.wallet.iota.ui.fragment;
 import android.app.Fragment;
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputEditText;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
@@ -41,6 +43,9 @@ import com.google.gson.Gson;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
+
+import jota.utils.Checksum;
+import run.wallet.common.json.JSONObject;
 import run.wallet.iota.IOTA;
 import run.wallet.R;
 import run.wallet.iota.api.TaskManager;
@@ -134,10 +139,8 @@ public class GenerateQRCodeFragment extends Fragment {
     @OnClick(R.id.generate_qr_code_fab_button)
     public void onGenerateQrCodeClick(FloatingActionButton fab) {
         inputManager.hideSoftInputFromWindow(fab.getWindowToken(), 0);
-        //reset errors
         addressEditTextInputLayout.setError(null);
 
-        //noinspection StatementWithEmptyBody
         if (!isValidAddress()) {
 
         } else {
@@ -156,18 +159,38 @@ public class GenerateQRCodeFragment extends Fragment {
 
             String json = new Gson().toJson(qrCode);
 
+            SafeDeleteFiles sdf = new SafeDeleteFiles();
+            sdf.execute(json);
+            Snackbar.make(getActivity().findViewById(R.id.drawer_layout), R.string.fragment_generate_qr_code_active, Snackbar.LENGTH_SHORT).show();
             //Bitmap bitmap = net.glxn.qrgen.android.QRCode.from(json).withSize(500, 500).bitmap();
 
-            Bitmap bitmap = QR.generateImage(json,getActivity());
+        }
+    }
 
+    private class SafeDeleteFiles extends AsyncTask<String, Void, Boolean> {
+        private Bitmap bitmap=null;
+        @Override
+        protected Boolean doInBackground(String... params) {
+            bitmap = QR.generateImage(params[0],getActivity());
+            return true;
+
+        }
+
+        @Override
+        protected void onPostExecute(Boolean result) {
             Bundle bundle = new Bundle();
             bundle.putParcelable("bitmap", bitmap);
             GeneratedQRCodeDialog fragment = new GeneratedQRCodeDialog();
             fragment.setArguments(bundle);
             fragment.show(getActivity().getFragmentManager(), null);
         }
-    }
 
+        @Override
+        protected void onPreExecute() {
+        }
+
+
+    }
 
     private String amountInSelectedUnit() {
         String inputAmount = amountEditText.getText().toString();
@@ -223,32 +246,17 @@ public class GenerateQRCodeFragment extends Fragment {
 
 
     }
-/*
-    private void generateNewAddress() {
-        AppService.generateNewAddress(getActivity());
-    }
-*/
-    private void attachNewAddress(String address) {
-        AppService.sendNewTransfer(getActivity(), Store.getCurrentSeed(), address, "0", "", Constants.NEW_ADDRESS_TAG);
-        //rt.startNewRequestTask(tir);
-    }
-
-    @Subscribe
-    public void onEvent(GetNewAddressResponse gnar) {
-        attachNewAddress(gnar.getAddresses().get(0));
-        addressEditText.setText(gnar.getAddresses().get(0));
-    }
 
     @Override
     public void onResume() {
         super.onResume();
-        EventBus.getDefault().register(this);
+
     }
 
     @Override
     public void onPause() {
         super.onPause();
-        EventBus.getDefault().unregister(this);
+
     }
 
     @Override
@@ -272,27 +280,21 @@ public class GenerateQRCodeFragment extends Fragment {
             unitsSpinner.setSelection(savedInstanceState.getInt(SPINNER_POISTION));
         }
     }
-
     private boolean isValidAddress() {
         String address = addressEditText.getText().toString();
-        //try {
-            //noinspection StatementWithEmptyBody
-            //if (Checksum.isAddressWithoutChecksum(address)) {
-            //}
-        //} catch (ArgumentException e) {
-            //addressEditTextInputLayout.setError(getString(R.string.messages_enter_txaddress_with_checksum));
-            //return false;
-        //}
-        return true;
+        try {
+            if (Checksum.isAddressWithChecksum(address)) {
+                address = Checksum.removeChecksum(address);
+            }
+        } catch(Exception e) {}
+        if(address.length()==81 && address.matches("^[A-Z9]+$")) {
+            return true;
+        }
+        return false;
     }
 
     private String getAddress() {
-        //try {
-            return addressEditText.getText().toString();
-        //}/ catch (ArgumentException e) {
-        //    e.printStackTrace();
-        //}
-        //return "";
+        return addressEditText.getText().toString();
     }
 
     private String getAmount() {

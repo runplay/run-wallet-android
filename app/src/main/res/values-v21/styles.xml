@@ -149,4 +149,18 @@
         <item name="android:textColorPrimary">@color/textColorBwPrimary</item>
         <item name="android:textColorSecondary">@color/textColorBwSecondary</item>
     </style>
+    <style name="AppThemeLgbota" parent="Theme.AppCompat.Light.DarkActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+        <item name="android:windowDrawsSystemBarBackgrounds">true</item>
+
+        <item name="colorPrimary">@color/colorLgbotaPrimary</item>
+        <item name="colorPrimaryDark">@color/colorLgbotaPrimaryDark</item>
+        <item name="colorAccent">@color/colorLgbotaAccent</item>
+        <item name="colorButtonNormal">@color/colorLgbotaPrimary</item>
+        <item name="android:colorButtonNormal">@color/colorLgbotaPrimary</item>
+        <item name="preferenceTheme">@style/PreferenceThemeOverlay.v14.Material</item>
+        <item name="android:textColorPrimary">@color/textColorLgbotaPrimary</item>
+        <item name="android:textColorSecondary">@color/textColorLgbotaSecondary</item>
+    </style>
 </resources>

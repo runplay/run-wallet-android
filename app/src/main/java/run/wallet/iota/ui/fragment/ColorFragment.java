@@ -70,6 +70,8 @@ public class ColorFragment extends Fragment {
     ScrollView scrollColors;
     @BindView(R.id.choose_theme_purple)
     View btnPurple;
+    @BindView(R.id.choose_theme_lgbota)
+    View btnLgbt;
 
 
     private Unbinder unbinder;
@@ -106,6 +108,7 @@ public class ColorFragment extends Fragment {
         btnRed.setOnClickListener(v-> {AppTheme.setTheme(getActivity(),AppTheme.THEME_RED); restart();});
         btnBw.setOnClickListener(v-> {AppTheme.setTheme(getActivity(),AppTheme.THEME_BW); restart();});
         btnPurple.setOnClickListener(v-> {AppTheme.setTheme(getActivity(),AppTheme.THEME_PURPLE); restart();});
+        btnLgbt.setOnClickListener(v-> {AppTheme.setTheme(getActivity(),AppTheme.THEME_LGBOTA); restart();});
         scrollColors.setScrollY(pos);
 
     }

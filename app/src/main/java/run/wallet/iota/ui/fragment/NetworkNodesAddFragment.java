@@ -108,7 +108,6 @@ public class NetworkNodesAddFragment extends Fragment {
         addNodeToolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //Log.d("cek", "home selected");
                 getActivity().onBackPressed();
             }
         });

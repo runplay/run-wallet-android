@@ -23,7 +23,7 @@
         android:summary="@string/settings_first_range_summary"
         android:title="@string/settings_first_range" />
     <CheckBoxPreference
-        android:defaultValue="true"
+        android:defaultValue="false"
         android:key="preference_local_pow"
         android:summary="@string/settings_local_pow_summary"
         android:title="@string/settings_local_pow_title" />

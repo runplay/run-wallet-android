@@ -104,7 +104,7 @@ public class ChooseSeedAddFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        UiManager.setActionBarBackOnly(getActivity(),getString(R.string.seed_add),null);
+
         generatedSeed=null;
     }
 
@@ -147,7 +147,7 @@ public class ChooseSeedAddFragment extends Fragment {
             Snackbar.make(getView(), R.string.max_seeds, Snackbar.LENGTH_LONG).show();
             return;
         }
-        String seed = SeedValidator.getSeed(seedEditText.getText().toString());
+        String seed = seedEditText.getText().toString();
 
 
         if (seed.isEmpty()) {
@@ -168,7 +168,7 @@ public class ChooseSeedAddFragment extends Fragment {
 
             }
         }
-
+        seed=SeedValidator.getSeed(seed);
         if(!Store.isLoggedIn()) {
             login(seed);
         } else {
@@ -207,7 +207,9 @@ public class ChooseSeedAddFragment extends Fragment {
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putString(SEED, seedEditText.getText().toString());
+        if(seedEditText!=null && seedEditText.getText()!=null) {
+            outState.putString(SEED, seedEditText.getText().toString());
+        }
     }
 
     @Override

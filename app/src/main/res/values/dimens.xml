@@ -15,5 +15,6 @@
     <dimen name="card_corner_radius">2dp</dimen>
 
     <dimen name="status_bar_height">30dp</dimen>
-
+    <dimen name="activity_horizontal_margin">16dp</dimen>
+    <dimen name="activity_vertical_margin">16dp</dimen>
 </resources>

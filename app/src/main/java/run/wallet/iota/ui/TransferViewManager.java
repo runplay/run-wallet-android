@@ -288,7 +288,7 @@ public class TransferViewManager {
                     }
                     holder.alternativeValueLabel.setText(context.getString(R.string.card_label_pending_out));
                 } else {
-                    if(isAutoNudge && transfer.getNudgeCount()>0) {
+                    if(isAutoNudge) {
                         holder.confirmCheck.setVisibility(View.VISIBLE);
                         holder.confirmCheck.setBackgroundResource(R.drawable.ic_replay_orange_alpha);
                     }
