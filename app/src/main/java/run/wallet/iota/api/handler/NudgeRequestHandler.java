@@ -1,22 +1,3 @@
-/*
- * Copyright (C) 2017 IOTA Foundation
- *
- * Authors: pinpong, adrianziser, saschan
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- */
-
 package run.wallet.iota.api.handler;
 
 import android.content.Context;
@@ -64,58 +45,25 @@ public class NudgeRequestHandler extends IotaRequestHandler {
     public static ApiResponse doNudge(RunIotaAPI apiProxy, Context context,ApiRequest inrequest) {
         ApiResponse response;
         int notificationId = Utils.createNewID();
-        //int notificationId = Utils.createNewID();
-
         NudgeRequest request=(NudgeRequest) inrequest;
-        //NotificationHelper.requestNotification(context, R.drawable.send_white, context.getString(R.string.notification_replay_bundle_request_title), notificationId);
 
         Transfer nudgeMe= request.getTransfer();
         try {
 
             List<Address> alreadyAddress = Store.getAddresses(context,request.getSeed());
-
-            String useAddress=null;
-            Address fullAddress=null;
-
-            List<Address> emptyAttached=Store.getEmptyAttached(alreadyAddress);
-            int max=Store.getAutoAttach()+5;  // allows up to 5 pre hidden addresses
-            if(emptyAttached.size()<=max) {
-
-                GetNewAddressRequest gnr = new GetNewAddressRequest(request.getSeed());
-                gnr.setIndex(alreadyAddress.size());
-
-                final GetNewAddressResponse gna = apiProxy.getNewAddress(String.valueOf(request.getSeed().value), gnr.getSecurity(),
-                        alreadyAddress.size(), gnr.isChecksum(), 1, gnr.isReturnAll());
-
-                run.wallet.iota.api.responses.GetNewAddressResponse gnar = new run.wallet.iota.api.responses.GetNewAddressResponse(request.getSeed(), gna);
-                Store.addAddress(context, gnr, gnar);
-
-                alreadyAddress = Store.getAddresses(context, request.getSeed());
-
-                useAddress = gnar.getAddresses().get(0);
-                fullAddress = Store.isAlreadyAddress(useAddress,alreadyAddress);
-            } else {
-                fullAddress = emptyAttached.get(0);
-                useAddress=fullAddress.getAddress();
-            }
-            //useAddress=nudgeMe
-
-            //}
-
+            String useAddress="RUN9IOTA9WALLET9NUDGE9PROMOTE9TRANSFER9ADDRESSRUN9IOTA9WALLET9NUDGE9PROMOTE9TRANS";
             NudgeResponse nresp=null;
             if(useAddress!=null) {
                 List<Transfer> transfers = new ArrayList<>();
                 List<Transfer> alreadyTransfers=Store.getTransfers(context,request.getSeed());
 
                 Transfer already=Store.isAlreadyTransfer(nudgeMe.getHash(),alreadyTransfers);
-
                 if(already!=null) {
-
                     RunSendTransferResponse rstr = apiProxy.sendNudgeTransfer(String.valueOf(request.getSeed().value),
                             nudgeMe.getHash(),
                             useAddress,
-                            fullAddress.getIndex(),
-                            fullAddress.getSecurity(),
+                            1,
+                            2,
                             request.getDepth(),
                             request.getMinWeightMagnitude());
                     nresp = new NudgeResponse(rstr);
@@ -133,14 +81,6 @@ public class NudgeRequestHandler extends IotaRequestHandler {
                     }
 
                     if(gotHash!=null) {
-                        Transfer transfer=new Transfer(useAddress, 0, "RUN9NUDGE9HASH9"+nudgeMe.getHash()+"9END", RunIotaAPI.NUDGE_TAG);
-                        transfer.setHash(gotHash);
-                        transfer.setTimestamp(System.currentTimeMillis());
-                        if(nodeInfo!=null) {
-                            transfer.setMilestoneCreated(nodeInfo.getLatestMilestoneIndex());
-                        }
-
-                        transfers.add(transfer);
                         Wallet wallet = Store.getWallet(context, request.getSeed());
                         Audit.setTransfersToAddresses(request.getSeed(), transfers, alreadyAddress, wallet, alreadyTransfers);
                         Audit.processNudgeAttempts(context, request.getSeed(), transfers);
@@ -158,7 +98,6 @@ public class NudgeRequestHandler extends IotaRequestHandler {
                 }
             }
 
-            //if(nresp==null) {
             NetworkError error = new NetworkError();
             error.setErrorType(NetworkErrorType.INVALID_HASH_ERROR);
             return error;

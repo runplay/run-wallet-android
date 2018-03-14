@@ -27,12 +27,9 @@ import android.util.Log;
 import run.wallet.iota.api.handler.AddNeighborsRequestHandler;
 import run.wallet.iota.api.handler.AddressSecurityChangeRequestHandler;
 import run.wallet.iota.api.handler.AuditAddressesRequestHandler;
-import run.wallet.iota.api.handler.AuditSeedRequestHandler;
 import run.wallet.iota.api.handler.AutoNudgeHandler;
 import run.wallet.iota.api.handler.GetFirstLoadRequestHandler;
 import run.wallet.iota.api.handler.NudgeRequestHandler;
-import run.wallet.iota.api.handler.WebGetExchangeRatesHistoryRequestHandler;
-import run.wallet.iota.api.handler.WebGetExchangeRatesRequestHandler;
 import run.wallet.iota.api.handler.FindTransactionsRequestHandler;
 import run.wallet.iota.api.handler.GetAccountDataRequestHandler;
 import run.wallet.iota.api.handler.GetBalanceAndFormatRequestHandler;
@@ -45,7 +42,6 @@ import run.wallet.iota.api.handler.ReplayBundleRequestHandler;
 import run.wallet.iota.api.handler.RequestHandler;
 import run.wallet.iota.api.handler.SendTransferRequestHandler;
 import run.wallet.iota.api.requests.ApiRequest;
-import run.wallet.iota.api.requests.AuditAddressesRequest;
 import run.wallet.iota.api.responses.ApiResponse;
 import run.wallet.iota.api.responses.error.NetworkError;
 import run.wallet.iota.api.responses.error.NetworkErrorType;
@@ -94,19 +90,15 @@ public class IotaApiProvider implements ApiProvider {
         SendTransferRequestHandler sendTransferAction = new SendTransferRequestHandler(iotaApi, context);
         NodeInfoRequestHandler nodeInfoAction = new NodeInfoRequestHandler(iotaApi, context);
         GetFirstLoadRequestHandler firstLoad = new GetFirstLoadRequestHandler(iotaApi,context);
-        AuditSeedRequestHandler auditRequest = new AuditSeedRequestHandler(iotaApi,context);
         NudgeRequestHandler nudgeRequest = new NudgeRequestHandler(iotaApi,context);
-        //MessageSendRequestHandler sendMessageAction = new MessageSendRequestHandler(iotaApi, context);
         GetBalanceAndFormatRequestHandler getBalanceAndFormatRequest = new GetBalanceAndFormatRequestHandler(iotaApi,context);
 
         requestHandlerMap.put(autoNudge.getType(),autoNudge);
         requestHandlerMap.put(nudgeRequest.getType(),nudgeRequest);
         requestHandlerMap.put(addressSecurity.getType(),addressSecurity);
         requestHandlerMap.put(auditAddresses.getType(), auditAddresses);
-        requestHandlerMap.put(auditRequest.getType(), auditRequest);
         requestHandlerMap.put(firstLoad.getType(), firstLoad);
         requestHandlerMap.put(addNeighborsAction.getType(), addNeighborsAction);
-
         requestHandlerMap.put(findTransactionsAction.getType(), findTransactionsAction);
         requestHandlerMap.put(getBundleAction.getType(), getBundleAction);
         requestHandlerMap.put(getNeighborsAction.getType(), getNeighborsAction);
@@ -116,7 +108,6 @@ public class IotaApiProvider implements ApiProvider {
         requestHandlerMap.put(replayBundleAction.getType(), replayBundleAction);
         requestHandlerMap.put(sendTransferAction.getType(), sendTransferAction);
         requestHandlerMap.put(nodeInfoAction.getType(), nodeInfoAction);
-        //requestHandlerMap.put(sendMessageAction.getType(), sendMessageAction);
         requestHandlerMap.put(getBalanceAndFormatRequest.getType(), getBalanceAndFormatRequest);
 
         this.requestHandlerMap = requestHandlerMap;

@@ -192,7 +192,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
                     @Override
                     public void onClick(View view) {
-                        drawer.openDrawer(Gravity.LEFT);
+                        try {
+                            drawer.openDrawer(Gravity.LEFT);
+                        } catch (Exception e){}
                     }
                 });
                 toggle.syncState();

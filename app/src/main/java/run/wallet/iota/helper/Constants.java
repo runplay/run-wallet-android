@@ -45,8 +45,8 @@ public class Constants {
     public static final int PREF_FIRST_LOAD_RANGE_DEFAULT =5;
 
     public static final String PREF_TRANSFER_NUDGE_ATTEMPTS="preference_nudge_attempts";
-    public static final int PREF_TRANSFER_NUDGE_ATTEMPTS_VALUE =2;
-    public static final int PREF_TRANSFER_NUDGE_MILESTONES_VALUE =5;
+    public static final int PREF_TRANSFER_NUDGE_ATTEMPTS_VALUE =4;
+    public static final int PREF_TRANSFER_NUDGE_MILESTONES_VALUE =1;
 
     public static final int PREF_AUTO_LOGUT_DEFAULT=2;
     public static final String PREF_AUTO_LOGOUT="preference_auto_logout";

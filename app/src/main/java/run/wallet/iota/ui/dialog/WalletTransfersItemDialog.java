@@ -88,7 +88,7 @@ public class WalletTransfersItemDialog extends DialogFragment implements DialogI
         } else if(transfer.isCompleted() || transfer.isMarkDoubleSpend() || transfer.isAttachment()) {
             useR = R.array.listOnWalletTransfersRecyclerViewClickDialogCompleted;
         } else {
-            if(maxNudgeAttempts==0 || maxNudgeAttempts>=transfer.getNudgeCount() || transfer.getTimestamp()<System.currentTimeMillis()- (Cal.HOURS_1_IN_MILLIS)) {
+            if(transfer.getTimestamp()<System.currentTimeMillis()- (Cal.MINUTES_1_IN_MILLIS*10)) {
                 useR = R.array.listOnWalletTransfersRecyclerViewClickDialogResend;
             }
         }

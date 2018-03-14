@@ -173,7 +173,7 @@ public class NodesListAdapter extends RecyclerView.Adapter<NodesListAdapter.Node
                             //Log.e("DISMISS","DIALOG");
                             reload();
                             AppService.refreshEvent();
-                            notifyDataSetChanged();
+                            //notifyDataSetChanged();
                         }
                     });
                 }

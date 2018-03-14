@@ -27,31 +27,13 @@ import android.util.Log;
 import java.util.HashMap;
 import java.util.Map;
 
-import cfb.pearldiver.PearlDiverLocalPoW;
-import jota.RunIotaAPI;
-import run.wallet.iota.api.handler.AddNeighborsRequestHandler;
-import run.wallet.iota.api.handler.AddressSecurityChangeRequestHandler;
-import run.wallet.iota.api.handler.AuditAddressesRequestHandler;
-import run.wallet.iota.api.handler.AuditSeedRequestHandler;
-import run.wallet.iota.api.handler.FindTransactionsRequestHandler;
-import run.wallet.iota.api.handler.GetAccountDataRequestHandler;
-import run.wallet.iota.api.handler.GetBalanceAndFormatRequestHandler;
-import run.wallet.iota.api.handler.GetBundleRequestHandler;
-import run.wallet.iota.api.handler.GetFirstLoadRequestHandler;
-import run.wallet.iota.api.handler.GetNeighborsRequestHandler;
-import run.wallet.iota.api.handler.GetNewAddressRequestHandler;
-import run.wallet.iota.api.handler.NodeInfoRequestHandler;
-import run.wallet.iota.api.handler.RemoveNeighborsRequestHandler;
-import run.wallet.iota.api.handler.ReplayBundleRequestHandler;
 import run.wallet.iota.api.handler.RequestHandler;
-import run.wallet.iota.api.handler.SendTransferRequestHandler;
 import run.wallet.iota.api.handler.WebGetExchangeRatesHistoryRequestHandler;
 import run.wallet.iota.api.handler.WebGetExchangeRatesRequestHandler;
 import run.wallet.iota.api.requests.ApiRequest;
 import run.wallet.iota.api.responses.ApiResponse;
 import run.wallet.iota.api.responses.error.NetworkError;
 import run.wallet.iota.api.responses.error.NetworkErrorType;
-import run.wallet.iota.helper.Constants;
 
 public class BasicApiProvider implements ApiProvider {
     private final Context context;

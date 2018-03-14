@@ -75,6 +75,24 @@
 
 
     </RelativeLayout>
+    <RelativeLayout
+        android:id="@+id/transfers_loading"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:visibility="gone"
+        >
+        <TextView
+            android:drawableTop="@drawable/logo"
+            android:drawableTint="@color/blackAlpha50"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="@string/messages_no_chart_data"
+            android:textColor="@color/blackAlpha50"
+            android:textSize="14sp"
+            />
+    </RelativeLayout>
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"

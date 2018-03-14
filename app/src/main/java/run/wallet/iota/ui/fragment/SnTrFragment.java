@@ -30,11 +30,13 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.pm.PackageManager;
 import android.graphics.Typeface;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputEditText;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.ActivityCompat;
@@ -69,6 +71,10 @@ import org.apache.commons.lang3.StringUtils;
 import java.util.ArrayList;
 import java.util.List;
 
+import jota.IotaAPI;
+import jota.dto.response.GetBalancesResponse;
+import jota.error.ArgumentException;
+import jota.model.Transaction;
 import jota.utils.Checksum;
 import run.wallet.R;
 import run.wallet.common.B;
@@ -77,6 +83,7 @@ import run.wallet.iota.helper.AppTheme;
 import run.wallet.iota.helper.Constants;
 import run.wallet.iota.helper.PermissionRequestHelper;
 import run.wallet.iota.model.Address;
+import run.wallet.iota.model.Nodes;
 import run.wallet.iota.model.PayPacket;
 import run.wallet.iota.model.QRCode;
 
@@ -196,7 +203,11 @@ public class SnTrFragment extends Fragment {
     AppCompatButton btnPayNow;
     @BindView(R.id.new_transfer_paste)
     View btnPaste;
+    @BindView(R.id.new_transfer_address_error)
+    TextView addressUsedMessage;
 
+
+    private boolean enableSend=false;
     private int editPayToAddressIndex=-1;
     private PayPacket.AvailableBalances balances;
     //private List<PayPacket.PayTo> paytoAddresses=new ArrayList();
@@ -377,7 +388,6 @@ public class SnTrFragment extends Fragment {
                 addressEditText.setInputType(InputType.TYPE_NULL);
                 addressEditText.onTouchEvent(event);
                 addressEditText.setInputType(inType);
-
                 return true; // consume touch event
 
 
@@ -386,6 +396,7 @@ public class SnTrFragment extends Fragment {
         });
         addressEditText.addTextChangedListener(inputWatcher);
         amountEditText.addTextChangedListener(inputWatcher);
+
 
         btnBack.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -455,6 +466,7 @@ public class SnTrFragment extends Fragment {
             addAddressPod.setVisibility(View.VISIBLE);
         }
         populatePaytoAddresses(true);
+
     }
     private TextWatcher inputWatcher = new TextWatcher() {
         @Override
@@ -472,7 +484,7 @@ public class SnTrFragment extends Fragment {
             if(checkSetMultiAddressImport(s)) {
 
             } else {
-                long value=Long.valueOf(amountInSelectedUnit());
+                long value=Sf.toLong(amountInSelectedUnit());
                 if(value>0 && balances.available>=value && isValidAddress()) {
                     next.setEnabled(true);
                     next.setAlpha(1F);
@@ -565,6 +577,7 @@ public class SnTrFragment extends Fragment {
             btnPaste.setAlpha(0.5F);
         }
         populatePaytoAddresses(true);
+        btnPayNow.setEnabled(false);
     }
     @Override
     public void onPause() {
@@ -690,15 +703,87 @@ public class SnTrFragment extends Fragment {
                 podAdd.setVisibility(View.GONE);
                 podDetails.setVisibility(View.VISIBLE);
                 addAddressPod.setVisibility(View.GONE);
-
+                btnPayNow.setEnabled(false);
+                btnPayNow.setText(getString(R.string.validating));
                 populatePaytoAddresses(false);
                 fillFromAddresses();
                 fillBalanceAddress();
-
+                new CheckAddressesTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, true);
             } else {
                 addressEditTextInputLayout.setError(PayPacket.getError());
             }
         }
+
+    }
+
+    private class CheckAddressesTask extends AsyncTask<Boolean, Void, Boolean> {
+
+        boolean failed;
+        public CheckAddressesTask() {
+
+        }
+
+        @Override
+        protected Boolean doInBackground(Boolean... params) {
+
+            Nodes.Node node=Store.getNode();
+            if(node!=null) {
+
+                List<String> ptAddresses = new ArrayList<>();
+                for(PayPacket.PayTo pt: PayPacket.getPayTo()) {
+                    ptAddresses.add(pt.address);
+                }
+                String protocol = node.protocol;
+                String host = node.ip;
+                int port = node.port;
+                IotaAPI api = new IotaAPI.Builder().protocol(protocol).host(host)
+                        .port(Integer.toString(port)).build();
+
+                List<Transaction> transactions=null;
+                try {
+                    String[] hashes = api.findTransactionsByAddresses(ptAddresses.toArray(new String[ptAddresses.size()])).getHashes();
+                    transactions = api.findTransactionsObjectsByHashes(hashes);
+                } catch(Exception e) {
+                    Log.e("SNT",""+e.getMessage());
+                }
+                if(transactions!=null && !transactions.isEmpty()) {
+                    for (Transaction trx : transactions) {
+                        //check if destination address is already in use
+                        if (trx.getValue() < 0 && ptAddresses.contains(trx.getAddress())) {
+                            for(PayPacket.PayTo pt: PayPacket.getPayTo()) {
+                                if(pt.address.equals(trx.getAddress())) {
+                                    pt.failCheck=true;
+                                    failed=true;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            return failed;
+
+        }
+
+        @Override
+        protected void onPostExecute(Boolean result) {
+            if(failed) {
+                addressUsedMessage.setVisibility(View.VISIBLE);
+                PayPacket.setErrorMessage(getString(R.string.messages_address_used));
+                goBackBtn();
+
+            } else {
+                btnPayNow.setEnabled(true);
+                btnPayNow.setText(getString(R.string.pay_now));
+                addressUsedMessage.setVisibility(View.GONE);
+                enableSend=true;
+            }
+
+        }
+
+        @Override
+        protected void onPreExecute() {
+        }
+
 
     }
     private void fillFromAddresses() {
@@ -802,10 +887,14 @@ public class SnTrFragment extends Fragment {
         addressEditTextInputLayout.setError(null);
 
         //noinspection StatementWithEmptyBody
-        if (!PayPacket.isValid()) {
+        if(!enableSend) {
+            Snackbar.make(getActivity().findViewById(R.id.drawer_layout), getString(R.string.messages_checking_address_used), Snackbar.LENGTH_LONG);
+
+        } else if (!PayPacket.isValid()) {
             addressEditTextInputLayout.setError(PayPacket.getError());
 
         } else {
+            inputManager.hideSoftInputFromWindow(getView().getWindowToken(),0);
             AlertDialog alertDialog = new AlertDialog.Builder(getActivity())
                     .setMessage(R.string.message_confirm_transfer)
                     .setCancelable(false)
@@ -1009,20 +1098,19 @@ public class SnTrFragment extends Fragment {
     }
     private static final LinearLayout.LayoutParams param = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
     private static final LinearLayout.LayoutParams main = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-    private static final LinearLayout.LayoutParams mainouts = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
     private static final LinearLayout.LayoutParams param2 = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
     private static final LinearLayout.LayoutParams param3 = new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT);
 
-    private static final LinearLayout.LayoutParams param4 = new LinearLayout.LayoutParams(100, LinearLayout.LayoutParams.WRAP_CONTENT);
-    private static final LinearLayout.LayoutParams param5 = new LinearLayout.LayoutParams(150, LinearLayout.LayoutParams.WRAP_CONTENT);
 
     private void populatePaytoAddresses(boolean showButtons) {
-
+        addressUsedMessage.setVisibility(View.GONE);
+        boolean hasErrorAddress=false;
         listAddresses.removeAllViews();
         Context context=getActivity();
         int bgcolor= B.getColor(context, AppTheme.getPrimary());
         int bglight=B.getColor(context,R.color.colorLight);
         int green=B.getColor(context,R.color.green);
+        int red=B.getColor(context,R.color.redAlpha);
 
         param.setMargins(16,6,16,6);
         param2.setMargins(8,4,8,4);
@@ -1031,7 +1119,13 @@ public class SnTrFragment extends Fragment {
         for(PayPacket.PayTo payto: PayPacket.getPayTo()) {
 
             LinearLayout layout = new LinearLayout(context);
-            layout.setBackgroundColor(bglight);
+            if(payto.failCheck) {
+                layout.setBackgroundColor(red);
+                hasErrorAddress=true;
+            } else {
+                layout.setBackgroundColor(bglight);
+            }
+
             layout.setOrientation(LinearLayout.HORIZONTAL);
             layout.setLayoutParams(main);
             layout.setPadding(20, 2, 20, 2);
@@ -1087,13 +1181,14 @@ public class SnTrFragment extends Fragment {
 
 
             listAddresses.addView(layout);
-
+            if(hasErrorAddress) {
+                addressUsedMessage.setVisibility(View.VISIBLE);
+            }
         }
         synchronized (listAddresses) {
             listAddresses.notifyAll();
         }
         redrawTotalToPay();
-        //uselayout.notify();
     }
 
 }

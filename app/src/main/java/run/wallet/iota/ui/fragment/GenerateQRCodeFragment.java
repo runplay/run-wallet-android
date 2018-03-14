@@ -250,7 +250,7 @@ public class GenerateQRCodeFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-
+        Store.setCurrentFragment(this.getClass());
     }
 
     @Override

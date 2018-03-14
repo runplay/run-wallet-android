@@ -191,13 +191,13 @@ public class TransferViewManager {
                 holder.fBalance.setText((value > 0 ? "+" : "") + fdata.value);
                 holder.fUnit.setText(fdata.unit);
                 holder.fThird.setText(fdata.thirdDecimal);
-                holder.fUnit.setTextColor(ContextCompat.getColor(context, AppTheme.getPrimary()));
+                holder.fUnit.setTextColor(B.getColor(context, AppTheme.getPrimary()));
                 if (value > 0) {
-                    holder.fBalance.setTextColor(ContextCompat.getColor(context, R.color.green));
-                    holder.fThird.setTextColor(ContextCompat.getColor(context, R.color.green));
+                    holder.fBalance.setTextColor(B.getColor(context, R.color.green));
+                    holder.fThird.setTextColor(B.getColor(context, R.color.green));
                 } else {
-                    holder.fBalance.setTextColor(ContextCompat.getColor(context, R.color.flatRed));
-                    holder.fThird.setTextColor(ContextCompat.getColor(context, R.color.flatRed));
+                    holder.fBalance.setTextColor(B.getColor(context, R.color.flatRed));
+                    holder.fThird.setTextColor(B.getColor(context, R.color.flatRed));
                 }
             }
         } else {
@@ -226,10 +226,10 @@ public class TransferViewManager {
         holder.confirmCheck.setVisibility(View.GONE);
         holder.alternativeValueLabel.setText("");
         holder.timestatus.setVisibility(View.VISIBLE);
-        holder.balance.setTextColor(ContextCompat.getColor(context, R.color.grey));
-        holder.balanceThird.setTextColor(ContextCompat.getColor(context, R.color.grey));
-        holder.balanceUnit.setTextColor(ContextCompat.getColor(context, R.color.grey));
-        holder.alternativeValueLabel.setTextColor(ContextCompat.getColor(context, R.color.grey));
+        holder.balance.setTextColor(B.getColor(context, R.color.grey));
+        holder.balanceThird.setTextColor(B.getColor(context, R.color.grey));
+        holder.balanceUnit.setTextColor(B.getColor(context, R.color.grey));
+        holder.alternativeValueLabel.setTextColor(B.getColor(context, R.color.grey));
         holder.balance.setPaintFlags(0);
         if(transfer.getPersistence()!=null && transfer.getPersistence().booleanValue()) {
             //holder.card.setCardBackgroundColor(B.getColor(context,R.color.cardview_light_background));
@@ -263,9 +263,9 @@ public class TransferViewManager {
             }
 
             if(transfer.getValue()<0) {
-                holder.balance.setTextColor(ContextCompat.getColor(context, R.color.flatRed));
-                holder.balanceThird.setTextColor(ContextCompat.getColor(context, R.color.flatRed));
-                holder.balanceUnit.setTextColor(ContextCompat.getColor(context, AppTheme.getPrimary()));
+                holder.balance.setTextColor(B.getColor(context, R.color.flatRed));
+                holder.balanceThird.setTextColor(B.getColor(context, R.color.flatRed));
+                holder.balanceUnit.setTextColor(B.getColor(context, AppTheme.getPrimary()));
             } else if(transfer.isInternal()) {
                 holder.alternativeValueLabel.setText(context.getString(R.string.card_label_internal));
                 holder.imgTran.setImageResource(R.drawable.tran_green);
@@ -282,13 +282,13 @@ public class TransferViewManager {
             } else {
 
                 if(transfer.getValue()<0) {
-                    if(isAutoNudge) {
+                    if(isAutoNudge || transfer.getNudgeCount()>0) {
                         holder.confirmCheck.setVisibility(View.VISIBLE);
                         holder.confirmCheck.setBackgroundResource(R.drawable.ic_replay_orange_alpha);
                     }
                     holder.alternativeValueLabel.setText(context.getString(R.string.card_label_pending_out));
                 } else {
-                    if(isAutoNudge) {
+                    if(isAutoNudge || transfer.getNudgeCount()>0) {
                         holder.confirmCheck.setVisibility(View.VISIBLE);
                         holder.confirmCheck.setBackgroundResource(R.drawable.ic_replay_orange_alpha);
                     }
@@ -312,9 +312,9 @@ public class TransferViewManager {
             holder.alternativeValueLabel.setText(context.getString(R.string.card_label_persistence_yes));
             holder.getAlternativeValueTime.setCompoundDrawables(B.getDrawable(context,R.drawable.check_green),null,null,null);
             holder.imgTran.setImageResource(R.drawable.ic_iota_in);
-            holder.balance.setTextColor(ContextCompat.getColor(context, R.color.green));
-            holder.balanceThird.setTextColor(ContextCompat.getColor(context, R.color.green));
-            holder.balanceUnit.setTextColor(ContextCompat.getColor(context, AppTheme.getPrimary()));
+            holder.balance.setTextColor(B.getColor(context, R.color.green));
+            holder.balanceThird.setTextColor(B.getColor(context, R.color.green));
+            holder.balanceUnit.setTextColor(B.getColor(context, AppTheme.getPrimary()));
         } else {
             holder.confirmCheck.setVisibility(View.VISIBLE);
             holder.confirmCheck.setText("");
@@ -322,9 +322,9 @@ public class TransferViewManager {
             holder.alternativeValueLabel.setText(context.getString(R.string.card_label_persistence_yes));
             holder.getAlternativeValueTime.setCompoundDrawables(B.getDrawable(context,R.drawable.check),null,null,null);
             holder.imgTran.setImageResource(R.drawable.ic_iota_out);
-            holder.balance.setTextColor(ContextCompat.getColor(context, R.color.flatRed));
-            holder.balanceThird.setTextColor(ContextCompat.getColor(context, R.color.flatRed));
-            holder.balanceUnit.setTextColor(ContextCompat.getColor(context, AppTheme.getPrimary()));
+            holder.balance.setTextColor(B.getColor(context, R.color.flatRed));
+            holder.balanceThird.setTextColor(B.getColor(context, R.color.flatRed));
+            holder.balanceUnit.setTextColor(B.getColor(context, AppTheme.getPrimary()));
         }
 
         TransferViewManager.populateTransferTransactions(context,holder.transferTransactions,transfer.getTransactions(),false);

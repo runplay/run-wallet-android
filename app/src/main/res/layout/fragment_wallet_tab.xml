@@ -125,7 +125,7 @@
                         android:layout_weight="1"
                         android:layout_height="wrap_content"
                         android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
-                        android:textColor="@color/green"
+                        android:textColor="@color/blackAlpha50"
                         android:gravity="start"
                         />
                 </LinearLayout>

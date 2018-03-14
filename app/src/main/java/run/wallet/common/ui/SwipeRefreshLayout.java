@@ -281,11 +281,13 @@ public class SwipeRefreshLayout extends ViewGroup {
 		return;
 		}
 		final View child = getChildAt(0);
-		final int childLeft = getPaddingLeft();
-		final int childTop = mCurrentTargetOffsetTop + getPaddingTop();
-		final int childWidth = width - getPaddingLeft() - getPaddingRight();
-		final int childHeight = height - getPaddingTop() - getPaddingBottom();
-		child.layout(childLeft, childTop, childLeft + childWidth, childTop + childHeight);
+		if(child!=null) {
+			final int childLeft = getPaddingLeft();
+			final int childTop = mCurrentTargetOffsetTop + getPaddingTop();
+			final int childWidth = width - getPaddingLeft() - getPaddingRight();
+			final int childHeight = height - getPaddingTop() - getPaddingBottom();
+			child.layout(childLeft, childTop, childLeft + childWidth, childTop + childHeight);
+		}
 	}
 	@Override
 	public void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {

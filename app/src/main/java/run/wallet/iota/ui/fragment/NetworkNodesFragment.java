@@ -53,6 +53,7 @@ import run.wallet.iota.helper.Constants;
 import run.wallet.iota.helper.JSONUrlReader;
 import run.wallet.iota.model.Nodes;
 import run.wallet.iota.model.Store;
+import run.wallet.iota.ui.RecyclerLayoutManager;
 import run.wallet.iota.ui.activity.MainActivity;
 import run.wallet.iota.ui.adapter.NodesListAdapter;
 
@@ -86,6 +87,7 @@ public class NetworkNodesFragment extends Fragment
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        recyclerView.setLayoutManager(new RecyclerLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
         nodesTextPod.setBackgroundColor(B.getColor(getActivity(), AppTheme.getSecondary()));
     }
 
@@ -131,7 +133,7 @@ public class NetworkNodesFragment extends Fragment
         recyclerView.setLayoutManager(layoutManager);
         adapter = new NodesListAdapter(getActivity());
         recyclerView.setAdapter(null);
-        adapter.notifyDataSetChanged();
+        //adapter.notifyDataSetChanged();
         recyclerView.setAdapter(adapter);
     }
 

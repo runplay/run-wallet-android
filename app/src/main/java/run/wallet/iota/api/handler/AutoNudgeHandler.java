@@ -60,9 +60,11 @@ public class AutoNudgeHandler extends IotaRequestHandler {
 
     public static ApiResponse doNudge(RunIotaAPI apiProxy, Context context,ApiRequest inrequest) {
         ApiResponse response=new ApiResponse();
+        Store.init(context,false);
         Store.loadNudgeTransfers(context);
         List<NudgeTransfer> nudgeTransfers=Store.getNudgeTransfers();
-        Store.init(context,false);
+
+
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
         int nudgeAttempts= Sf.toInt(prefs.getString(Constants.PREF_TRANSFER_NUDGE_ATTEMPTS, ""+Constants.PREF_TRANSFER_NUDGE_ATTEMPTS_VALUE));
 
@@ -82,8 +84,9 @@ public class AutoNudgeHandler extends IotaRequestHandler {
                     }
                 }
                 if (nir != null) {
-                    //Log.e("AUTONUDGE", "Running nudge transfers, milestone: " + nir.getLatestMilestoneIndex());
                     if (nir.getLatestMilestoneIndex() == nir.getLatestSolidSubtangleMilestoneIndex()) {
+                        Log.e("SERVICE","Call nudge now - 1");
+
                         Map<String, NudgeTransfer> refreshSeedShorts = new HashMap<>();
                         List<NudgeTransfer> removeFromNudges=new ArrayList<>();
                         int len = nudgeTransfers.size();
@@ -91,15 +94,8 @@ public class AutoNudgeHandler extends IotaRequestHandler {
                         // strictly this way incase one gets added from another method
                         for (int i = 0; i < len; i++) {
                             NudgeTransfer ntran = nudgeTransfers.get(i);
-                            int useval = Constants.PREF_TRANSFER_NUDGE_MILESTONES_VALUE;
-                            if (ntran.transfer.getValue() > 0) {
-                                useval = Constants.PREF_TRANSFER_NUDGE_MILESTONES_VALUE + 25;  // Redundant --- wait 2 more before trying receiving iota payments, let the other wallet get a chance
-                            }
-                            //Log.e("AUTONUDGE", "test: "+useval+" - -"+ntran.transfer.getValue()+" = " + ntran.transfer.getHash() + " ::::::::::::::::::::::::::::::: hash: " + ntran.transfer.getMilestone());
-
-                            if (ntran.transfer.getMilestone() < nir.getLatestMilestoneIndex() - useval
+                            if (ntran.transfer.getMilestone() < nir.getLatestMilestoneIndex()
                                     && ntran.transfer.getNudgeCount()<nudgeAttempts) {
-                                //Log.e("AUTONUDGE", "run nudge: mstone: " + ntran.transfer.getMilestone() +"--"+nir.getLatestMilestoneIndex()+"--"+useval+ "-- val: " + ntran.transfer.getValue() + " -- hash: " + ntran.transfer.getHash());
                                 try {
                                     Seeds.Seed seed=null;
                                     for(Seeds.Seed tseed: Store.getSeedList()) {
@@ -134,15 +130,13 @@ public class AutoNudgeHandler extends IotaRequestHandler {
                                         }
                                         if (hascompleted || hashes.isEmpty() || transactions.isEmpty()) {
                                             ntran.status = NudgeTransfer.NUDGE_CONFIRM;
-                                            //refreshSeedShorts.put(ntran.seedShort, ntran);
                                             removeFromNudges.add(ntran);
-                                            //refreshSeedShorts.put(ntran.seedShort, ntran);
                                         } else {
-                                            //Log.e("NUDGE","Nudging now .............................");
+                                            Log.e("SERVICE","Call nudge now - 2");
                                             ApiResponse resp = NudgeRequestHandler.doNudge(api,context,new NudgeRequest(seed,ntran.transfer));
                                             if(resp instanceof NudgeResponse) {
                                                 NudgeResponse nresponse = (NudgeResponse) resp;
-                                                //ReplayBundleResponse replay = api.replayBundle(ntran.transfer.getHash(), Constants.PREF_TRANSFER_DEPTH_DEFAULT, Store.getMinWeightDefaultDefault());
+
                                                 if (nresponse.getSuccessfully()) {
                                                     ntran.status = NudgeTransfer.NUDGE_CONFIRM;
                                                     refreshSeedShorts.put(ntran.seedShort, ntran);
@@ -151,7 +145,6 @@ public class AutoNudgeHandler extends IotaRequestHandler {
                                             removeFromNudges.add(ntran);
                                         }
                                     } else {
-                                        //refreshSeedShorts.put(ntran.seedShort, ntran);
                                         removeFromNudges.add(ntran);
                                     }
                                 } catch (Exception e) {

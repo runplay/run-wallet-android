@@ -28,6 +28,7 @@ import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputEditText;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.AppCompatSeekBar;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -37,7 +38,15 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.Button;
+import android.widget.HorizontalScrollView;
+import android.widget.ImageButton;
+import android.widget.LinearLayout;
+import android.widget.NumberPicker;
+import android.widget.Switch;
+import android.widget.TextView;
 
+import java.util.Collections;
 import java.util.List;
 
 import butterknife.BindView;
@@ -65,9 +74,22 @@ public class ChooseSeedAddFragment extends Fragment {
 
     @BindView(R.id.seed_login_seed_text_input_layout)
     TextInputLayout seedEditTextLayout;
-
     @BindView(R.id.seed_login_seed_input)
     TextInputEditText seedEditText;
+
+    @BindView(R.id.seed_add_gen_pod)
+    LinearLayout genPod;
+    @BindView(R.id.seed_gen_holder)
+    LinearLayout numberPickerHolder;
+    @BindView(R.id.add_seed_copy)
+    Button btnCopy;
+    @BindView(R.id.seed_add_scroll_left)
+    ImageButton scrollLeft;
+    @BindView(R.id.seed_add_scroll_right)
+    ImageButton scrollRight;
+    @BindView(R.id.seed_add_scroll_view)
+    HorizontalScrollView scrollView;
+
 
     private String generatedSeed;
 
@@ -80,7 +102,6 @@ public class ChooseSeedAddFragment extends Fragment {
         view.setBackgroundColor(B.getColor(getActivity(), AppTheme.getSecondary()));
         unbinder = ButterKnife.bind(this, view);
 
-        //UiManager.setActionBarBackOnly(getActivity(),getString(R.string.seed_add),null);
         return view;
     }
 
@@ -99,12 +120,32 @@ public class ChooseSeedAddFragment extends Fragment {
                 getActivity().onBackPressed();
             }
         });
+        scrollLeft.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                int scrollby =scrollView.getScrollX()-300;
+                scrollby=scrollby<0?0:scrollby;
+                scrollView.setScrollX(scrollby);
+            }
+        });
+        scrollRight.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                scrollView.setScrollX(scrollView.getScrollX()+300);
+            }
+        });
+        btnCopy.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                CopySeed();
+            }
+        });
     }
 
     @Override
     public void onResume() {
         super.onResume();
-
+        Store.setCurrentFragment(this.getClass());
         generatedSeed=null;
     }
 
@@ -126,11 +167,45 @@ public class ChooseSeedAddFragment extends Fragment {
     public void onSeedLoginGenerateSeedClick() {
         generatedSeed = SeedRandomGenerator.generateNewSeed();
         seedEditText.setText(generatedSeed);
+        genPod.setVisibility(View.VISIBLE);
+
+        drawCutomise();
+    }
+
+    private void CopySeed() {
         Bundle bundle = new Bundle();
         bundle.putString("generatedSeed", generatedSeed);
         CopySeedDialog dialog = new CopySeedDialog();
         dialog.setArguments(bundle);
         dialog.show(getFragmentManager(), null);
+    }
+    private String pickerValues = "ABCDEFGHIJKLMNOPQRSTUVWXYZ9";
+    private String[] pickerArray= pickerValues.split("(?!^)");
+
+    private void drawCutomise() {
+        numberPickerHolder.removeAllViews();
+        char[] asArray = generatedSeed.toCharArray();
+        for(int i=0; i<asArray.length; i++) {
+            char c= asArray[i];
+            NumberPicker num = new NumberPicker(getActivity());
+            num.setMinValue(0);
+            num.setMaxValue(26);
+            num.setDisplayedValues(pickerArray);
+            num.setValue(pickerValues.indexOf(c));
+            num.setClickable(false);
+            num.setTag(Integer.valueOf(i));
+            num.setOnValueChangedListener(new NumberPicker.OnValueChangeListener() {
+                @Override
+                public void onValueChange(NumberPicker picker, int oldVal, int newVal) {
+                    Integer index = (Integer) picker.getTag();
+                    char[] asArray = generatedSeed.toCharArray();
+                    asArray[index]=pickerArray[newVal].charAt(0);
+                    generatedSeed= new String(asArray);
+                    seedEditText.setText(generatedSeed);
+                }
+            });
+            numberPickerHolder.addView(num);
+        }
     }
 
     @OnEditorAction(R.id.seed_login_seed_input)
@@ -179,7 +254,7 @@ public class ChooseSeedAddFragment extends Fragment {
         }
     }
     private void login(String seed) {
-        //UiManager.setKeyboard(getActivity(),seedEditText,false);
+
         Bundle bundle = new Bundle();
         bundle.putString("seed", seed);
         if(generatedSeed!=null && generatedSeed.equals(seed)) {
@@ -206,10 +281,11 @@ public class ChooseSeedAddFragment extends Fragment {
     }
     @Override
     public void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
+
         if(seedEditText!=null && seedEditText.getText()!=null) {
             outState.putString(SEED, seedEditText.getText().toString());
         }
+        super.onSaveInstanceState(outState);
     }
 
     @Override

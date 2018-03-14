@@ -54,6 +54,7 @@ import run.wallet.iota.helper.AppTheme;
 import run.wallet.iota.model.Address;
 import run.wallet.iota.model.Store;
 import run.wallet.iota.service.AppService;
+import run.wallet.iota.ui.RecyclerLayoutManager;
 import run.wallet.iota.ui.UiManager;
 import run.wallet.iota.ui.adapter.WalletAddressCardAdapter;
 
@@ -153,6 +154,7 @@ public class WalletAddressesFragment extends BaseSwipeRefreshLayoutFragment  {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        recyclerView.setLayoutManager(new RecyclerLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
         NavigationView navigationView = getActivity().findViewById(R.id.nav_view);
         navigationView.getMenu().findItem(R.id.nav_wallet).setChecked(true);
         yesButton.setOnClickListener(new View.OnClickListener() {
@@ -245,7 +247,7 @@ public class WalletAddressesFragment extends BaseSwipeRefreshLayoutFragment  {
                 //Log.e("HMMM","Adapter is not empty");
                 emptyAddresses.setVisibility(View.GONE);
                 firstLoadPod.setVisibility(View.GONE);
-                adapter.notifyDataSetChanged();
+                //adapter.notifyDataSetChanged();
             } else {
                 //Log.e("HMMM","Adapter is empty");
                 if (Store.getCurrentWallet() != null) {

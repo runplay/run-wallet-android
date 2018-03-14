@@ -21,6 +21,8 @@ package run.wallet.iota.ui.fragment;
 
 import android.app.Fragment;
 import android.app.FragmentTransaction;
+import android.content.Context;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
@@ -56,6 +58,7 @@ import run.wallet.iota.helper.AppTheme;
 import run.wallet.iota.model.Address;
 import run.wallet.iota.model.Store;
 import run.wallet.iota.service.AppService;
+import run.wallet.iota.ui.RecyclerLayoutManager;
 import run.wallet.iota.ui.UiManager;
 import run.wallet.iota.ui.adapter.WalletTransfersCardAdapter;
 
@@ -91,7 +94,8 @@ public class WalletTransfersFragment extends BaseSwipeRefreshLayoutFragment impl
     LinearLayout filterBar;
     @BindView(R.id.item_ta_address_id)
     TextView filterId;
-
+    @BindView(R.id.transfers_loading)
+    RelativeLayout transferLoading;
 
     @BindView(R.id.filter_wt_balance)
     TextView filterBalance;
@@ -110,8 +114,6 @@ public class WalletTransfersFragment extends BaseSwipeRefreshLayoutFragment impl
     @BindView(R.id.fl_confirm_no)
     AppCompatButton noButton;
 
-
-
     private static boolean shouldRefresh=false;
     public static void setShouldRefresh(boolean refresh)    {
         shouldRefresh=refresh;
@@ -129,6 +131,15 @@ public class WalletTransfersFragment extends BaseSwipeRefreshLayoutFragment impl
 
         setAdapter(true);
 
+    }
+    @Override
+    public void onRefresh() {
+        super.onRefresh();
+        if(AppService.canRunGetAccountData(Store.getCurrentSeed())) {
+            AppService.getAccountData(getActivity(), Store.getCurrentSeed(), true);
+        } else {
+            swipeRefreshLayout.setRefreshing(false);
+        }
     }
     private Runnable runFirstLoad=new Runnable() {
         @Override
@@ -185,7 +196,23 @@ public class WalletTransfersFragment extends BaseSwipeRefreshLayoutFragment impl
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        recyclerView.setLayoutManager(new RecyclerLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
+        recyclerView.setAdapter(new RecyclerView.Adapter() {
+            @Override
+            public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+                return null;
+            }
 
+            @Override
+            public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+
+            }
+
+            @Override
+            public int getItemCount() {
+                return 0;
+            }
+        });
         NavigationView navigationView = getActivity().findViewById(R.id.nav_view);
         navigationView.getMenu().findItem(R.id.nav_wallet).setChecked(true);
         yesButton.setOnClickListener(new View.OnClickListener() {
@@ -224,9 +251,10 @@ public class WalletTransfersFragment extends BaseSwipeRefreshLayoutFragment impl
             firstLoadPod.setVisibility(View.GONE);
             firstLoad.removeCallbacks(runFirstLoad);
             confirmPod.setVisibility(View.GONE);
-
+            transferLoading.setVisibility(View.VISIBLE);
         }
     }
+
     @Override
     public void onPause() {
         super.onPause();
@@ -325,7 +353,71 @@ public class WalletTransfersFragment extends BaseSwipeRefreshLayoutFragment impl
         firstVis=0;
     }
 
+    private class AsyncCall extends AsyncTask<Boolean, Void, Boolean> {
+
+        @Override
+        protected Boolean doInBackground(Boolean... params) {
+
+            if(adapter==null) {
+                firstVis=0;
+                adapter = new WalletTransfersCardAdapter(getActivity(),params[0]);
+            } else {
+                if(recyclerView!=null) {
+                    firstVis = recyclerView.getVerticalScrollbarPosition();
+                }
+                if(params[0]) {
+                    WalletTransfersCardAdapter.load(getActivity(),true);
+                }
+            }
+            return true;
+        }
+
+        @Override
+        protected void onPostExecute(Boolean result) {
+            if(recyclerView!=null) {
+                transferLoading.setVisibility(View.GONE);
+                LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
+                recyclerView.setLayoutManager(layoutManager);
+                recyclerView.setAdapter(adapter);
+
+                if (adapter.getItemCount() != 0) {
+                    emptyTransfers.setVisibility(View.GONE);
+                    firstLoadPod.setVisibility(View.GONE);
+                } else {
+                    if (Store.getCurrentWallet() != null) {
+                        emptyTransfers.setVisibility(View.VISIBLE);
+
+                    }
+                }
+                filterBar.setVisibility(View.GONE);
+                if (WalletTransfersCardAdapter.getFilterAddress() != null) {
+
+                    Address address = Store.isAlreadyAddress(WalletTransfersCardAdapter.getFilterAddress(),Store.getAddresses());
+                    if(address!=null) {
+                        filterBar.setVisibility(View.VISIBLE);
+                        filterBar.setBackgroundColor(AppTheme.getColorPrimaryDark(getActivity()));
+                        IotaToText.IotaDisplayData data=IotaToText.getIotaDisplayData(address.getValue());
+                        filterAddress.setText(address.getAddress());
+                        filterId.setText(WalletTransfersCardAdapter.getFilterAddressId());
+                        filterBalance.setText(data.value);
+                        filterBalanceThird.setText(data.thirdDecimal);
+                        filterBalanceUnit.setText(data.unit);
+
+                    }
+                }
+                recyclerView.scrollToPosition(firstVis);
+            }
+        }
+
+        @Override
+        protected void onPreExecute() {
+        }
+    }
     private void setAdapter(boolean force) {
+        AsyncCall task = new AsyncCall();
+        task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, force);
+    }
+    private void setAdapterOld(boolean force) {
 
         if(recyclerView!=null) {
             if(adapter==null) {
@@ -336,7 +428,6 @@ public class WalletTransfersFragment extends BaseSwipeRefreshLayoutFragment impl
                 if(force) {
                     WalletTransfersCardAdapter.load(getActivity(),true);
                 }
-                adapter.notifyDataSetChanged();
             }
 
             LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
@@ -408,10 +499,6 @@ public class WalletTransfersFragment extends BaseSwipeRefreshLayoutFragment impl
         super.onActivityCreated(savedInstanceState);
     }
 
-    @Override
-    public void onRefresh() {
-        super.onRefresh();
-        AppService.getAccountData(getActivity(),Store.getCurrentSeed(),true);
-    }
+
 
 }

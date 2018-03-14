@@ -105,7 +105,7 @@ public class WalletTransfersCardAdapter extends RecyclerView.Adapter<TransferVie
         adapter=this;
         this.context = context;
         load(context,force);
-        adapter.notifyDataSetChanged();
+        //adapter.notifyDataSetChanged();
 
     }
     public static synchronized void load(Context context, boolean force) {

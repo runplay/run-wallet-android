@@ -20,12 +20,19 @@ public class PayPacket {
     private Address remainer;
     private boolean breakPig=false;
     private boolean isValid=false;
+
     private String error;
 
+
+
+    public static void setErrorMessage(String error) {
+        packet.error=error;
+    }
 
     public static class PayTo {
         public long value;
         public String address;
+        public boolean failCheck;
         public PayTo(long value, String address) {
             this.value=value; this.address=address;
         }
@@ -59,7 +66,7 @@ public class PayPacket {
         findApplyAddresses(getTotalToPay());
         checkValid();
             //Log.e("PAYPACK","pay: "+getTotalToPay()+", to: "+packet.payto.get(0).address +", pig: "+packet.breakPig+", valid: "+packet.isValid +", from: "+packet.payfrom.size()+" - ");
-        return packet.isValid;
+        return isValid();
     }
     public static void start() {
         clear();
@@ -82,6 +89,10 @@ public class PayPacket {
         return packet.breakPig;
     }
     public static boolean isValid() {
+        for(PayTo pt: getPayTo()) {
+            if(pt.failCheck)
+                return false;
+        }
         return packet.isValid;
     }
 
@@ -127,7 +138,7 @@ public class PayPacket {
             for(Address address: stored) {
                 boolean okgo=true;
                 for(PayTo addstr: packet.payto) {
-                    if(address.isUsed() || address.getAddress().startsWith(addstr.address)) {
+                    if((address.isUsed() && address.getValue()==0) || address.getAddress().startsWith(addstr.address)) {
                         okgo=false;
                         break;
                     }

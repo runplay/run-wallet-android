@@ -72,6 +72,7 @@ import run.wallet.iota.model.Tick;
 import run.wallet.iota.model.Ticker;
 import run.wallet.iota.model.TickerHist;
 import run.wallet.iota.service.AppService;
+import run.wallet.iota.ui.RecyclerLayoutManager;
 import run.wallet.iota.ui.UiManager;
 import run.wallet.iota.ui.adapter.ChooseSeedAdapter;
 
@@ -142,6 +143,7 @@ public class ChooseSeedFragment extends Fragment implements WalletTabFragment.On
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        recyclerView.setLayoutManager(new RecyclerLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
         ((AppCompatActivity) getActivity()).setSupportActionBar(chooseSeedToolbar);
         setHasOptionsMenu(true);
         setAdapter();

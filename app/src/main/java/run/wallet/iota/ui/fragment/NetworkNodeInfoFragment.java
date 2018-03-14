@@ -123,6 +123,7 @@ public class NetworkNodeInfoFragment extends BaseSwipeRefreshLayoutFragment impl
     @Override
     public void onResume() {
         super.onResume();
+
         getNodeInfo(true);
         setAdapter();
     }
@@ -187,7 +188,7 @@ public class NetworkNodeInfoFragment extends BaseSwipeRefreshLayoutFragment impl
         Activity activity = getActivity();
 
         if(activity!=null && nir!=null) {
-
+            swipeRefreshLayout.setRefreshing(false);
             SimpleDateFormat df = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss", Locale.getDefault());
             nodeInfos = new ArrayList<>();
             nodeInfos.add(new NodeInfo(activity.getString(R.string.info_app_name), nir.getAppName()));

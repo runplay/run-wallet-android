@@ -80,7 +80,11 @@ public class Cal extends GregorianCalendar {
                 }
 
             } else {
-                frd=din.getDaysInPast()+"d";
+                if(din.getDaysInPast()>430) {
+                    frd = "not used";
+                } else {
+                    frd = din.getDaysInPast() + "d";
+                }
             }
         }
         return frd;

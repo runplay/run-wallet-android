@@ -96,7 +96,9 @@ public class ChooseSeedItemDialog extends DialogFragment implements DialogInterf
             case 0:
                 Store.setCurrentSeed(getActivity(),seed);
                 WalletTransfersFragment.resetScroll();
+
                 WalletAddressesFragment.resetScroll();
+                WalletTransfersCardAdapter.setFilterAddress(null,null);
                 WalletAddressCardAdapter.load(getActivity(),true);
                 WalletTransfersCardAdapter.load(getActivity(),true);
                 getDialog().dismiss();

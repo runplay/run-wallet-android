@@ -22,6 +22,7 @@ package run.wallet.iota.api.handler;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
+import android.text.TextUtils;
 import android.util.Log;
 
 import org.greenrobot.eventbus.EventBus;
@@ -80,12 +81,8 @@ public class GetAccountDataRequestHandler extends IotaRequestHandler {
         if(wallet!=null && nodeInfo!=null) {
             List<Address> alreadyAddress = Store.getAddresses(context, request.getSeed());
             List<Address> usingAddress = Store.getDisplayAddresses(alreadyAddress);
-
-            //List<String> checkAddressString = new ArrayList<>();
             List<Address> checkAddress = new ArrayList<>();
-
             if(request.getIfSingleAddressOrNull()!=null) {
-                //Log.e("GO","SINGLE CALLED ADDRESS.......");
                 Address address= Store.isAlreadyAddress(request.getIfSingleAddressOrNull(),alreadyAddress);
                 if(address!=null) {
                     checkAddress.add(address);
@@ -94,9 +91,7 @@ public class GetAccountDataRequestHandler extends IotaRequestHandler {
                 for(Address add: usingAddress) {
                     if (!add.isUsed()||(add.isUsed()&&(add.getPendingValue()!=0||add.getValue()!=0))) {
                         if(request.isForce() || nodeInfo.getLatestMilestoneIndex()!=add.getLastMilestone()) {
-                            //checkAddressString.add(add.getAddress());
                             checkAddress.add(add);
-                            //Log.e("GET-ACC", "check address: " + add.getAddress());
                         }
                     }
                 }
@@ -104,7 +99,6 @@ public class GetAccountDataRequestHandler extends IotaRequestHandler {
             if(!checkAddress.isEmpty()) {
 
                 try {
-
                     List<String> checkAddressString = new ArrayList<>();
                     List<String> checkAddressBal = new ArrayList<>();
                     for(Address addr: checkAddress) {
@@ -145,7 +139,6 @@ public class GetAccountDataRequestHandler extends IotaRequestHandler {
                     }
 
                     if(request.getIfSingleAddressOrNull() == null ) {
-                        //EventBus.getDefault().post(new RefreshEventResponse());
                         WalletAddressesFragment.setShouldRefresh(true);
                         WalletTransfersFragment.setShouldRefresh(true);
 
@@ -174,7 +167,6 @@ public class GetAccountDataRequestHandler extends IotaRequestHandler {
 
                             Audit.processNudgeAttempts(context,request.getSeed(),transfers);
                             Store.updateAccountData(context, request.getSeed(), wallet, transfers, alreadyAddress);
-                            //EventBus.getDefault().post(new RefreshEventResponse());
                         }
                     }
 

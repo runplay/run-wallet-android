@@ -7,6 +7,7 @@ import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -15,6 +16,7 @@ import jota.model.Bundle;
 import jota.model.Transaction;
 import run.wallet.iota.api.responses.NodeInfoResponse;
 import run.wallet.iota.model.Address;
+
 import run.wallet.iota.model.NudgeTransfer;
 import run.wallet.iota.model.Seeds;
 import run.wallet.iota.model.Store;
@@ -168,7 +170,7 @@ public class Audit {
                 if (already == null) {
                     allTransfers.add(tran);
                 } else {
-                    already.setMarkDoubleAddress(tran.isMarkDoubleAddress());
+                    //already.setMarkDoubleAddress(tran.isMarkDoubleAddress());
                     already.setLastDoubleCheck(tran.getLastDoubleCheck());
                     already.setMilestone(tran.getMilestone());
                     already.setMilestoneCreated(tran.getMilestoneCreated());
@@ -221,6 +223,7 @@ public class Audit {
                         transfer.setTimestampConfirmed(System.currentTimeMillis());
                     for (TransferTransaction trans : transfer.getTransactions()) {
                         if (trans.getValue() < 0) {
+                            //Log.e("AUDIT","comp address: "+trans.getValue()+" - "+trans.getAddress());
                             completedAddresses.put(trans.getAddress(), transfer);
                         }
                     }
@@ -231,17 +234,24 @@ public class Audit {
 
         for(Transfer transfer: transfers) {
             if(!transfer.isCompleted() && !transfer.isMarkDoubleSpend()) {
+                //Log.e("AUDIT","check: "+transfer.getValue()+" - "+transfer.getHash());
                 List<String> testAddress=new ArrayList<>();
                 for(TransferTransaction trans: transfer.getTransactions()) {
                     if(trans.getValue()<0) {
+                        //Log.e("AUDIT","-address: "+trans.getValue()+" - "+trans.getAddress());
                         testAddress.add(trans.getAddress());
                     }
                 }
                 if(!testAddress.isEmpty()) {
                     for(String testadd: testAddress) {
                         Transfer completedOnTransfer = completedAddresses.get(testadd);
-                        if(completedOnTransfer!=null && !completedOnTransfer.getHash().equals(transfer.getHash())) {
-                            transfer.setMarkDoubleAddress(true);
+                        if(completedOnTransfer!=null
+                                && !completedOnTransfer.getHash().equals(transfer.getHash())) {
+                            Address tmpadd=Store.isAlreadyAddress(testadd,allAddresses);
+                            if(tmpadd!=null && tmpadd.getValue()==0) {
+                                //Log.e("AUDIT", "completedOnTransfer: " + completedOnTransfer.getValue() + " - " + completedOnTransfer.getAddress());
+                                transfer.setMarkDoubleAddress(true);
+                            }
                         }
                     }
                 }

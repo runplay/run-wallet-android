@@ -27,7 +27,6 @@ import run.wallet.iota.helper.Num;
 
 public class Nodes {
     private static List<Node> othernodes = new ArrayList<>();
-    //private static final List<Node> appnodes =new ArrayList<>();
     private static final List<Node> usenodes =new ArrayList<>();
 
     private boolean alreadyinit=false;
@@ -40,7 +39,6 @@ public class Nodes {
     private static final String J_IP="ip";
     private static final String J_PROTO="prot";
     private static final String J_PORT="port";
-    //private static final String J_ISAPP="isa";
     private static final String J_ISPREF="isp";
     private static final String J_NAME="name";
     private static final String J_LAST="last";
@@ -49,40 +47,16 @@ public class Nodes {
 
     private static int random;
     private static final List<Node> defaultnodes=new ArrayList<>();
-/*
-    static {
-        Node n1 = new Node();
-        n1.port=14265;
-        n1.name="node1";
-        n1.ip="node.iotawallet.info";
-        n1.protocol="http";
-        n1.isappnode=true;
-        defaultnodes.add(n1);
-        Node n2 = new Node();
-        n2.port=14265;
-        n2.name="node2";
-        n2.ip="node.iotawallet.info";
-        n2.protocol="http";
-        n2.isappnode=true;
-        defaultnodes.add(n2);
-        Node n3 = new Node();
-        n3.port=14265;
-        n3.name="node3";
-        n3.ip="node.iotawallet.info";
-        n3.protocol="http";
-        n3.isappnode=true;
-        defaultnodes.add(n3);
-        Node n4 = new Node();
-        n4.port=14265;
-        n4.name="node4";
-        n4.ip="node.iotawallet.info";
-        n4.protocol="http";
-        n4.isappnode=true;
-        defaultnodes.add(n4);
-    }
-    */
+    private static final Node fieldNode;
+
 
     static {
+        fieldNode=new Node();
+        fieldNode.port=443;
+        fieldNode.ip="field.carriota.com";
+        fieldNode.protocol="https";
+        fieldNode.isappnode=false;
+
         Node n1 = new Node();
         n1.port=14265;
         n1.ip="riota0.runplay.com";
@@ -148,11 +122,9 @@ public class Nodes {
 
         usenodes.add(getRandomDefault());
 
-        //SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(context);
         SharedPreferences sp = context.getSharedPreferences(SP_NODES,Context.MODE_PRIVATE);
 
         String uarrayString=sp.getString(PREF_USE_NODEs,"[]");
-        //String jarrayString = sp.getString(PREF_SEEDS,"[]");
         try {
             JSONArray jar = new JSONArray(uarrayString);
             if(jar.length()!=0) {
@@ -176,14 +148,11 @@ public class Nodes {
                 }
             }
         } catch (Exception e) {}
-        //Log.e("REFRESH-NODE","nodes size: "+usenodes.size());
     }
     private void loadOthers(Context context) {
-        //SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(context);
         SharedPreferences sp = context.getSharedPreferences(SP_NODES,Context.MODE_PRIVATE);
         othernodes.clear();
         String uarrayString=sp.getString(PREF_NODES,"[]");
-        //String jarrayString = sp.getString(PREF_SEEDS,"[]");
         try {
             JSONArray jar = new JSONArray(uarrayString);
             if(jar.length()!=0) {
@@ -201,10 +170,8 @@ public class Nodes {
                 }
             }
         } catch (Exception e) {}
-        //Log.e("REFRESH-OTHER-NODE","nodes size: "+othernodes.size());
     }
     protected void saveDownloadNodes(Context context, List<Node> nodes) {
-        //SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(context);
         SharedPreferences sp = context.getSharedPreferences(SP_NODES,Context.MODE_PRIVATE);
         JSONArray jar = new JSONArray();
         try {
@@ -247,7 +214,6 @@ public class Nodes {
     }
 
     protected void save(Context context) {
-        //SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(context);
         SharedPreferences sp = context.getSharedPreferences(SP_NODES,Context.MODE_PRIVATE);
         JSONArray jar = new JSONArray();
         try {
@@ -268,7 +234,6 @@ public class Nodes {
         }
     }
     protected void update(Context context, Node updatenode) {
-        //SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(context);
         SharedPreferences sp = context.getSharedPreferences(SP_NODES,Context.MODE_PRIVATE);
         JSONArray jar = new JSONArray();
         try {
@@ -319,6 +284,10 @@ public class Nodes {
 
 
     private void init(Context context) {
+        usenodes.clear();
+        usenodes.add(getRandomDefault());
+        usenodes.add(fieldNode);
+        save(context);
 
         if(goOther.getStatus()== AsyncTask.Status.PENDING) {
             goOther.setContext(context);
@@ -328,7 +297,7 @@ public class Nodes {
     }
 
     private GoOtherNodes goOther = new GoOtherNodes();
-    private ChooseOtherNodes goChoose;
+    //private ChooseOtherNodes goChoose;
     private class GoOtherNodes extends AsyncTask<Boolean, Boolean, Boolean> {
         private Context context;
         protected void setContext(Context context) {
@@ -341,6 +310,7 @@ public class Nodes {
             //Log.e("LOAD-NODE",Constants.WWW_RUN_IOTA+"/node_table.json");
             if(jar!=null) {
                 List<Nodes.Node> nodes=new ArrayList<>();
+                nodes.add(fieldNode);
                 for(int i=0; i<jar.length(); i++) {
                     JSONObject job = jar.optJSONObject(i);
                     try {
@@ -371,12 +341,16 @@ public class Nodes {
         }
         @Override
         protected void onPostExecute(Boolean result) {
+            /*
             goChoose = new ChooseOtherNodes();
             goChoose.setContext(context);
             goChoose.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, true);
+            */
 
         }
     };
+
+    @Deprecated
     private class ChooseOtherNodes extends AsyncTask<Boolean, Boolean, Boolean> {
         private Context context;
         protected void setContext(Context context) {

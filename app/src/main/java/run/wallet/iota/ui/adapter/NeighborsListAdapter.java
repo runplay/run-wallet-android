@@ -102,7 +102,7 @@ public class NeighborsListAdapter extends RecyclerView.Adapter<NeighborsListAdap
 
     public void setAdapterList(List<Neighbor> neighbors) {
         this.neighbors = neighbors;
-        notifyDataSetChanged();
+        //notifyDataSetChanged();
     }
 
     public void filter(final List<Neighbor> neighbors, String searchText) {

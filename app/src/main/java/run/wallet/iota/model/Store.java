@@ -157,7 +157,6 @@ public class Store {
             //Log.e("EXC",e.getMessage());
             store.balanceDisplayType = prefs.getInt(Constants.PREF_BALANCE_DISPLAY, 0);
         } catch(Exception e){
-            Log.e("EXC",e.getMessage());
             store.autoAttach = Constants.PREFERENCES_MIN_ADDRESSES_DEFAULT;
             store.addressSecurity = Constants.PREF_ADDRESS_SECURITY_DEFAULT;
             store.minWeight = Constants.PREF_MIN_WEIGHT_DEFAULT;
@@ -512,13 +511,8 @@ public class Store {
     @Deprecated
     public static synchronized void updateAccountDataOld(Context context, Seeds.Seed seed, Wallet wallet, List<Transfer> transfers, List<Address> addresses) {
         if(seed!=null) {
-            //Log.e("STORE","........updateAccountData()");
 
             SharedPreferences sp = context.getSharedPreferences(seed.id, Context.MODE_PRIVATE);
-            //String jarrayString = SpManager.getEncryptedPreference(sp, PREF_ADDRESSES, "[]");
-
-
-            //Log.e("Store","store UPDATING Transfers");
             List<Transfer> alreadyTransfers = getTransfers(context,seed);
             //Collections.reverse(transfers);
             for (Transfer t : transfers) {
@@ -536,7 +530,6 @@ public class Store {
             for (Transfer t : alreadyTransfers) {
                 trans.put(t.toJson());
             }
-            //Log.e("TRANSFERS",trans.toString());
             SpManager.setEncryptedPreference(sp, PREF_TRANSFERS, trans.toString());
 
 
@@ -545,7 +538,6 @@ public class Store {
             for(Address add: addresses) {
                 Address already=isAlreadyAddress(add,alreadyAddress);
                 if(already==null) {
-                    //add.setIndex(alreadyAddress.size());
                     alreadyAddress.add(add);
 
                 } else {
@@ -553,11 +545,9 @@ public class Store {
                     already.setValue(add.getValue());
                     already.setPendingValue(add.getPendingValue());
                     already.setUsed(add.isUsed());
-                    //already.set
                 }
             }
 
-            //Log.e("Store","store - UPDATING Address");
             JSONArray jar = new JSONArray();
             for (Address add : alreadyAddress) {
                 jar.put(add.toJson());
@@ -661,7 +651,7 @@ public class Store {
         return store.addressSecurity;
 
     }
-    public static int getMinWeightDefaultDefault() {
+    public static int getMinWeightDefault() {
         return store.minWeight;
 
     }

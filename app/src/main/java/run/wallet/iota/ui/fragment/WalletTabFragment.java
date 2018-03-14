@@ -123,7 +123,6 @@ public class WalletTabFragment extends LoggedInFragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //alternateValueManager = new AlternateValueManager(getActivity());
         adapter = new WalletPagerAdapter(getActivity(), getChildFragmentManager());
     }
 
@@ -151,6 +150,7 @@ public class WalletTabFragment extends LoggedInFragment {
         goCreate();
 
     }
+
     private void goCreate() {
 
 
@@ -237,14 +237,10 @@ public class WalletTabFragment extends LoggedInFragment {
 
     @OnClick(R.id.fab_wallet)
     public void onFabWalletClick() {
-        //if (isConnected && adapter != null) {
-            Fragment currentFragment = adapter.getItem(viewPager.getCurrentItem());
-            if (currentFragment != null && currentFragment instanceof WalletTabFragment.OnFabClickListener) {
-                ((OnFabClickListener) currentFragment).onFabClick();
-            } else {
-                Log.e("BAD","MR BADDY BAD");
-            }
-        //}
+        Fragment currentFragment = adapter.getItem(viewPager.getCurrentItem());
+        if (currentFragment != null && currentFragment instanceof WalletTabFragment.OnFabClickListener) {
+            ((OnFabClickListener) currentFragment).onFabClick();
+        }
     }
     private void updateBalance() {
         long walletBalanceIota = 0;
@@ -252,14 +248,11 @@ public class WalletTabFragment extends LoggedInFragment {
         long pendingIotaOut=0;
         Wallet wallet = Store.getCurrentWallet();
         if(wallet!=null) {
-
+            walletToolbar.setTitle(Store.getCurrentSeed().name);
             walletBalanceIota=wallet.getBalanceDisplay();
-            //Log.e("WTF","run.wallet bal: "+walletBalanceIota+" - pendingin: "+wallet.getBalancePendingIn()+" - penignout: "+wallet.getBalancePendingOut());
             pendingIotaIn=wallet.getBalancePendingIn();
             pendingIotaOut=wallet.getBalancePendingOut();
-
         }
-
         IotaToText.IotaDisplayData data = IotaToText.getIotaDisplayData(walletBalanceIota);
 
         String balanceText = data.value;
@@ -340,7 +333,6 @@ public class WalletTabFragment extends LoggedInFragment {
                 fabWallet.setImageResource(R.drawable.ic_fab_send);
                 break;
         }
-        NodeInfoResponse info=Store.getNodeInfo();
         if(Store.getCurrentWallet()!=null && viewPager.getCurrentItem()==0) {
             fabWallet.show();
         } else {
@@ -375,7 +367,6 @@ public class WalletTabFragment extends LoggedInFragment {
 
         Ticker useticker= Store.getTicker("IOTA:"+alternateCurrency);
         if(useticker!=null && Store.getCurrentWallet()!=null) {
-            //Log.e("RATE",walletBalanceIota+"-- IOTA:"+alternateCurrency+" = "+useticker.getLast());
             alternateBalanceTextView.setText(useticker.getIotaValString(Store.getCurrentWallet().getBalanceDisplay()));
             altCurrency.setText(alternateCurrency.getSymbol());
         } else {
@@ -430,11 +421,6 @@ public class WalletTabFragment extends LoggedInFragment {
     @Override
     public void onHiddenChanged(boolean hidden) {
         super.onHiddenChanged(hidden);
-        if (!hidden) {
-            if (isConnected) {
-                //getAccountData();
-            }
-        }
     }
 
     @Override
@@ -455,10 +441,7 @@ public class WalletTabFragment extends LoggedInFragment {
 
         @Override
         public void onPageSelected(int position) {
-
             updateFab();
-            //AppService.refreshEvent();
-
         }
 
         @Override

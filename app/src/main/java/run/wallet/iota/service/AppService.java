@@ -93,7 +93,7 @@ public final class AppService extends Service {
 
     private final IBinder mBinder = new LocalBinder();
     private static OnAlarmReceiver areceiver;
-    private static OnAlarmReceiver aoreceiver;
+    //private static OnAlarmReceiver aoreceiver;
     private static OnBootReceiver receiver;
     private static OnBootReceiver breceiver;
     private static OnUserPresentReceiver ubreceiver;
@@ -101,7 +101,7 @@ public final class AppService extends Service {
 
     public static boolean shouldReloadContacts=false;
 
-    private static final long MILLIS_SYNC_DATA = 50000; // every 50 secs
+    private static final long MILLIS_SYNC_DATA = 40000; // every 40 secs
 
 
     private boolean isAppStarted=false;
@@ -200,8 +200,8 @@ public final class AppService extends Service {
 		IntentFilter afilter = new IntentFilter(Intent.ACTION_SCREEN_ON);
 		areceiver = new OnAlarmReceiver();
 		
-		IntentFilter aofilter = new IntentFilter(Intent.ACTION_SCREEN_OFF);
-		aoreceiver = new OnAlarmReceiver();
+		//IntentFilter aofilter = new IntentFilter(Intent.ACTION_SCREEN_OFF);
+		//aoreceiver = new OnAlarmReceiver();
 
 		IntentFilter filter = new IntentFilter(Intent.ACTION_BOOT_COMPLETED);
 		receiver = new OnBootReceiver();
@@ -214,7 +214,7 @@ public final class AppService extends Service {
 		
 
 		registerReceiver(areceiver, afilter);
-		registerReceiver(aoreceiver, aofilter);
+		//registerReceiver(aoreceiver, aofilter);
 		registerReceiver(receiver, filter);
 		registerReceiver(breceiver, bfilter);
 		registerReceiver(ubreceiver, ubfilter);
@@ -277,7 +277,7 @@ public final class AppService extends Service {
         super.onDestroy();
         try {
             unregisterReceiver(areceiver);
-            unregisterReceiver(aoreceiver);
+            //unregisterReceiver(aoreceiver);
             unregisterReceiver(receiver);
             unregisterReceiver(breceiver);
             unregisterReceiver(ubreceiver);
@@ -295,17 +295,19 @@ public final class AppService extends Service {
 
 	
     public static boolean isAppServiceRunning(Context context) {
-        android.app.ActivityManager manager = (android.app.ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
-        for (RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
-            if (AppService.class.getName().equals(service.service.getClassName())) {
-                return true;
+        if(context!=null) {
+            android.app.ActivityManager manager = (android.app.ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
+            for (RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
+                if (AppService.class.getName().equals(service.service.getClassName())) {
+                    return true;
+                }
             }
         }
         return false;
     }
     
     private void checkStartAppService(Context context) {
-        if(!isAppServiceRunning(context)) {
+        if(context!=null && !isAppServiceRunning(context)) {
             Intent service = new Intent(context, AppService.class);
             startService(service);
         }
@@ -347,14 +349,15 @@ public final class AppService extends Service {
     }
 
     public static void startRegularRefresh() {
-
-        if(SERVICE.syncDataHandler!=null)
-            SERVICE.syncDataHandler.removeCallbacks(SERVICE.syncDataThread);
-    	if(SERVICE.syncDataThread==null) {
-            SERVICE.syncDataThread=SERVICE.new SyncDataThread();
-    	}
-        if(!SERVICE.isrefreshing) {
-            SERVICE.syncDataHandler.postDelayed(SERVICE.syncDataThread, 30000);
+        if(SERVICE!=null) {
+            if (SERVICE.syncDataHandler != null)
+                SERVICE.syncDataHandler.removeCallbacks(SERVICE.syncDataThread);
+            if (SERVICE.syncDataThread == null) {
+                SERVICE.syncDataThread = SERVICE.new SyncDataThread();
+            }
+            if (!SERVICE.isrefreshing) {
+                SERVICE.syncDataHandler.postDelayed(SERVICE.syncDataThread, 30000);
+            }
         }
     }
     
@@ -566,22 +569,22 @@ public final class AppService extends Service {
 
     public static void runMessageFirstLoad(Context context) {
         if(Validator.isValidCaller() && Store.getCurrentSeed()!=null && MsgStore.getSeed()==null) {
-            TaskManager rt = new TaskManager(context);
-            MsgStore.createSeed(context);
+            TaskManager rt = new TaskManager(SERVICE);
+            MsgStore.createSeed(SERVICE);
             MessageFirstLoadRequest gtr = new MessageFirstLoadRequest();
             runMessageTask(rt,gtr);
         }
     }
     public static void generateMessageNewAddress(Context context) {
         if(Validator.isValidCaller() && MsgStore.getSeed()!=null) {
-            TaskManager rt = new TaskManager(context);
+            TaskManager rt = new TaskManager(SERVICE);
             MessageNewAddressRequest gtr = new MessageNewAddressRequest(MsgStore.getSeed());
             runTask(rt,gtr);
         }
     }
     public static void generateNewAddress(Context context,Seeds.Seed seed) {
         if(Validator.isValidCaller() && seed!=null) {
-            TaskManager rt = new TaskManager(context);
+            TaskManager rt = new TaskManager(SERVICE);
             GetNewAddressRequest gtr = new GetNewAddressRequest(seed);
             runTask(rt,gtr);
         }
@@ -589,7 +592,7 @@ public final class AppService extends Service {
     public static void auditAddresses(Context context, Seeds.Seed seed) {
         if(Validator.isValidCaller() && seed!=null) {
             if(AppService.countSeedRunningTasks(seed)==0) {
-                TaskManager rt = new TaskManager(context);
+                TaskManager rt = new TaskManager(SERVICE);
                 AuditAddressesRequest gtr = new AuditAddressesRequest(seed);
                 runTask(rt, gtr);
             }
@@ -598,7 +601,7 @@ public final class AppService extends Service {
     public static void auditAddressesWithDelay(Context context,Seeds.Seed seed) {
         if(Validator.isValidCaller() && seed!=null) {
             if(AppService.countSeedRunningTasks(seed)==0) {
-                TaskManager rt = new TaskManager(context);
+                TaskManager rt = new TaskManager(SERVICE);
                 AuditAddressesRequest gtr = new AuditAddressesRequest(seed);
                 runTask(rt, gtr);
             }
@@ -607,21 +610,21 @@ public final class AppService extends Service {
 
     public static void getFirstTimeLoad(Context context) {
         if(Validator.isValidCaller() && Store.getCurrentSeed()!=null) {
-            TaskManager rt = new TaskManager(context);
+            TaskManager rt = new TaskManager(SERVICE);
             GetFirstLoadRequest gna = new GetFirstLoadRequest(Store.getCurrentSeed());
             runTask(rt,gna);
         }
     }
     private long lastAccountCall=0;
     public static void getAccountData(Context context, Seeds.Seed seed) {
-        getAccountData(context, seed,false);
+        getAccountData(SERVICE, seed,false);
     }
     public static void getAccountData(Context context, Seeds.Seed seed,boolean force) {
         if(Validator.isValidCaller() && Store.getCurrentSeed()!=null) {
             if(SERVICE !=null && countSeedRunningTasks(seed)==0 && !isGetAccountDataRunning(seed)) {
-                if (SERVICE.lastAccountCall < System.currentTimeMillis() - 10000) {
+                if (force || SERVICE.lastAccountCall < System.currentTimeMillis() - 10000) {
                     SERVICE.lastAccountCall=System.currentTimeMillis();
-                    TaskManager rt = new TaskManager(context);
+                    TaskManager rt = new TaskManager(SERVICE);
                     GetAccountDataRequest gna = new GetAccountDataRequest(seed);
                     gna.setForce(force);
                     runTask(rt, gna);
@@ -629,10 +632,20 @@ public final class AppService extends Service {
             }
         }
     }
+    public static boolean canRunGetAccountData(Seeds.Seed seed) {
+        if(Validator.isValidCaller() && Store.getCurrentSeed()!=null) {
+            if(SERVICE !=null && countSeedRunningTasks(seed)==0 && !isGetAccountDataRunning(seed)) {
+                if (SERVICE.lastAccountCall < System.currentTimeMillis() - 10000) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
     public static void getAccountDataSingleAddress(Context context, Seeds.Seed seed, String address) {
         if(Validator.isValidCaller() && Store.getCurrentSeed()!=null) {
             if(SERVICE !=null && !isGetAccountDataRunning(Store.getCurrentSeed())) {
-                TaskManager rt = new TaskManager(context);
+                TaskManager rt = new TaskManager(SERVICE);
                 GetAccountDataRequest gna = new GetAccountDataRequest(seed);
                 gna.setSingleAddressRefresh(address);
                 runTask(rt, gna);
@@ -661,14 +674,14 @@ public final class AppService extends Service {
     public static void nudgeTransaction(Context context, Seeds.Seed seed, Transfer transfer) {
         if(Validator.isValidCaller() && Store.getCurrentSeed()!=null) {
             NudgeRequest rtr = new NudgeRequest(seed,transfer);
-            TaskManager rt = new TaskManager(context);
+            TaskManager rt = new TaskManager(SERVICE);
             runTask(rt,rtr);
         }
     }
     public static void replayBundleTransaction(Context context, Seeds.Seed seed, String hash, String refreshCallAddress) {
         if(Validator.isValidCaller() && Store.getCurrentSeed()!=null) {
             ReplayBundleRequest rtr = new ReplayBundleRequest(seed,hash,refreshCallAddress);
-            TaskManager rt = new TaskManager(context);
+            TaskManager rt = new TaskManager(SERVICE);
             runTask(rt,rtr);
         }
     }
@@ -679,13 +692,13 @@ public final class AppService extends Service {
             if(security>3)
                 security=3;
             AddressSecurityChangeRequest rtr = new AddressSecurityChangeRequest(seed,address,security);
-            TaskManager rt = new TaskManager(context);
+            TaskManager rt = new TaskManager(SERVICE);
             runTask(rt,rtr);
         }
     }
     public static void attachNewAddress(Context context, Seeds.Seed seed, String address) {
         if(Validator.isValidCaller() && Store.getCurrentSeed()!=null) {
-            TaskManager rt = new TaskManager(context);
+            TaskManager rt = new TaskManager(SERVICE);
             SendTransferRequest tir = new SendTransferRequest(seed,address, "0", "", Constants.NEW_ADDRESS_TAG);
             runTask(rt,tir);
         }
@@ -693,21 +706,21 @@ public final class AppService extends Service {
 
     public static void sendMessageToAddress(Context context, Seeds.Seed seed, String toAddress, String amountIOTA, String message, String tag) {
         if(Validator.isValidCaller() && Store.getCurrentSeed()!=null) {
-            TaskManager rt = new TaskManager(context);
+            TaskManager rt = new TaskManager(SERVICE);
             MessageSendRequest tir = new MessageSendRequest(seed,toAddress, message, tag);
             runMessageTask(rt,tir);
         }
     }
     public static void sendNewTransfer(Context context, Seeds.Seed seed, List<PayPacket.PayTo> payTos, List<Address> fromAddress, Address remainder, String message, String tag) {
         if(Validator.isValidCaller() && Store.getCurrentSeed()!=null) {
-            TaskManager rt = new TaskManager(context);
+            TaskManager rt = new TaskManager(SERVICE);
             SendTransferRequest tir = new SendTransferRequest(seed, payTos,fromAddress,remainder, message, tag);
             runTask(rt,tir);
         }
     }
     public static void sendNewTransfer(Context context, Seeds.Seed seed, String toAddress, String amountIOTA, List<Address> fromAddress, Address remainder, String message, String tag) {
         if(Validator.isValidCaller() && Store.getCurrentSeed()!=null) {
-            TaskManager rt = new TaskManager(context);
+            TaskManager rt = new TaskManager(SERVICE);
             SendTransferRequest tir = new SendTransferRequest(seed, toAddress, amountIOTA,fromAddress,remainder, message, tag);
             runTask(rt,tir);
         }
@@ -715,7 +728,7 @@ public final class AppService extends Service {
     @Deprecated
     public static void sendNewTransfer(Context context, Seeds.Seed seed, String toAddress, String amountIOTA, String message, String tag) {
         if(Validator.isValidCaller() && Store.getCurrentSeed()!=null) {
-            TaskManager rt = new TaskManager(context);
+            TaskManager rt = new TaskManager(SERVICE);
             SendTransferRequest tir = new SendTransferRequest(seed, toAddress, amountIOTA, message, tag);
             runTask(rt,tir);
         }
@@ -738,7 +751,7 @@ public final class AppService extends Service {
         if(SERVICE !=null) {
             if (SERVICE.lastNodeInfo < System.currentTimeMillis() - 3000) {
                 SERVICE.lastNodeInfo = System.currentTimeMillis();
-                TaskManager rt = new TaskManager(context);
+                TaskManager rt = new TaskManager(SERVICE);
                 NodeInfoRequest nir = new NodeInfoRequest();
                 runTask(rt, nir);
             }
@@ -748,7 +761,7 @@ public final class AppService extends Service {
         if(SERVICE !=null) {
             if (force || (SERVICE.lastNodeInfo < System.currentTimeMillis() - 3000)) {
                 SERVICE.lastNodeInfo = System.currentTimeMillis();
-                TaskManager rt = new TaskManager(context);
+                TaskManager rt = new TaskManager(SERVICE);
                 NodeInfoRequest nir = new NodeInfoRequest();
                 runTask(rt, nir);
             }
@@ -760,26 +773,27 @@ public final class AppService extends Service {
         long now=System.currentTimeMillis();
         if(lastExchangeRateCall==0 || now>lastExchangeRateCall+timeoutExchangeRates) {
             lastExchangeRateCall=now;
-            TaskManager rt = new TaskManager(context);
+            TaskManager rt = new TaskManager(SERVICE);
             WebGetExchangeRatesRequest nir = new WebGetExchangeRatesRequest();
             runBasicTask(rt, nir);
         }
 
     }
     public static void updateExchangeRatesHistory(Context context, String currencyPair, int step) {
-        TaskManager rt = new TaskManager(context);
+        TaskManager rt = new TaskManager(SERVICE);
         WebGetExchangeRatesHistoryRequest nir = new WebGetExchangeRatesHistoryRequest(currencyPair,step);
         runBasicTask(rt, nir);
     }
 
-    private static final long nudgeEvery=60000*2;
-    private static long lastNudgeRun=System.currentTimeMillis()-(60000*1);
+    private static final long nudgeEvery=60000;
+    private static long lastNudgeRun=System.currentTimeMillis()-(40000);
 
     private static void AutoNudgerGo() {
         long now=System.currentTimeMillis();
         if(SERVICE!=null && lastNudgeRun<now-nudgeEvery) {
             Store.loadNudgeTransfers(SERVICE);
             if(!Store.getNudgeTransfers().isEmpty() && !isAutoNudgerRunning()) {
+                Log.e("SERVICE","Call nudge now");
                 lastNudgeRun=now;
                 TaskManager rt = new TaskManager(SERVICE);
                 AutoNudgeRequest nir = new AutoNudgeRequest();
@@ -789,52 +803,6 @@ public final class AppService extends Service {
         }
     }
 
-    /*
-
-    // for future cold wallet feature
-    private class SafeDeleteFiles extends AsyncTask<Boolean, Void, Boolean> {
-
-        List<File> okdelete=new ArrayList<File>();
-        List<File> nodelete=new ArrayList<File>();
-        List<File> deletefiles=new ArrayList<File>();
-        public SafeDeleteFiles(List<File> deletefiles) {
-            if(deletefiles!=null)
-                this.deletefiles=deletefiles;
-        }
-
-        @Override
-        protected Boolean doInBackground(Boolean... params) {
-            boolean completedOK=true;
-
-            if(deletefiles!=null && !deletefiles.isEmpty()) {
-                for(File f: deletefiles) {
-                    if(SecureDeleteFile.delete((File) f)) {
-                        okdelete.add(f);
-                    } else {
-                        nodelete.add(f);
-                    }
-                }
-            }
-
-            return true;
-
-        }
-
-        @Override
-        protected void onPostExecute(Boolean result) {
-
-
-        }
-
-        @Override
-        protected void onPreExecute() {
-        }
-
-
-    }
-
-
-*/
 
 
 

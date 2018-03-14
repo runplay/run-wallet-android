@@ -29,15 +29,16 @@ https://github.com/iotaledger/android-wallet-app
 <br/>
 <h2>Updates</h2>
 
-v1.3.790 - Edit Wallet section created, Added one extra Theme, Rate App prompt added<br/>
-v1.3.780 - Bug fixes identified in Google Play console<br/>
-v1.3.770 - Welcome section added and opened the app to full app browsing without Seed<br/>
-v1.3.770 - Colour Themes, 10 different app colours styles to choose from<br/>
-v1.3.660 - Multi Address transfer and TOR ability<br/>
+v1.3.8000 - Improved Seed generator, improved Promotes, field.carriota node added to node list options, improved wallet load display, Active wallet name displayed in Toolbar, improved nudging (faster and more often)<br/>
+v1.3.7900 - Edit Wallet section created, Added one extra Theme, Rate App prompt added<br/>
+v1.3.7800 - Bug fixes identified in Google Play console<br/>
+v1.3.7700 - Welcome section added and opened the app to full app browsing without Seed<br/>
+v1.3.6600 - Colour Themes, 10 different app colours styles to choose from<br/>
+v1.3.5500 - Multi Address transfer and TOR ability<br/>
 <br/><br/>
 <h2>Download</h2>
 
-<a href='https://play.google.com/store/apps/details?id=run.wallet'><img alt='Get it on Google Play' src='https://play.google.com/intl/en_us/badges/images/generic/en_badge_web_generic.png' width="323" height="125"/></a></a>
+<a href="https://play.google.com/store/apps/details?id=run.wallet"><img alt="Get it on Google Play" src="https://play.google.com/intl/en_us/badges/images/generic/en_badge_web_generic.png" width="323" height="125"/></a>
 
 <h2>How to build</h2>
 

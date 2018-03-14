@@ -116,81 +116,13 @@ public class AuditAddressesRequestHandler extends IotaRequestHandler {
                         Store.addAddress(context,gnr,gnar);
                         AppService.auditAddressesWithDelay(context, request.getSeed());
                     } catch (Exception e) {}
-                    //AppService.generateNewAddress(context,request.getSeed());
 
                 } else {
                     //Log.e("AUDIT","no address need creating");
                 }
 
             }
-            /*
-            *
-            * Code not ready for
 
-
-            List<Transfer> allTransfers = Store.getTransfers(context,request.getSeed());
-            boolean hasChanges=false;
-            for(Transfer tran: allTransfers) {
-                boolean isInternal = (tran.getValue()==0 && !tran.getTransactions().isEmpty());
-                if(!isInternal && !tran.isCompleted() && tran.getValue()>0 && !tran.isMarkDoubleSpend()
-                        && !tran.isMarkDoubleAddress()
-                        ) {
-
-                    if(tran.getLastDoubleCheck()<System.currentTimeMillis()- (Cal.HOURS_1_IN_MILLIS*6)) {
-                        List<String> payFromAddress=new ArrayList<>();
-                        for(TransferTransaction t: tran.getOtherTransactions()) {
-                            if(t.getValue()<0) {
-                                payFromAddress.add(t.getAddress());
-                            }
-                        }
-                        hasChanges = true;
-
-                        tran.setLastDoubleCheck(System.currentTimeMillis());
-
-                        for(String payAddress: payFromAddress) {
-                            long addressTotal=0;
-                            try {
-                                //Log.e("LT","check address: "+payAddress);
-                                List<String> padd=new ArrayList<>();
-                                padd.add(payAddress);
-                                GetBalancesResponse gbal = apiProxy.getBalances(100,padd);
-                                addressTotal= Sf.toLong(gbal.getBalances()[0]);
-                            } catch (Exception e) {
-                                //Log.e("BAD","ex: "+e.getMessage());
-                            }
-                            if(addressTotal==0) {
-                                for (TransferTransaction t : tran.getOtherTransactions()) {
-                                    if (t.getAddress().equals(payAddress)) {
-                                        Log.e("LT","MARK = "+ t.getValue() + " - " + t.getAddress()+" - set total: "+addressTotal+" - marking double Address");
-                                        t.setPayFromAddressValue(addressTotal);
-                                        tran.setMarkDoubleAddress(true);
-
-                                    }
-                                }
-                            }
-
-                        }
-
-
-
-                    }
-                }
-            }
-            if(hasChanges) {
-                //Log.e("INNTRAN","HAS UPDATES ON TRANSACTIONS MARKED DOUBLE ADDRESS");
-
-                List<Address> allAddresses=Store.getAddresses(context,request.getSeed());
-                Wallet wallet = Store.getWallet(context,request.getSeed());
-                //Bundle[] emptyBundle = null;
-                Audit.setTransfersToAddresses(request.getSeed(), allTransfers, allAddresses, wallet,null);
-                Store.updateAccountData(context,request.getSeed(),wallet,allTransfers,allAddresses);
-                //Store.updateAllTransfersInSeed(context,request.getSeed(),allTransfers);
-                return new RefreshEventResponse();
-            } else {
-                //Log.e("INNTRAN","NO!! TRANSACTIONS MARKED DOUBLE ADDRESS");
-            }
-
-*/
         } else {
             //Log.e("AUDIT","Called but skipped.. hopefully good");
         }

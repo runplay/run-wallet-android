@@ -204,7 +204,7 @@ public class WalletAddressCardAdapter extends RecyclerView.Adapter<WalletAddress
 
     public void setAdapterList(List<Address> addresses) {
         this.addresses = addresses;
-        notifyDataSetChanged();
+        //notifyDataSetChanged();
     }
 
     @Override

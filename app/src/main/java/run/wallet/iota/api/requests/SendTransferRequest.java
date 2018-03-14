@@ -55,7 +55,7 @@ public class SendTransferRequest extends SeedApiRequest {
         this.tag = tag;
         this.setFromAddresses(fromAddress);
         this.setRemainder(remainder);
-        minWeightMagnitude= Store.getMinWeightDefaultDefault();
+        minWeightMagnitude= Store.getMinWeightDefault();
 
     }
     public SendTransferRequest(Seeds.Seed seed, String address, String value, String message, String tag) {
@@ -65,7 +65,7 @@ public class SendTransferRequest extends SeedApiRequest {
         //this.value = value;
         this.message = message;
         this.tag = tag;
-        minWeightMagnitude= Store.getMinWeightDefaultDefault();
+        minWeightMagnitude= Store.getMinWeightDefault();
     }
 
     public SendTransferRequest(Seeds.Seed seed, List<PayPacket.PayTo> payTos, List<Address> fromAddress, Address remainder
@@ -78,7 +78,7 @@ public class SendTransferRequest extends SeedApiRequest {
         this.tag = tag;
         this.setFromAddresses(fromAddress);
         this.setRemainder(remainder);
-        minWeightMagnitude= Store.getMinWeightDefaultDefault();
+        minWeightMagnitude= Store.getMinWeightDefault();
     }
 /*
     public Transfer prepareTransfer() {

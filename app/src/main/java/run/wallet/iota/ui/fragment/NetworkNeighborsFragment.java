@@ -29,6 +29,7 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
@@ -62,6 +63,7 @@ import run.wallet.iota.api.responses.error.NetworkError;
 import run.wallet.iota.helper.Constants;
 import run.wallet.iota.model.Neighbor;
 import run.wallet.iota.model.Store;
+import run.wallet.iota.ui.RecyclerLayoutManager;
 import run.wallet.iota.ui.activity.MainActivity;
 import run.wallet.iota.ui.adapter.NeighborsListAdapter;
 
@@ -125,7 +127,7 @@ public class NetworkNeighborsFragment extends BaseSwipeRefreshLayoutFragment
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
+        recyclerView.setLayoutManager(new RecyclerLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
         fabAddButton.setVisibility(View.VISIBLE);
         recyclerView.setBackgroundColor(B.getColor(getActivity(),R.color.whiteAlpha75));
         revealView.setVisibility(View.INVISIBLE);
@@ -224,7 +226,7 @@ public class NetworkNeighborsFragment extends BaseSwipeRefreshLayoutFragment
 
         tvEmpty.setVisibility(Store.getNeighbours().size() == 0 ? View.VISIBLE : View.GONE);
         neighborsHeaderTextView.setText(""+gpr.getNeighbors().size());
-        adapter.notifyDataSetChanged();
+        setAdapter();
     }
 
     @Subscribe
@@ -234,8 +236,8 @@ public class NetworkNeighborsFragment extends BaseSwipeRefreshLayoutFragment
                 swipeRefreshLayout.setRefreshing(false);
                 if (Store.getNeighbours() != null)
                     Store.getNeighbours().clear();
-                if (adapter != null)
-                    adapter.notifyDataSetChanged();
+                //if (adapter != null)
+                    //adapter.notifyDataSetChanged();
                 break;
             case REMOTE_NODE_ERROR:
                 swipeRefreshLayout.setRefreshing(false);
@@ -283,7 +285,7 @@ public class NetworkNeighborsFragment extends BaseSwipeRefreshLayoutFragment
 
         } else {
             recyclerView.setAdapter(adapter);
-            adapter.notifyDataSetChanged();
+            //adapter.notifyDataSetChanged();
         }
 
         if(adapter.getItemCount()==0) {
@@ -291,6 +293,7 @@ public class NetworkNeighborsFragment extends BaseSwipeRefreshLayoutFragment
         } else {
             tvEmpty.setVisibility(View.GONE);
         }
+        swipeRefreshLayout.setRefreshing(false);
     }
 
     @Override

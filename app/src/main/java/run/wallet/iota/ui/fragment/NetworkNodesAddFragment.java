@@ -28,6 +28,7 @@ import android.support.design.widget.TextInputEditText;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.AppCompatButton;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
@@ -54,6 +55,7 @@ import run.wallet.iota.helper.AppTheme;
 import run.wallet.iota.helper.Utils;
 import run.wallet.iota.model.Nodes;
 import run.wallet.iota.model.Store;
+import run.wallet.iota.ui.RecyclerLayoutManager;
 import run.wallet.iota.ui.adapter.AddNodesListAdapter;
 
 public class NetworkNodesAddFragment extends Fragment {
@@ -101,6 +103,7 @@ public class NetworkNodesAddFragment extends Fragment {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        listNodes.setLayoutManager(new RecyclerLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
         ((AppCompatActivity) getActivity()).setSupportActionBar(addNodeToolbar);
         setHasOptionsMenu(false);
         enterPod.setBackgroundColor(B.getColor(getActivity(), AppTheme.getSecondary()));
@@ -163,6 +166,7 @@ public class NetworkNodesAddFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
+        Store.setCurrentFragment(this.getClass());
         protocol.setText("http");
     }
     @Override

@@ -48,6 +48,7 @@
     <string name="info_transfer">Transfer</string>
     <string name="info_address_already">Edit existing payment address</string>
 
+
     <string name="info_nudge">Nudge</string>
     <string name="info_resend">Resend</string>
     <string name="info_audit">Audit</string>
@@ -56,6 +57,7 @@
     <string name="info_new_attach">Attach</string>
     <string name="info_first_load">First load</string>
 
+    <string name="validating">Validating</string>
     <string name="edit">Edit</string>
     <string name="pay_now">Pay Now</string>
     <string name="volume">vol</string>
@@ -63,6 +65,7 @@
     <string name="from">From</string>
     <string name="remainder">Balance</string>
     <string name="paste">Paste</string>
+    <string name="copy">Copy</string>
     <string name="qr">QR</string>
     <string name="message_fix_import">Fix import address values before proceeding</string>
 
@@ -70,6 +73,8 @@
     <string name="wallet">Wallet</string>
     <string name="used_address">Used address</string>
     <string name="attached_address">Attached</string>
+
+    <string name="randomise">Randomise</string>
 
     <!-- Buttons-->
     <string name="buttons_ok">OK</string>
@@ -130,7 +135,8 @@
     <string name="message_seed_duplicate">Seed is already in the wallet</string>
     <string name="message_install_web_view">Install WebView</string>
     <string name="messages_iota_donation">Address copied to clipboard</string>
-    <string name="messages_address_used">The address is already used. Please generate a new one or choose a non-used address</string>
+    <string name="messages_address_used">Used Address detected, transfer not possible</string>
+    <string name="messages_checking_address_used">One moment, checking address validity</string>
     <string name="messages_transaction_already_confirmed">The transaction is already confirmed</string>
     <string name="messages_transaction_auto_off">Turn off auto Nudge in settings to perform this option</string>
     <string name="messages_create_new_msgaddress">Creating new contact link</string>
@@ -422,8 +428,8 @@
     <string name="settings_used">Used Addresses</string>
     <string name="settings_used_summary">Show used Addresses in the \'Receive\' section</string>
 
-    <string name="settings_attachments">Nudge and Attachments</string>
-    <string name="settings_attachments_summary">Show Nudges and Address attachments in the \'Actions\' section</string>
+    <string name="settings_attachments">Attachments</string>
+    <string name="settings_attachments_summary">Show Address attachments in the \'Actions\' section</string>
 
 
     <string name="settings_issue_reporter_title">Report issue</string>

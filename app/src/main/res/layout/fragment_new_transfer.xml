@@ -262,6 +262,14 @@
                                 android:inputType="textNoSuggestions"
                                 android:digits="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ9"  />
                         </android.support.design.widget.TextInputLayout>
+                        <TextView
+                            android:visibility="gone"
+                            android:id="@+id/new_transfer_address_error"
+                            android:text="@string/messages_address_used"
+                            android:layout_width="match_parent"
+                            android:gravity="center"
+                            android:textColor="@color/redAlpha"
+                            android:layout_height="wrap_content" />
                         <LinearLayout
                             android:id="@+id/new_transfer_address_list"
                             android:layout_width="match_parent"
@@ -539,7 +547,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
-            android:background="@color/whiteAlpha"
+            android:background="@color/whiteAlpha75"
             >
             <android.support.v7.widget.AppCompatButton
                 android:id="@+id/new_transfer_next"
@@ -560,7 +568,7 @@
             android:layout_height="wrap_content"
             android:visibility="gone"
             android:layout_alignParentBottom="true"
-            android:background="@color/whiteAlpha"
+            android:background="@color/whiteAlpha75"
             >
             <android.support.v7.widget.AppCompatButton
                 android:id="@+id/new_transfer_back"
@@ -587,6 +595,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="3"
                 android:padding="3dp"
+
                 android:paddingLeft="5dp"
                 android:paddingRight="5dp"
                 android:text="@string/pay_now"
