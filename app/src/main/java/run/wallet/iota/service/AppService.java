@@ -56,6 +56,7 @@ import run.wallet.iota.api.requests.MessageNewAddressRequest;
 import run.wallet.iota.api.requests.NodeInfoRequest;
 import run.wallet.iota.api.requests.MessageSendRequest;
 import run.wallet.iota.api.requests.NudgeRequest;
+import run.wallet.iota.api.requests.RefreshUsedAddressesRequest;
 import run.wallet.iota.api.requests.ReplayBundleRequest;
 import run.wallet.iota.api.requests.SendTransferRequest;
 import run.wallet.iota.api.requests.WebGetExchangeRatesHistoryRequest;
@@ -102,6 +103,7 @@ public final class AppService extends Service {
     public static boolean shouldReloadContacts=false;
 
     private static final long MILLIS_SYNC_DATA = 40000; // every 40 secs
+    private static final long MILLIS_SYNC_SLOW = Cal.HOURS_1_IN_MILLIS; // every hour
 
 
     private boolean isAppStarted=false;
@@ -380,7 +382,7 @@ public final class AppService extends Service {
 		protected Boolean doInBackground(Boolean... params) {
             ensureStartups(getBaseContext());
             AutoNudgerGo();
-
+            checkUsedAddresses();
 			return true;
 		}      
 	
@@ -389,12 +391,41 @@ public final class AppService extends Service {
 			isrefreshing=false;
 			try {
                 SERVICE.syncDataHandler.removeCallbacks(SERVICE.syncDataThread);
-                SERVICE.syncDataHandler.postDelayed(SERVICE.syncDataThread, MILLIS_SYNC_DATA);
+                Store.init(SERVICE,false);
+                if(!Store.getNudgeTransfers().isEmpty()) {
+                    SERVICE.syncDataHandler.postDelayed(SERVICE.syncDataThread, MILLIS_SYNC_DATA);
+                } else {
+                    SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(SERVICE);
+                    int nudgeAttempts= Sf.toInt(prefs.getString(Constants.PREF_TRANSFER_NUDGE_ATTEMPTS, ""+Constants.PREF_TRANSFER_NUDGE_ATTEMPTS_VALUE));
+                    boolean keepfast=false;
+                    for(NudgeTransfer nt: Store.getNudgeTransfers()) {
+                        if(nt.transfer.getNudgeCount()<nudgeAttempts) {
+                            keepfast=true;
+                        }
+                    }
+                    if(keepfast) {
+                        SERVICE.syncDataHandler.postDelayed(SERVICE.syncDataThread, MILLIS_SYNC_DATA);
+                    } else {
+                        SERVICE.syncDataHandler.postDelayed(SERVICE.syncDataThread, MILLIS_SYNC_SLOW);
+                    }
+
+                }
             } catch(Exception e) {}
 		}
 	}
 
-
+	public static void setFastMode() {
+        SERVICE.syncDataHandler.removeCallbacks(SERVICE.syncDataThread);
+        SERVICE.syncDataHandler.postDelayed(SERVICE.syncDataThread, MILLIS_SYNC_DATA);
+    }
+    private static void checkUsedAddresses() {
+        Store.init(SERVICE,false);
+        if(!Store.getSeedList().isEmpty() && Store.getLastUsedCheck()<System.currentTimeMillis()-Cal.HOURS_24_IN_MILLIS) {
+            TaskManager rt = new TaskManager(SERVICE);
+            RefreshUsedAddressesRequest tir = new RefreshUsedAddressesRequest(null);
+            runTask(rt,tir);
+        }
+    }
 
     /* IOTA */
     private Map<Long,ApiRequest> tasks = new ConcurrentHashMap<Long,ApiRequest>();
@@ -607,7 +638,6 @@ public final class AppService extends Service {
             }
         }
     }
-
     public static void getFirstTimeLoad(Context context) {
         if(Validator.isValidCaller() && Store.getCurrentSeed()!=null) {
             TaskManager rt = new TaskManager(SERVICE);
@@ -703,7 +733,13 @@ public final class AppService extends Service {
             runTask(rt,tir);
         }
     }
-
+    public static void checkUsedAddress(Seeds.Seed seed) {
+        if(Validator.isValidCaller() && Store.getCurrentSeed()!=null) {
+            TaskManager rt = new TaskManager(SERVICE);
+            RefreshUsedAddressesRequest tir = new RefreshUsedAddressesRequest(seed);
+            runTask(rt,tir);
+        }
+    }
     public static void sendMessageToAddress(Context context, Seeds.Seed seed, String toAddress, String amountIOTA, String message, String tag) {
         if(Validator.isValidCaller() && Store.getCurrentSeed()!=null) {
             TaskManager rt = new TaskManager(SERVICE);
@@ -793,7 +829,6 @@ public final class AppService extends Service {
         if(SERVICE!=null && lastNudgeRun<now-nudgeEvery) {
             Store.loadNudgeTransfers(SERVICE);
             if(!Store.getNudgeTransfers().isEmpty() && !isAutoNudgerRunning()) {
-                Log.e("SERVICE","Call nudge now");
                 lastNudgeRun=now;
                 TaskManager rt = new TaskManager(SERVICE);
                 AutoNudgeRequest nir = new AutoNudgeRequest();

@@ -25,6 +25,7 @@ import java.util.List;
 
 import run.wallet.iota.api.requests.ApiRequest;
 import run.wallet.iota.api.requests.GetNewAddressRequest;
+import run.wallet.iota.api.requests.MessageSendRequest;
 import run.wallet.iota.api.responses.ApiResponse;
 import run.wallet.iota.api.responses.GetNewAddressResponse;
 import run.wallet.iota.api.responses.error.NetworkError;
@@ -53,7 +54,7 @@ public class GetNewAddressRequestHandler extends IotaRequestHandler {
         List<Address> alreadyAddress=Store.getAddresses(context,gnr.getSeed());
         gnr.setIndex(alreadyAddress.size());
         try {
-            jota.dto.response.GetNewAddressResponse resp=apiProxy.getNewAddress(gnr.getSeedValue(),
+            jota.dto.response.GetNewAddressResponse resp=apiProxy.getNewAddress(String.valueOf(Store.getSeedRaw(context,gnr.getSeed())),
                     gnr.getSecurity(),
                     alreadyAddress.size(),
                     gnr.isChecksum(),

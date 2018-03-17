@@ -744,7 +744,7 @@ public class SnTrFragment extends Fragment {
                     String[] hashes = api.findTransactionsByAddresses(ptAddresses.toArray(new String[ptAddresses.size()])).getHashes();
                     transactions = api.findTransactionsObjectsByHashes(hashes);
                 } catch(Exception e) {
-                    Log.e("SNT",""+e.getMessage());
+                    Log.e("SNT","error: "+e.getMessage());
                 }
                 if(transactions!=null && !transactions.isEmpty()) {
                     for (Transaction trx : transactions) {

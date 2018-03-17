@@ -48,6 +48,7 @@ public class Store {
     private static final String PREF_NUDGE_TRANSFERS="nudgetran";
     private static final String PREF_TRANSFERS="traf";
     private static final String PREF_WALLET= "wallet";
+    private static final String PREF_LAST_USED_CHECK= "lastused";
 
     private Class<? extends Fragment> currentFragment;
 
@@ -58,6 +59,9 @@ public class Store {
     private Nodes.Node currentNode;
     private boolean isLoggedin=false;
     private int balanceDisplayType;
+    private long lastUsedCheck;
+
+    private String checkUsedResult=null;
 
     private int addressSecurity=Constants.PREF_ADDRESS_SECURITY_DEFAULT;
     private int minWeight=Constants.PREF_MIN_WEIGHT_DEFAULT;
@@ -131,6 +135,12 @@ public class Store {
         loadWallets(context);
     }
 
+    public static String getUsedAddressCheckResult() {
+        return store.checkUsedResult;
+    }
+    public static void setUsedAddressCheckResult(String result) {
+        store.checkUsedResult=result;
+    }
     public static void setCurrentFragment(Class<? extends Fragment> fragment) {
         store.currentFragment=fragment;
     }
@@ -139,8 +149,14 @@ public class Store {
     }
 
 
-
-
+    public static void updateLastUsedCheck(Context context) {
+        store.lastUsedCheck=System.currentTimeMillis();
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+        prefs.edit().putLong(PREF_LAST_USED_CHECK,store.lastUsedCheck).commit();
+    }
+    public static long getLastUsedCheck() {
+        return store.lastUsedCheck;
+    }
     public static int getAutoAttach() {
         return store.autoAttach;
     }
@@ -149,7 +165,7 @@ public class Store {
 
         try {
             SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
-
+            store.lastUsedCheck=prefs.getLong(PREF_LAST_USED_CHECK, 0);
             store.autoAttach = Sf.toInt(prefs.getString(Constants.PREFERENCES_MIN_ADDRESSES, "" + Constants.PREFERENCES_MIN_ADDRESSES_DEFAULT));
             //Log.e("SP",store.autoAttach+"--"+prefs.getString(Constants.PREFERENCES_MIN_ADDRESSES, "" + 0));
             store.addressSecurity = Sf.toInt(prefs.getString(Constants.PREF_ADDRESS_SECURITY, "" + Constants.PREF_ADDRESS_SECURITY_DEFAULT));
@@ -161,6 +177,7 @@ public class Store {
             store.addressSecurity = Constants.PREF_ADDRESS_SECURITY_DEFAULT;
             store.minWeight = Constants.PREF_MIN_WEIGHT_DEFAULT;
             store.balanceDisplayType = 0;
+            store.lastUsedCheck=0;
             setAddressSecurity(context,store.addressSecurity);
             setMinWeight(context,store.minWeight);
             setBalanceDisplayType(context,store.balanceDisplayType);
@@ -199,6 +216,12 @@ public class Store {
         prefs.edit().putInt(Constants.PREF_BALANCE_DISPLAY,id).commit();
     }
 
+    public static char[] getSeedRaw(Context context, Seeds.Seed seed) {
+        if(Validator.isValidCaller()) {
+            return seed.value;
+        }
+        return new char[0];
+    }
     public static final List<Neighbor> getNeighbours() {
         return store.neighbours;
     }
@@ -552,7 +575,6 @@ public class Store {
             for (Address add : alreadyAddress) {
                 jar.put(add.toJson());
             }
-            Log.e("ADDRESSES",jar.toString());
             SpManager.setEncryptedPreference(sp, PREF_ADDRESSES, jar.toString());
 
             Store.addUpdateWallet(context,seed,wallet);
@@ -794,7 +816,6 @@ public class Store {
     }
     public static void changeNode(Nodes.Node newnode) {
         store.currentNode=newnode;
-        Log.e("SOTRE",store.currentNode.ip);
         store.neighbours.clear();
     }
     public static void updateNode(Context context,Nodes.Node updateNode) {
@@ -828,6 +849,13 @@ public class Store {
     }
     public static void removeSeed(Context context, String seedId) {
         store.seeds.removeSeed(context,seedId);
+    }
+    public static void wipeSeed(Context context, Seeds.Seed seed) {
+        SharedPreferences sp = context.getSharedPreferences(seed.id, Context.MODE_PRIVATE);
+        sp.edit().clear().commit();
+        seed.isappgenerated=false;
+        saveSeeds(context);
+        reinit(context);
     }
     public static void setDefaultSeed(Seeds.Seed seed) {
         store.seeds.setDefault(seed);
@@ -902,6 +930,7 @@ public class Store {
             reinit(context);
         }
     }
+
     private static void loadAddresses(Context context) {
         if(store.currentSeed!=null) {
             SharedPreferences sp = context.getSharedPreferences(store.currentSeed.id, Context.MODE_PRIVATE);
@@ -914,6 +943,11 @@ public class Store {
                     JSONObject job = jar.optJSONObject(i);
                     Address add = new Address(job);
                     store.addresses.add(add);
+                }
+                for(Address add: store.addresses) {
+                    if(add.isUsed() && add.getValue()>0) {
+                        store.currentSeed.warnUsed=true;
+                    }
                 }
             } catch (Exception e) {
             }
@@ -1062,7 +1096,7 @@ public class Store {
                     if(!transfer.isCompleted() && !transfer.isAttachment() && !transfer.isMarkDoubleAddress() && !transfer.isMarkDoubleSpend()) {
                         if(currentMilestone-transfer.getMilestoneCreated()<18
                                 && !transfer.getHash().equals(hash)) {
-                            Log.e("TRUCK","Found a not completed transfer that could be for trunk");
+
                             return transfer;
                         }
                     }
@@ -1199,6 +1233,6 @@ public class Store {
             trans.put(t.toJson());
         }
         SpManager.setEncryptedPreference(sp, PREF_NUDGE_TRANSFERS, trans.toString());
-
+        AppService.setFastMode();
     }
 }

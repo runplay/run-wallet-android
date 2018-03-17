@@ -143,13 +143,7 @@ public class TransferViewManager {
                 WalletTransfersItemDialog dialog = new WalletTransfersItemDialog();
                 dialog.setArguments(bundle);
                 dialog.show(((Activity) context).getFragmentManager(), null);
-                /*
-                int position = getAdapterPosition();
-                if (position != RecyclerView.NO_POSITION) {
-                    Toast.makeText(v.getContext(), context.getString(R.string.messages_not_yet_implemented), Toast.LENGTH_SHORT).show();
 
-                }
-                */
                 return true;
             });
 
@@ -173,178 +167,179 @@ public class TransferViewManager {
     }
 
     public static final void populateViewHolder(Context context, ViewHolder holder, Transfer transfer, boolean isAutoNudge, int adapterPosition,boolean filtered) {
-        String faddress=WalletTransfersCardAdapter.getFilterAddress();
+        if(context!=null) {
+            String faddress = WalletTransfersCardAdapter.getFilterAddress();
 
-        if(faddress!=null && transfer.isCompleted()) {
-            ((LinearLayout.LayoutParams)(holder.card).getLayoutParams()).setMarginStart(70);
+            if (faddress != null && transfer.isCompleted()) {
+                ((LinearLayout.LayoutParams) (holder.card).getLayoutParams()).setMarginStart(70);
 
-            long value = 0;
-            for(TransferTransaction t: transfer.getTransactions()) {
-                if(faddress.equals(t.getAddress()))
-                    value+=t.getValue();
-            }
-            if(transfer.getTransactions().isEmpty()) {
-
-            } else {
-                IotaToText.IotaDisplayData fdata = IotaToText.getIotaDisplayData(value);
-                holder.filtered.setVisibility(View.VISIBLE);
-                holder.fBalance.setText((value > 0 ? "+" : "") + fdata.value);
-                holder.fUnit.setText(fdata.unit);
-                holder.fThird.setText(fdata.thirdDecimal);
-                holder.fUnit.setTextColor(B.getColor(context, AppTheme.getPrimary()));
-                if (value > 0) {
-                    holder.fBalance.setTextColor(B.getColor(context, R.color.green));
-                    holder.fThird.setTextColor(B.getColor(context, R.color.green));
-                } else {
-                    holder.fBalance.setTextColor(B.getColor(context, R.color.flatRed));
-                    holder.fThird.setTextColor(B.getColor(context, R.color.flatRed));
+                long value = 0;
+                for (TransferTransaction t : transfer.getTransactions()) {
+                    if (faddress.equals(t.getAddress()))
+                        value += t.getValue();
                 }
-            }
-        } else {
-            holder.filtered.setVisibility(View.GONE);
-        }
-        IotaToText.IotaDisplayData data = IotaToText.getIotaDisplayData(transfer.getValue());
-        holder.transfer=transfer;
-        holder.balance.setText(data.value);
-        holder.balanceThird.setText(data.thirdDecimal);
-        holder.balanceUnit.setText(data.unit);
-        holder.addressLabel.setText(transfer.getAddress());
-        holder.messageLabel.setText(TextUtils.isEmpty(transfer.getMessage()) ? "" : formatMessage(context,transfer.getMessage()));
-        holder.tagLabel.setText(transfer.getTag());
-        holder.timeLabel.setText(Utils.timeStampToDate(transfer.getTimestamp()));
-        holder.hashLabel.setText(transfer.getHash());
-        holder.isCancelled=transfer.isMarkDoubleSpend();
-        holder.isAddressDouble=transfer.isMarkDoubleAddress();
-        holder.value=transfer.getValue();
-        int persist = R.string.card_label_persistence_no;
-        if(transfer.isCompleted())
-            persist=R.string.card_label_persistence_yes;
+                if (transfer.getTransactions().isEmpty()) {
 
-
-        holder.persistenceLabel.setText(context.getResources().getString(persist));
-        holder.isConfirmed = transfer.getPersistence()!=null?transfer.getPersistence():false;
-        holder.confirmCheck.setVisibility(View.GONE);
-        holder.alternativeValueLabel.setText("");
-        holder.timestatus.setVisibility(View.VISIBLE);
-        holder.balance.setTextColor(B.getColor(context, R.color.grey));
-        holder.balanceThird.setTextColor(B.getColor(context, R.color.grey));
-        holder.balanceUnit.setTextColor(B.getColor(context, R.color.grey));
-        holder.alternativeValueLabel.setTextColor(B.getColor(context, R.color.grey));
-        holder.balance.setPaintFlags(0);
-        if(transfer.getPersistence()!=null && transfer.getPersistence().booleanValue()) {
-            //holder.card.setCardBackgroundColor(B.getColor(context,R.color.cardview_light_background));
-            holder.card.setAlpha(1F);
-        } else {
-            if((System.currentTimeMillis()-600000)>transfer.getTimestamp()) {
-                holder.card.setAlpha(0.6F);
+                } else {
+                    IotaToText.IotaDisplayData fdata = IotaToText.getIotaDisplayData(value);
+                    holder.filtered.setVisibility(View.VISIBLE);
+                    holder.fBalance.setText((value > 0 ? "+" : "") + fdata.value);
+                    holder.fUnit.setText(fdata.unit);
+                    holder.fThird.setText(fdata.thirdDecimal);
+                    holder.fUnit.setTextColor(B.getColor(context, AppTheme.getPrimary()));
+                    if (value > 0) {
+                        holder.fBalance.setTextColor(B.getColor(context, R.color.green));
+                        holder.fThird.setTextColor(B.getColor(context, R.color.green));
+                    } else {
+                        holder.fBalance.setTextColor(B.getColor(context, R.color.flatRed));
+                        holder.fThird.setTextColor(B.getColor(context, R.color.flatRed));
+                    }
+                }
             } else {
-                holder.card.setAlpha(0.8F);
+                holder.filtered.setVisibility(View.GONE);
             }
-            //holder.card.setCardBackgroundColor(B.getColor(context,R.color.cardview_dark_background));
+            IotaToText.IotaDisplayData data = IotaToText.getIotaDisplayData(transfer.getValue());
+            holder.transfer = transfer;
+            holder.balance.setText(data.value);
+            holder.balanceThird.setText(data.thirdDecimal);
+            holder.balanceUnit.setText(data.unit);
+            holder.addressLabel.setText(transfer.getAddress());
+            holder.messageLabel.setText(TextUtils.isEmpty(transfer.getMessage()) ? "" : formatMessage(context, transfer.getMessage()));
+            holder.tagLabel.setText(transfer.getTag());
+            holder.timeLabel.setText(Utils.timeStampToDate(transfer.getTimestamp()));
+            holder.hashLabel.setText(transfer.getHash());
+            holder.isCancelled = transfer.isMarkDoubleSpend();
+            holder.isAddressDouble = transfer.isMarkDoubleAddress();
+            holder.value = transfer.getValue();
+            int persist = R.string.card_label_persistence_no;
+            if (transfer.isCompleted())
+                persist = R.string.card_label_persistence_yes;
 
-        }
-        holder.mstoneCount.setVisibility(View.GONE);
-        holder.getAlternativeValueTime.setText(Cal.friendlyReadDate(new Cal(transfer.getTimestamp())));
-        holder.getAlternativeValueTime.setCompoundDrawables(null,null,null,null);
-        if (transfer.getValue() == 0 && transfer.getTransactions().isEmpty()) {
 
-            if(transfer.getTag().endsWith("NUDGE9")) {
-                holder.alternativeValueLabel.setText(context.getString(R.string.info_nudge));
-                holder.imgTran.setImageResource(R.drawable.nudge_orange);
+            holder.persistenceLabel.setText(context.getString(persist));
+            holder.isConfirmed = transfer.getPersistence() != null ? transfer.getPersistence() : false;
+            holder.confirmCheck.setVisibility(View.GONE);
+            holder.alternativeValueLabel.setText("");
+            holder.timestatus.setVisibility(View.VISIBLE);
+            holder.balance.setTextColor(B.getColor(context, R.color.grey));
+            holder.balanceThird.setTextColor(B.getColor(context, R.color.grey));
+            holder.balanceUnit.setTextColor(B.getColor(context, R.color.grey));
+            holder.alternativeValueLabel.setTextColor(B.getColor(context, R.color.grey));
+            holder.balance.setPaintFlags(0);
+            if (transfer.getPersistence() != null && transfer.getPersistence().booleanValue()) {
+                //holder.card.setCardBackgroundColor(B.getColor(context,R.color.cardview_light_background));
+                holder.card.setAlpha(1F);
             } else {
-                holder.alternativeValueLabel.setText(context.getString(R.string.attached_address));
-                holder.imgTran.setImageResource(R.drawable.tran_orange);
-            }
-        } else if (!transfer.isCompleted()) {
-            if(isAutoNudge) {
-                holder.imgTran.setImageResource(R.drawable.ic_replay_orange);
-            } else {
-                holder.imgTran.setImageResource(R.drawable.ic_replay_grey);
-            }
+                if ((System.currentTimeMillis() - 600000) > transfer.getTimestamp()) {
+                    holder.card.setAlpha(0.6F);
+                } else {
+                    holder.card.setAlpha(0.8F);
+                }
+                //holder.card.setCardBackgroundColor(B.getColor(context,R.color.cardview_dark_background));
 
-            if(transfer.getValue()<0) {
+            }
+            holder.mstoneCount.setVisibility(View.GONE);
+            holder.getAlternativeValueTime.setText(Cal.friendlyReadDate(new Cal(transfer.getTimestamp())));
+            holder.getAlternativeValueTime.setCompoundDrawables(null, null, null, null);
+            if (transfer.getValue() == 0 && transfer.getTransactions().isEmpty()) {
+
+                if (transfer.getTag().endsWith("NUDGE9")) {
+                    holder.alternativeValueLabel.setText(context.getString(R.string.info_nudge));
+                    holder.imgTran.setImageResource(R.drawable.nudge_orange);
+                } else {
+                    holder.alternativeValueLabel.setText(context.getString(R.string.attached_address));
+                    holder.imgTran.setImageResource(R.drawable.tran_orange);
+                }
+            } else if (!transfer.isCompleted()) {
+                if (isAutoNudge) {
+                    holder.imgTran.setImageResource(R.drawable.ic_replay_orange);
+                } else {
+                    holder.imgTran.setImageResource(R.drawable.ic_replay_grey);
+                }
+
+                if (transfer.getValue() < 0) {
+                    holder.balance.setTextColor(B.getColor(context, R.color.flatRed));
+                    holder.balanceThird.setTextColor(B.getColor(context, R.color.flatRed));
+                    holder.balanceUnit.setTextColor(B.getColor(context, AppTheme.getPrimary()));
+                } else if (transfer.isInternal()) {
+                    holder.alternativeValueLabel.setText(context.getString(R.string.card_label_internal));
+                    holder.imgTran.setImageResource(R.drawable.tran_green);
+                }
+                holder.confirmCheck.setText(transfer.getNudgeCount() + "");
+                if (transfer.isMarkDoubleSpend()) {
+                    holder.imgTran.setImageResource(R.drawable.ic_replay_grey);
+                    holder.alternativeValueLabel.setText(context.getString(R.string.label_cancelled));
+                    holder.balance.setPaintFlags(holder.addressLabel.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+                } else if (transfer.isMarkDoubleAddress()) {
+                    holder.imgTran.setImageResource(R.drawable.ic_replay_grey);
+                    holder.alternativeValueLabel.setText(context.getString(R.string.label_address_used));
+                    holder.balance.setPaintFlags(holder.addressLabel.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+                } else {
+
+                    if (transfer.getValue() < 0) {
+                        if (isAutoNudge || transfer.getNudgeCount() > 0) {
+                            holder.confirmCheck.setVisibility(View.VISIBLE);
+                            holder.confirmCheck.setBackgroundResource(R.drawable.ic_replay_orange_alpha);
+                        }
+                        holder.alternativeValueLabel.setText(context.getString(R.string.card_label_pending_out));
+                    } else {
+                        if (isAutoNudge || transfer.getNudgeCount() > 0) {
+                            holder.confirmCheck.setVisibility(View.VISIBLE);
+                            holder.confirmCheck.setBackgroundResource(R.drawable.ic_replay_orange_alpha);
+                        }
+                        holder.alternativeValueLabel.setText(context.getString(R.string.card_label_pending_in));
+                    }
+
+                }
+            } else if (transfer.getValue() == 0) {
+
+                holder.alternativeValueLabel.setText(context.getString(R.string.card_label_internal));
+                holder.imgTran.setImageResource(R.drawable.tran_green);
+                if (transfer.isCompleted()) {
+                    holder.confirmCheck.setBackgroundResource(R.drawable.check_green);
+                    holder.confirmCheck.setVisibility(View.VISIBLE);
+                }
+
+            } else if (transfer.getValue() > 0) {
+                holder.confirmCheck.setVisibility(View.VISIBLE);
+                holder.confirmCheck.setText("");
+                holder.confirmCheck.setBackgroundResource(R.drawable.check_green);
+                holder.alternativeValueLabel.setText(context.getString(R.string.card_label_persistence_yes));
+                holder.getAlternativeValueTime.setCompoundDrawables(B.getDrawable(context, R.drawable.check_green), null, null, null);
+                holder.imgTran.setImageResource(R.drawable.ic_iota_in);
+                holder.balance.setTextColor(B.getColor(context, R.color.green));
+                holder.balanceThird.setTextColor(B.getColor(context, R.color.green));
+                holder.balanceUnit.setTextColor(B.getColor(context, AppTheme.getPrimary()));
+            } else {
+                holder.confirmCheck.setVisibility(View.VISIBLE);
+                holder.confirmCheck.setText("");
+                holder.confirmCheck.setBackgroundResource(R.drawable.check_green);
+                holder.alternativeValueLabel.setText(context.getString(R.string.card_label_persistence_yes));
+                holder.getAlternativeValueTime.setCompoundDrawables(B.getDrawable(context, R.drawable.check), null, null, null);
+                holder.imgTran.setImageResource(R.drawable.ic_iota_out);
                 holder.balance.setTextColor(B.getColor(context, R.color.flatRed));
                 holder.balanceThird.setTextColor(B.getColor(context, R.color.flatRed));
                 holder.balanceUnit.setTextColor(B.getColor(context, AppTheme.getPrimary()));
-            } else if(transfer.isInternal()) {
-                holder.alternativeValueLabel.setText(context.getString(R.string.card_label_internal));
-                holder.imgTran.setImageResource(R.drawable.tran_green);
             }
-            holder.confirmCheck.setText(transfer.getNudgeCount()+"");
-            if(transfer.isMarkDoubleSpend()) {
-                holder.imgTran.setImageResource(R.drawable.ic_replay_grey);
-                holder.alternativeValueLabel.setText(context.getString(R.string.label_cancelled));
-                holder.balance.setPaintFlags(holder.addressLabel.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
-            } else if(transfer.isMarkDoubleAddress()) {
-                holder.imgTran.setImageResource(R.drawable.ic_replay_grey);
-                holder.alternativeValueLabel.setText(context.getString(R.string.label_address_used));
-                holder.balance.setPaintFlags(holder.addressLabel.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+
+            TransferViewManager.populateTransferTransactions(context, holder.transferTransactions, transfer.getTransactions(), false);
+
+            if (!transfer.getOtherTransactions().isEmpty()) {
+                holder.otherAddressView.setVisibility(View.VISIBLE);
+                holder.otherAddressLayout.setVisibility(View.VISIBLE);
+                TransferViewManager.populateTransferTransactions(context, holder.otherAddressLayout, transfer.getOtherTransactions(), true);
             } else {
-
-                if(transfer.getValue()<0) {
-                    if(isAutoNudge || transfer.getNudgeCount()>0) {
-                        holder.confirmCheck.setVisibility(View.VISIBLE);
-                        holder.confirmCheck.setBackgroundResource(R.drawable.ic_replay_orange_alpha);
-                    }
-                    holder.alternativeValueLabel.setText(context.getString(R.string.card_label_pending_out));
-                } else {
-                    if(isAutoNudge || transfer.getNudgeCount()>0) {
-                        holder.confirmCheck.setVisibility(View.VISIBLE);
-                        holder.confirmCheck.setBackgroundResource(R.drawable.ic_replay_orange_alpha);
-                    }
-                    holder.alternativeValueLabel.setText(context.getString(R.string.card_label_pending_in));
-                }
-
-            }
-        } else if(transfer.getValue()==0) {
-
-            holder.alternativeValueLabel.setText(context.getString(R.string.card_label_internal));
-            holder.imgTran.setImageResource(R.drawable.tran_green);
-            if(transfer.isCompleted()) {
-                holder.confirmCheck.setBackgroundResource(R.drawable.check_green);
-                holder.confirmCheck.setVisibility(View.VISIBLE);
+                //holder.otherAddressLayout.removeAllViews();
+                holder.otherAddressView.setVisibility(View.GONE);
             }
 
-        }  else if (transfer.getValue() > 0) {
-            holder.confirmCheck.setVisibility(View.VISIBLE);
-            holder.confirmCheck.setText("");
-            holder.confirmCheck.setBackgroundResource(R.drawable.check_green);
-            holder.alternativeValueLabel.setText(context.getString(R.string.card_label_persistence_yes));
-            holder.getAlternativeValueTime.setCompoundDrawables(B.getDrawable(context,R.drawable.check_green),null,null,null);
-            holder.imgTran.setImageResource(R.drawable.ic_iota_in);
-            holder.balance.setTextColor(B.getColor(context, R.color.green));
-            holder.balanceThird.setTextColor(B.getColor(context, R.color.green));
-            holder.balanceUnit.setTextColor(B.getColor(context, AppTheme.getPrimary()));
-        } else {
-            holder.confirmCheck.setVisibility(View.VISIBLE);
-            holder.confirmCheck.setText("");
-            holder.confirmCheck.setBackgroundResource(R.drawable.check_green);
-            holder.alternativeValueLabel.setText(context.getString(R.string.card_label_persistence_yes));
-            holder.getAlternativeValueTime.setCompoundDrawables(B.getDrawable(context,R.drawable.check),null,null,null);
-            holder.imgTran.setImageResource(R.drawable.ic_iota_out);
-            holder.balance.setTextColor(B.getColor(context, R.color.flatRed));
-            holder.balanceThird.setTextColor(B.getColor(context, R.color.flatRed));
-            holder.balanceUnit.setTextColor(B.getColor(context, AppTheme.getPrimary()));
+            if (adapterPosition < 0) {
+
+            } else {
+                holder.expandableLayout.setExpanded(expandState.get(adapterPosition));
+                holder.expandableLayout.invalidate();
+            }
         }
-
-        TransferViewManager.populateTransferTransactions(context,holder.transferTransactions,transfer.getTransactions(),false);
-
-        if(!transfer.getOtherTransactions().isEmpty()) {
-            holder.otherAddressView.setVisibility(View.VISIBLE);
-            holder.otherAddressLayout.setVisibility(View.VISIBLE);
-            TransferViewManager.populateTransferTransactions(context,holder.otherAddressLayout,transfer.getOtherTransactions(),true);
-        } else {
-            //holder.otherAddressLayout.removeAllViews();
-            holder.otherAddressView.setVisibility(View.GONE);
-        }
-
-        if(adapterPosition<0) {
-
-        } else {
-            holder.expandableLayout.setExpanded(expandState.get(adapterPosition));
-            holder.expandableLayout.invalidate();
-        }
-
     }
 
     private static final String TXT_NUDGE_START="RUN9NUDGE9HASH9";

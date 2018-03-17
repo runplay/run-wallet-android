@@ -30,6 +30,8 @@ import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.AppCompatSeekBar;
 import android.support.v7.widget.Toolbar;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -140,6 +142,30 @@ public class ChooseSeedAddFragment extends Fragment {
                 CopySeed();
             }
         });
+        seedEditText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if(SeedValidator.isSeedValid(getActivity(),s.toString())==null) {
+                    btnCopy.setAlpha(1f);
+                    btnCopy.setEnabled(true);
+                } else {
+                    btnCopy.setAlpha(0.3f);
+                    btnCopy.setEnabled(false);
+                }
+            }
+        });
+        btnCopy.setAlpha(0.3f);
+        btnCopy.setEnabled(false);
     }
 
     @Override
@@ -174,7 +200,7 @@ public class ChooseSeedAddFragment extends Fragment {
 
     private void CopySeed() {
         Bundle bundle = new Bundle();
-        bundle.putString("generatedSeed", generatedSeed);
+        bundle.putString("generatedSeed", seedEditTextLayout.getEditText().toString());
         CopySeedDialog dialog = new CopySeedDialog();
         dialog.setArguments(bundle);
         dialog.show(getFragmentManager(), null);
@@ -184,27 +210,29 @@ public class ChooseSeedAddFragment extends Fragment {
 
     private void drawCutomise() {
         numberPickerHolder.removeAllViews();
-        char[] asArray = generatedSeed.toCharArray();
-        for(int i=0; i<asArray.length; i++) {
-            char c= asArray[i];
-            NumberPicker num = new NumberPicker(getActivity());
-            num.setMinValue(0);
-            num.setMaxValue(26);
-            num.setDisplayedValues(pickerArray);
-            num.setValue(pickerValues.indexOf(c));
-            num.setClickable(false);
-            num.setTag(Integer.valueOf(i));
-            num.setOnValueChangedListener(new NumberPicker.OnValueChangeListener() {
-                @Override
-                public void onValueChange(NumberPicker picker, int oldVal, int newVal) {
-                    Integer index = (Integer) picker.getTag();
-                    char[] asArray = generatedSeed.toCharArray();
-                    asArray[index]=pickerArray[newVal].charAt(0);
-                    generatedSeed= new String(asArray);
-                    seedEditText.setText(generatedSeed);
-                }
-            });
-            numberPickerHolder.addView(num);
+        if(generatedSeed!=null) {
+            char[] asArray = generatedSeed.toCharArray();
+            for (int i = 0; i < asArray.length; i++) {
+                char c = asArray[i];
+                NumberPicker num = new NumberPicker(getActivity());
+                num.setMinValue(0);
+                num.setMaxValue(26);
+                num.setDisplayedValues(pickerArray);
+                num.setValue(pickerValues.indexOf(c));
+                num.setClickable(false);
+                num.setTag(Integer.valueOf(i));
+                num.setOnValueChangedListener(new NumberPicker.OnValueChangeListener() {
+                    @Override
+                    public void onValueChange(NumberPicker picker, int oldVal, int newVal) {
+                        Integer index = (Integer) picker.getTag();
+                        char[] asArray = generatedSeed.toCharArray();
+                        asArray[index] = pickerArray[newVal].charAt(0);
+                        generatedSeed = new String(asArray);
+                        seedEditText.setText(generatedSeed);
+                    }
+                });
+                numberPickerHolder.addView(num);
+            }
         }
     }
 
@@ -237,7 +265,7 @@ public class ChooseSeedAddFragment extends Fragment {
         }
         List<Seeds.Seed> seeds=Store.getSeedList();
         for(Seeds.Seed tmp: seeds) {
-            if(seed.equals(String.valueOf(tmp.value))) {
+            if(seed.equals(String.valueOf(Store.getSeedRaw(getActivity(),tmp)))) {
                 Snackbar.make(getView(), R.string.message_seed_duplicate, Snackbar.LENGTH_LONG).show();
                 return;
 

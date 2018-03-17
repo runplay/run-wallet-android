@@ -39,6 +39,7 @@ import run.wallet.iota.helper.NotificationHelper;
 import run.wallet.iota.helper.Utils;
 import run.wallet.iota.model.Address;
 import run.wallet.iota.model.PayPacket;
+import run.wallet.iota.model.Store;
 import run.wallet.iota.service.AppService;
 import run.wallet.iota.ui.dialog.KeyReuseDetectedDialog;
 
@@ -82,7 +83,7 @@ public class SendTransferRequestHandler extends IotaRequestHandler {
             }
             try {
                 response = new SendTransferResponse(context, ((SendTransferRequest) request).getSeed()
-                        , apiProxy.sendTransfer(String.valueOf(((SendTransferRequest) request).getSeed().value),
+                        , apiProxy.sendTransfer(String.valueOf(Store.getSeedRaw(context,((SendTransferRequest) request).getSeed())),
                         ((SendTransferRequest) request).getSecurity(),
                         ((SendTransferRequest) request).getDepth(),
                         ((SendTransferRequest) request).getMinWeightMagnitude(),
@@ -103,7 +104,7 @@ public class SendTransferRequestHandler extends IotaRequestHandler {
                     wait(10000);
                 } catch (Exception ew){}
                 response = new SendTransferResponse(context, ((SendTransferRequest) request).getSeed()
-                        , apiProxy.sendTransfer(String.valueOf(((SendTransferRequest) request).getSeed().value),
+                        , apiProxy.sendTransfer(String.valueOf(Store.getSeedRaw(context,((SendTransferRequest) request).getSeed())),
                         ((SendTransferRequest) request).getSecurity(),
                         ((SendTransferRequest) request).getDepth(),
                         ((SendTransferRequest) request).getMinWeightMagnitude(),
@@ -116,7 +117,7 @@ public class SendTransferRequestHandler extends IotaRequestHandler {
                         false)
                 );
             }
-
+            AppService.setFastMode();
         } catch (ArgumentException | IllegalAccessError e) {
             //Log.e("SNT","ex: "+e.getMessage());
             NetworkError error = new NetworkError();

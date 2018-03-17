@@ -116,7 +116,7 @@ class IotaRequestTask extends AsyncTask<ApiRequest, String, ApiResponse> {
             }
         }
 */
-        if (result != null) {
+        if (result != null && context!=null) {
             //Log.e("Bus",result.getClass().getCanonicalName());
             bus.post(result);
         } else {

@@ -54,7 +54,7 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentBottom="true"
                 android:gravity="center_horizontal"
-                android:paddingBottom="140dp"
+                android:paddingBottom="200dp"
                 android:alpha="0.4"
                 />
             <LinearLayout
@@ -238,12 +238,13 @@
                 <TextView
                     android:id="@+id/default_seed_name"
                     android:layout_width="0dp"
-                    android:layout_weight="4"
+                    android:layout_weight="3"
                     android:layout_height="wrap_content"
+                    android:ellipsize="end"
                     android:padding="@dimen/baseline_small"
                     android:paddingLeft="30dp"
                     android:layout_gravity="center_vertical"
-                    android:textAppearance="@style/Base.TextAppearance.AppCompat.Large.Inverse"
+                    android:textAppearance="@style/Base.TextAppearance.AppCompat.Large"
                     android:textColor="@color/white"/>
                 <TextView
                     android:id="@+id/default_seed_value"
@@ -251,8 +252,9 @@
                     android:layout_weight="3"
                     android:layout_height="wrap_content"
                     android:padding="@dimen/baseline_small"
-                    android:layout_gravity="center_horizontal|center_vertical"
-                    android:textAppearance="@style/Base.TextAppearance.AppCompat.Headline"
+                    android:gravity="center"
+                    android:layout_gravity="center"
+                    android:textAppearance="@style/Base.TextAppearance.AppCompat.Large"
                     android:textColor="@color/white"/>
                 <TextView
                     android:id="@+id/default_seed_currency"

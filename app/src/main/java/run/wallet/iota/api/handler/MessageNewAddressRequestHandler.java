@@ -28,6 +28,7 @@ import jota.error.ArgumentException;
 import run.wallet.iota.api.requests.ApiRequest;
 import run.wallet.iota.api.requests.GetNewAddressRequest;
 import run.wallet.iota.api.requests.MessageNewAddressRequest;
+import run.wallet.iota.api.requests.MessageSendRequest;
 import run.wallet.iota.api.responses.ApiResponse;
 import run.wallet.iota.api.responses.GetNewAddressResponse;
 import run.wallet.iota.api.responses.MessageNewAddressResponse;
@@ -53,7 +54,7 @@ public class MessageNewAddressRequestHandler extends IotaMessageRequestHandler {
         List<Address> addressList = MsgStore.getAddresses();
         try {
 
-            jota.dto.response.GetNewAddressResponse resp=apiProxy.getNewAddress(((MessageNewAddressRequest) request).getSeedValue(),
+            jota.dto.response.GetNewAddressResponse resp=apiProxy.getNewAddress(String.valueOf(Store.getSeedRaw(context,((MessageNewAddressRequest) request).getSeed())),
                     ((MessageNewAddressRequest) request).getSecurity(),
                     addressList.size(),
                     ((MessageNewAddressRequest) request).isChecksum(),

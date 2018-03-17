@@ -33,10 +33,11 @@ public class MessageNewAddressRequest extends ApiRequest {
     public MessageNewAddressRequest(Seeds.Seed seed) {
         this.seed=seed;
     }
-
+/*
     public String getSeedValue() {
         return String.valueOf(seed.value);
     }
+    */
     public Seeds.Seed getSeed() {
         return seed;
     }

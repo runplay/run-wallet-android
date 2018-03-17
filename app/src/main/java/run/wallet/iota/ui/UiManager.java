@@ -53,6 +53,7 @@ import run.wallet.iota.api.requests.GetAccountDataRequest;
 import run.wallet.iota.api.requests.GetFirstLoadRequest;
 import run.wallet.iota.api.requests.GetNewAddressRequest;
 import run.wallet.iota.api.requests.NudgeRequest;
+import run.wallet.iota.api.requests.RefreshUsedAddressesRequest;
 import run.wallet.iota.api.requests.ReplayBundleRequest;
 import run.wallet.iota.api.requests.SendTransferRequest;
 import run.wallet.iota.helper.AESCrypt;
@@ -157,6 +158,10 @@ public class UiManager {
                         //if(request.getSeed().id.equals(currentSeed.id)) {
                         processing.add(createProcessRunningPod(context, R.drawable.send_white, context.getString(R.string.auto), 0));
                         //}
+                    } else if(req instanceof RefreshUsedAddressesRequest) {
+                        //if(request.getSeed().id.equals(currentSeed.id)) {
+                        processing.add(createProcessRunningPod(context, R.drawable.send_white, context.getString(R.string.info_audit), 0));
+                        //}
                     }
 
                 }
@@ -171,6 +176,40 @@ public class UiManager {
                     forView.setVisibility(View.VISIBLE);
                     AnimationUtils.loadAnimation(context, R.anim.slide_in_from_bottom);
                 }
+            } else if(Store.getUsedAddressCheckResult()!=null) {
+                Snackbar.make(forView, Store.getUsedAddressCheckResult(), Snackbar.LENGTH_LONG).show();
+                Store.setUsedAddressCheckResult(null);
+            } else if(Store.getCurrentSeed().warnUsed) {
+
+                SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+                boolean showused=prefs.getBoolean(Constants.PREFERENCES_SHOW_USED,true);
+
+                TextView messy = new TextView(context);
+                if(showused) {
+                    messy.setText(context.getString(R.string.usedAddressWarn));
+                } else {
+                    messy.setText(context.getString(R.string.usedAddressSettings));
+                }
+
+                messy.setTextColor(Color.WHITE);
+                messy.setPadding(30, 30, 30, 30);
+                //messy.setText
+                messy.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent settings = new Intent(context, SettingsActivity.class);
+                        context.startActivityForResult(settings, 0);
+                    }
+                });
+                forView.addView(messy);
+
+                forView.canScrollHorizontally(View.LAYOUT_DIRECTION_LTR);
+                if (forView.getVisibility() != View.VISIBLE) {
+                    AnimationUtils.loadAnimation(context, R.anim.slide_in_from_bottom);
+                }
+
+
+
             } else {
                 SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context.getApplicationContext());
                 if(prefs.getBoolean(Constants.PREFERENCES_SHOW_CANCELLED, true)

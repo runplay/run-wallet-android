@@ -37,6 +37,7 @@ import run.wallet.iota.api.handler.GetBundleRequestHandler;
 import run.wallet.iota.api.handler.GetNeighborsRequestHandler;
 import run.wallet.iota.api.handler.GetNewAddressRequestHandler;
 import run.wallet.iota.api.handler.NodeInfoRequestHandler;
+import run.wallet.iota.api.handler.RefreshUsedAddressesHandler;
 import run.wallet.iota.api.handler.RemoveNeighborsRequestHandler;
 import run.wallet.iota.api.handler.ReplayBundleRequestHandler;
 import run.wallet.iota.api.handler.RequestHandler;
@@ -79,6 +80,7 @@ public class IotaApiProvider implements ApiProvider {
         AddNeighborsRequestHandler addNeighborsAction = new AddNeighborsRequestHandler(iotaApi, context);
         AuditAddressesRequestHandler auditAddresses = new AuditAddressesRequestHandler(iotaApi, context);
         AutoNudgeHandler autoNudge = new AutoNudgeHandler(iotaApi, context);
+        RefreshUsedAddressesHandler refreshUsed = new RefreshUsedAddressesHandler(iotaApi, context);
 
         FindTransactionsRequestHandler findTransactionsAction = new FindTransactionsRequestHandler(iotaApi, context);
         GetBundleRequestHandler getBundleAction = new GetBundleRequestHandler(iotaApi, context);
@@ -93,6 +95,7 @@ public class IotaApiProvider implements ApiProvider {
         NudgeRequestHandler nudgeRequest = new NudgeRequestHandler(iotaApi,context);
         GetBalanceAndFormatRequestHandler getBalanceAndFormatRequest = new GetBalanceAndFormatRequestHandler(iotaApi,context);
 
+        requestHandlerMap.put(refreshUsed.getType(),refreshUsed);
         requestHandlerMap.put(autoNudge.getType(),autoNudge);
         requestHandlerMap.put(nudgeRequest.getType(),nudgeRequest);
         requestHandlerMap.put(addressSecurity.getType(),addressSecurity);

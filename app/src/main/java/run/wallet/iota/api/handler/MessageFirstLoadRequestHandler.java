@@ -40,6 +40,7 @@ import run.wallet.iota.api.responses.error.NetworkError;
 import run.wallet.iota.helper.Audit;
 import run.wallet.iota.model.Address;
 import run.wallet.iota.model.MsgStore;
+import run.wallet.iota.model.Store;
 import run.wallet.iota.model.Transfer;
 import run.wallet.iota.model.Wallet;
 import run.wallet.iota.service.AppService;
@@ -79,7 +80,7 @@ public class MessageFirstLoadRequestHandler extends IotaRequestHandler {
 
 
             while(true) {
-                GetNewAddressResponse gnr = apiProxy.getNewAddress(String.valueOf(MsgStore.getSeed().value),
+                GetNewAddressResponse gnr = apiProxy.getNewAddress(String.valueOf(Store.getSeedRaw(context,MsgStore.getSeed())),
                         firstLoadRequest.getSecurity(),
                         start,
                         false,

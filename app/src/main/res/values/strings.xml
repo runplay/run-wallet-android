@@ -76,6 +76,17 @@
 
     <string name="randomise">Randomise</string>
 
+    <string name="usedAddressOk">All OK, no used addresses with &gt; Zero balances</string>
+    <string name="usedAddressNoOk">Check your used addresses, the app found </string>
+    <string name="usedAddressWarn">Warning, you should transfer the value from the used non zero address in the list</string>
+    <string name="usedAddressSettings">Warning, you have non Zero used address, go to Settings and check display Used Addresses</string>
+
+    <string name="switch_wallet">Switch Wallet</string>
+    <string name="switch_wallet_text">Select wallet from below</string>
+
+    <string name="edit_wallet_reload_text">Wipe history, and perform a first load again on this Seed</string>
+    <string name="edit_wallet_reload_btn">Reload</string>
+
     <!-- Buttons-->
     <string name="buttons_ok">OK</string>
     <string name="buttons_cancel">Cancel</string>
@@ -102,7 +113,8 @@
     <string name="messages_exchange_rate_error">No exchange rate data available.</string>
     <string name="messages_no_chart_data">Loading...</string>
     <string name="messages_copy_seed">Seed generated... copy to clipboard?</string>
-    <string name="messages_remove_seed">Remove Seed, are you sure?, please make sure you have a backup of the seed</string>
+    <string name="messages_remove_seed">Remove Seed, are you sure? please make sure you have a backup of the seed, or copy it first before deleting from the app</string>
+    <string name="messages_wipe_seed">ReLoad Seed? this will clear all current Seed history and start a First Load</string>
 
     <string name="snackbar_balance_live">Live balance, only completed transfers</string>
     <string name="snackbar_balance_out">Available balance, less pending out</string>
@@ -560,6 +572,7 @@
     <string name="fragment_new_transfer_title">New Transfer</string>
     <string name="fragment_wallet_title">Wallet</string>
 
+    <string name="title_reload_seed">Reload Seed</string>
     <string name="title_remove_seed">Remove Seed</string>
     <string name="title_edit_wallet">Edit Wallet</string>
     <string name="title_edit_default">Set this Wallet to Default</string>
@@ -568,6 +581,9 @@
     <string name="fragment_generate_qr_code_title">QR Code</string>
     <string name="fragment_generate_qr_code_active">Generating QR Code</string>
 
+    <string name="edit_wallet_check">Check Used Addresses</string>
+    <string name="edit_wallet_check_text">run IOTA will automatically check used addresses every 24 hours, or click to check this Seed now</string>
+    <string name="edit_wallet_check_now">Check now</string>
     <!-- rate app -->
     <string name="new_rate_dialog_title">Rate run IOTA️</string>
     <string name="new_rate_dialog_message">If you find run IOTA useful, why not help with a Rating...</string>
@@ -612,13 +628,15 @@
     <string name="help_aw_receive">Receive</string>
     <string name="help_aw_receive_text">Lists all active Addresses with balances for the active Wallet</string>
 
+    <string name="help_aw_used">Used Address with &gt; Zero balance</string>
+    <string name="help_aw_used_text">If you have a used address showing a non Zero balance, simply open the wallet and transfer the exact balance to a new address, always be careful about sending old / used Addresses for payment, if in doubt Pig lock the Address to avoid spending</string>
     <string name="help_aw_pigadd">Piggy Bank Addresses 🐷</string>
     <string name="help_aw_pigadd_text">Mark an address as a Piggy Bank to ensure the app will not use that address when making transfers, you need to remove the pig before spending with the Address</string>
     <string name="help_aw_piglock">Pig Locked</string>
     <string name="help_aw_piglock_no_unlock">Pig can only be broken when pending balances are completed</string>
     <string name="help_aw_piglock_text">If an Address has pending transfers, the address will be locked from outgoing payments</string>
     <string name="help_aw_security">Change Address Security option</string>
-    <string name="help_aw_security_text">Use this to get Specific with the way your Wallet Addresses are created, by default the security value is 2 unless changed. If you have changed the address, but want the original address back, you will need to remove the Wallet Seed and Re-load again</string>
+    <string name="help_aw_security_text">Use this to get Specific with the way your Wallet Addresses are created, by default the security value is 2 unless changed. If you have changed the address, but want the original address back, you will need to remove the Wallet Seed and Reload again</string>
 
     <string name="help_key_head">Key</string>
     <string name="help_key_receive">Positive balance transfer (receive IOTA)</string>

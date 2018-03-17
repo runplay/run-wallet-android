@@ -19,6 +19,8 @@
 
 package run.wallet.iota.api.requests;
 
+import android.util.Log;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -71,9 +73,7 @@ public class SendTransferRequest extends SeedApiRequest {
     public SendTransferRequest(Seeds.Seed seed, List<PayPacket.PayTo> payTos, List<Address> fromAddress, Address remainder
             , String message, String tag) {
         super(seed);
-
         this.payTos = payTos;
-        //this.value = value;
         this.message = message;
         this.tag = tag;
         this.setFromAddresses(fromAddress);
@@ -89,6 +89,7 @@ public class SendTransferRequest extends SeedApiRequest {
     public List<Transfer> prepareTransfers() {
         List<Transfer> transfers = new ArrayList<>();
         for (PayPacket.PayTo pt: payTos) {
+
             transfers.add(new Transfer(pt.address, pt.value, message, tag));
         }
         return transfers;

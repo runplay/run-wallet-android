@@ -29,6 +29,7 @@ https://github.com/iotaledger/android-wallet-app
 <br/>
 <h2>Updates</h2>
 
+v1.3.8100 - Used Address balance Auto & manual check added, Fast wallet Switcher, Ui tweak for large seed values, Reload Seed request (performs a first load again), Background Service performance improvements and a couple Bug fixes.
 v1.3.8000 - Improved Seed generator, improved Promotes, field.carriota node added to node list options, improved wallet load display, Active wallet name displayed in Toolbar, improved nudging (faster and more often)<br/>
 v1.3.7900 - Edit Wallet section created, Added one extra Theme, Rate App prompt added<br/>
 v1.3.7800 - Bug fixes identified in Google Play console<br/>

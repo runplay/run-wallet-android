@@ -120,7 +120,7 @@ public class GetFirstLoadRequestHandler extends IotaRequestHandler {
         if(!userDeclaredBalance || firstLoadRequest.getSeed().isappgenerated) {
 
             try {
-                final GetNewAddressResponse gna = apiProxy.getNewAddress(String.valueOf(firstLoadRequest.getSeed().value), firstLoadRequest.getSecurity(),
+                final GetNewAddressResponse gna = apiProxy.getNewAddress(String.valueOf(Store.getSeedRaw(context,firstLoadRequest.getSeed())), firstLoadRequest.getSecurity(),
                         0, false, 1, false);
                 for (String add : gna.getAddresses()) {
                     Address newaddress = new Address(add, false, false);
@@ -164,7 +164,7 @@ public class GetFirstLoadRequestHandler extends IotaRequestHandler {
                     long useBalance=0L;
 
                     try {
-                        GetNewAddressResponse gnr = apiProxy.getNewAddress(String.valueOf(firstLoadRequest.getSeed().value), firstLoadRequest.getSecurity(),
+                        GetNewAddressResponse gnr = apiProxy.getNewAddress(String.valueOf(Store.getSeedRaw(context,firstLoadRequest.getSeed())), firstLoadRequest.getSecurity(),
                                 start, false, 1, false);
                         String add = gnr.getAddresses().get(0);
                         //Log.e("FIRST-TIME", "CALC ADDRESS: " + add + " -- " + start+"-");

@@ -223,7 +223,7 @@ public class IotaMsg extends IotaMsgCore {
         try {
             broadcastAndStore(res.getTrytes());
         } catch (ArgumentException e) {
-            Log.e("IotaMsg","sendTrytes ex: "+e.getMessage());
+            //Log.e("IotaMsg","sendTrytes ex: "+e.getMessage());
             return new ArrayList<>();
         }
 

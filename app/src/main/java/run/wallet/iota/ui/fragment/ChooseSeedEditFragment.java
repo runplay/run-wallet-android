@@ -19,7 +19,9 @@
 
 package run.wallet.iota.ui.fragment;
 
+import android.app.Activity;
 import android.app.Fragment;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
@@ -56,8 +58,12 @@ import run.wallet.iota.helper.AppTheme;
 import run.wallet.iota.model.Seeds;
 import run.wallet.iota.model.Store;
 import run.wallet.iota.service.AppService;
+import run.wallet.iota.ui.UiManager;
 import run.wallet.iota.ui.adapter.WalletAddressCardAdapter;
+import run.wallet.iota.ui.adapter.WalletTransfersCardAdapter;
+import run.wallet.iota.ui.dialog.ChooseSeedItemDialog;
 import run.wallet.iota.ui.dialog.ShowNoDescDialog;
+import run.wallet.iota.ui.dialog.WipeSeedDialog;
 
 public class ChooseSeedEditFragment extends Fragment {
 
@@ -74,6 +80,10 @@ public class ChooseSeedEditFragment extends Fragment {
     TextView seed;
     @BindView(R.id.edit_wallet_view)
     Button btnViewSeed;
+    @BindView(R.id.edit_wallet_reload)
+    Button btnReload;
+    @BindView(R.id.edit_wallet_check)
+    Button checkUsed;
 
     private Seeds.Seed useSeed;
     private boolean hasChanges;
@@ -132,6 +142,29 @@ public class ChooseSeedEditFragment extends Fragment {
                     setDefault.setEnabled(false);
                     setDefault.setText(getString(R.string.title_edit_isdefault));
                 }
+            }
+        });
+        btnReload.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                WipeSeedDialog dialog = new WipeSeedDialog();
+                dialog.setSeed(useSeed);
+
+                dialog.show(getActivity().getFragmentManager(), null);
+            }
+        });
+        checkUsed.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AppService.checkUsedAddress(useSeed);
+                Store.setCurrentSeed(getActivity(),useSeed);
+                WalletTransfersFragment.resetScroll();
+
+                WalletAddressesFragment.resetScroll();
+                WalletTransfersCardAdapter.setFilterAddress(null,null);
+                WalletAddressCardAdapter.load(getActivity(),true);
+                WalletTransfersCardAdapter.load(getActivity(),true);
+                UiManager.openFragment(getActivity(), WalletTabFragment.class);
             }
         });
     }

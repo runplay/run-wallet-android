@@ -41,9 +41,11 @@ public class GetNewAddressRequest extends SeedApiRequest {
         super(seed);
         this.security= security;
     }
+    /*
     public String getSeedValue() {
         return String.valueOf(seed.value);
     }
+    */
     public Seeds.Seed getSeed() {
         return seed;
     }

@@ -32,6 +32,7 @@ import jota.dto.response.GetNodeInfoResponse;
 import run.wallet.iota.api.requests.ApiRequest;
 import run.wallet.iota.api.requests.AuditAddressesRequest;
 import run.wallet.iota.api.requests.GetNewAddressRequest;
+import run.wallet.iota.api.requests.SendTransferRequest;
 import run.wallet.iota.api.responses.ApiResponse;
 import run.wallet.iota.model.Address;
 import run.wallet.iota.model.Store;
@@ -110,7 +111,7 @@ public class AuditAddressesRequestHandler extends IotaRequestHandler {
                         GetNewAddressRequest gnr = new GetNewAddressRequest(request.getSeed());
                         gnr.setIndex(addresses.size());
 
-                        final GetNewAddressResponse gna = apiProxy.getNewAddress(String.valueOf(request.getSeed().value), gnr.getSecurity(),
+                        final GetNewAddressResponse gna = apiProxy.getNewAddress(String.valueOf(Store.getSeedRaw(context,request.getSeed())), gnr.getSecurity(),
                                 addresses.size(), gnr.isChecksum(), 1, gnr.isReturnAll());
                         run.wallet.iota.api.responses.GetNewAddressResponse gnar = new run.wallet.iota.api.responses.GetNewAddressResponse(request.getSeed(),gna);
                         Store.addAddress(context,gnr,gnar);

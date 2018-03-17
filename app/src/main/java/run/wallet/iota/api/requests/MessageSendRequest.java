@@ -58,11 +58,11 @@ public class MessageSendRequest extends ApiRequest {
         transfers.add(transfer);
         return transfers;
     }
-
+/*
     public String getSeedValue() {
         return String.valueOf(seed.value);
     }
-
+*/
     public Seeds.Seed getSeed() {
         return seed;
     }

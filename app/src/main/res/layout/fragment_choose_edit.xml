@@ -104,6 +104,75 @@
                     android:text="@string/view"
                     />
             </LinearLayout>
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="start"
+                android:paddingTop="40dp"
+                android:text="@string/edit_wallet_check"
+                android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
+                android:textColor="@color/blackAlpha50" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:paddingTop="@dimen/baseline_card">
+                <TextView
+                    android:text="@string/edit_wallet_check_text"
+                    android:layout_width="0dp"
+                    android:layout_weight="2"
+                    android:layout_height="wrap_content"
+                    android:gravity="start|center_vertical"
+
+                    android:alpha="0.8"
+                    android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
+                    android:textColor="@color/blackAlpha50" />
+                <Button
+                    android:id="@+id/edit_wallet_check"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:textColor="@color/white"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:text="@string/edit_wallet_check_now"
+                    />
+            </LinearLayout>
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="start"
+                android:paddingTop="40dp"
+                android:text="@string/title_reload_seed"
+                android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
+                android:textColor="@color/blackAlpha50" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:paddingTop="@dimen/baseline_card">
+                <TextView
+                    android:text="@string/edit_wallet_reload_text"
+                    android:layout_width="0dp"
+                    android:layout_weight="2"
+                    android:layout_height="wrap_content"
+                    android:gravity="start|center_vertical"
+
+                    android:alpha="0.8"
+                    android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
+                    android:textColor="@color/blackAlpha50" />
+                <Button
+                    android:id="@+id/edit_wallet_reload"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:textColor="@color/white"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:text="@string/edit_wallet_reload_btn"
+                    />
+            </LinearLayout>
+
         </LinearLayout>
     </ScrollView>
 

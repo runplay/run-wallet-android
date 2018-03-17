@@ -35,10 +35,11 @@ public class Seeds {
 
     public static class Seed {
         public String id;
-        public char[] value;
+        protected char[] value;
         public String name;
         public boolean isdefault;
         public boolean isappgenerated;
+        public boolean warnUsed;
 
         protected Seed() {
 

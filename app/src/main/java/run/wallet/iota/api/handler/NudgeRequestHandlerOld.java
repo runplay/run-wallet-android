@@ -65,7 +65,7 @@ public class NudgeRequestHandlerOld extends IotaRequestHandler {
                 GetNewAddressRequest gnr = new GetNewAddressRequest(request.getSeed());
                 gnr.setIndex(alreadyAddress.size());
 
-                final GetNewAddressResponse gna = apiProxy.getNewAddress(String.valueOf(request.getSeed().value), gnr.getSecurity(),
+                final GetNewAddressResponse gna = apiProxy.getNewAddress(String.valueOf(Store.getSeedRaw(context,request.getSeed())), gnr.getSecurity(),
                         alreadyAddress.size(), gnr.isChecksum(), 1, gnr.isReturnAll());
 
                 run.wallet.iota.api.responses.GetNewAddressResponse gnar = new run.wallet.iota.api.responses.GetNewAddressResponse(request.getSeed(), gna);
@@ -92,7 +92,7 @@ public class NudgeRequestHandlerOld extends IotaRequestHandler {
 
                 if(already!=null) {
 
-                    RunSendTransferResponse rstr = apiProxy.sendNudgeTransfer(String.valueOf(request.getSeed().value),
+                    RunSendTransferResponse rstr = apiProxy.sendNudgeTransfer(String.valueOf(Store.getSeedRaw(context,request.getSeed())),
                             nudgeMe.getHash(),
                             useAddress,
                             fullAddress.getIndex(),

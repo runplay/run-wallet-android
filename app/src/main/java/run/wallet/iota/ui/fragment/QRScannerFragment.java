@@ -35,6 +35,7 @@ import run.wallet.common.json.JSONException;
 import run.wallet.common.json.JSONObject;
 
 import me.dm7.barcodescanner.zxing.ZXingScannerView;
+import run.wallet.iota.model.Store;
 
 public class QRScannerFragment extends Fragment implements ZXingScannerView.ResultHandler {
 
@@ -49,6 +50,7 @@ public class QRScannerFragment extends Fragment implements ZXingScannerView.Resu
     @Override
     public void onResume() {
         super.onResume();
+        Store.setCurrentFragment(this.getClass());
         scannerView.setResultHandler(this);
         scannerView.startCamera();
     }
@@ -87,6 +89,7 @@ public class QRScannerFragment extends Fragment implements ZXingScannerView.Resu
                 .replace(R.id.container, fragment, null)
                 .addToBackStack(null)
                 .commit();
+
     }
 
 }

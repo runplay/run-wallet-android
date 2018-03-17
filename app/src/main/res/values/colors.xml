@@ -108,6 +108,7 @@
     <color name="whiteAlpha50">#80FFFFFF</color>
     <color name="whiteAlpha75">#B0FFFFFF</color>
     <color name="black">#000000</color>
+    <color name="blackAlpha75">#B0000000</color>
     <color name="blackAlpha50">#80000000</color>
     <color name="blackAlpha25">#30000000</color>
     <color name="textDark">#333333</color>

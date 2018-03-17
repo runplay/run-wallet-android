@@ -177,7 +177,7 @@ public class GetAccountDataRequestHandler extends IotaRequestHandler {
 
 
             }
-
+            AppService.setFastMode();
             return new GetAccountDataResponse();
         }
 

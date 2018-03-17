@@ -286,7 +286,9 @@ public class SwipeRefreshLayout extends ViewGroup {
 			final int childTop = mCurrentTargetOffsetTop + getPaddingTop();
 			final int childWidth = width - getPaddingLeft() - getPaddingRight();
 			final int childHeight = height - getPaddingTop() - getPaddingBottom();
-			child.layout(childLeft, childTop, childLeft + childWidth, childTop + childHeight);
+			try {
+				child.layout(childLeft, childTop, childLeft + childWidth, childTop + childHeight);
+			} catch(Exception e) {}
 		}
 	}
 	@Override

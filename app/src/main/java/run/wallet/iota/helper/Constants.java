@@ -45,7 +45,7 @@ public class Constants {
     public static final int PREF_FIRST_LOAD_RANGE_DEFAULT =5;
 
     public static final String PREF_TRANSFER_NUDGE_ATTEMPTS="preference_nudge_attempts";
-    public static final int PREF_TRANSFER_NUDGE_ATTEMPTS_VALUE =4;
+    public static final int PREF_TRANSFER_NUDGE_ATTEMPTS_VALUE =6;
     public static final int PREF_TRANSFER_NUDGE_MILESTONES_VALUE =1;
 
     public static final int PREF_AUTO_LOGUT_DEFAULT=2;
@@ -79,9 +79,9 @@ public class Constants {
 
     public static final String QRCODE = "qrcode";
     public static final String UDP = "udp://";
-    public static final String NEW_ADDRESS_TAG =  "99999999RUN9WALLET9ADDRESS9";
+    public static final String NEW_ADDRESS_TAG =  "RUN9WALLET9ADDRESS999999999";
     public static final String NEW_TRANSFER_TAG = "RUN9WALLET9TRANSFER99999999";
-    public static final String DONATION_TAG =     "9999999RUN9WALLET9DONATE999";
+    public static final String DONATION_TAG =     "RUN9WALLET9DONATE9999999999";
 
 
     public static final String DONATION_ADDRESS = "9PPMLVNEGQEZLCKTPDSCMKNKNDPMHUTC9PMOAKHGNGOVVTXOTRA99JFPVAAXHPUM99DGLUHOYLMWOL9YCSGRZJIYSW";

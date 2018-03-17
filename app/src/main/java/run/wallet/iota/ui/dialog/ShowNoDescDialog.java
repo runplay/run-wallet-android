@@ -131,7 +131,7 @@ public class ShowNoDescDialog extends DialogFragment {
             String encSeed = prefs.getString(Constants.PREFERENCE_ENC_PASS, "");
             //Log.e("PASS-TEST","P: "+password+" -- "+encSeed+" -- "+aes.decrypt(encSeed)+" -- "+aes.encrypt(password));
             if(Store.verifyPassword(aes.decrypt(encSeed))) {
-                textViewSeed.setText(String.valueOf(seed.value));
+                textViewSeed.setText(String.valueOf(Store.getSeedRaw(getActivity(),seed)));
             };
 
 

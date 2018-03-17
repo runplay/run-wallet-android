@@ -38,6 +38,7 @@ import run.wallet.iota.api.responses.SendTransferResponse;
 import run.wallet.iota.api.responses.error.NetworkError;
 import run.wallet.iota.api.responses.error.NetworkErrorType;
 import run.wallet.iota.helper.Constants;
+import run.wallet.iota.model.Store;
 import run.wallet.iota.service.IotaMsg;
 import run.wallet.iota.helper.NotificationHelper;
 import run.wallet.iota.helper.Utils;
@@ -69,7 +70,7 @@ public class MessageSendRequestHandler extends IotaMessageRequestHandler {
         }
 
         try {
-            response = new MessageSendResponse(context,((MessageSendRequest) request).getSeed(),apiProxy.sendTransfer(((MessageSendRequest) request).getSeedValue(),
+            response = new MessageSendResponse(context,((MessageSendRequest) request).getSeed(),apiProxy.sendTransfer(String.valueOf(Store.getSeedRaw(context,((MessageSendRequest) request).getSeed())),
                     ((MessageSendRequest) request).getSecurity(),
                     ((MessageSendRequest) request).getDepth(),
                     ((MessageSendRequest) request).getMinWeightMagnitude(),

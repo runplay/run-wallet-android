@@ -10,7 +10,9 @@ import jota.RunIotaAPI;
 import jota.dto.response.GetNewAddressResponse;
 import jota.dto.response.RunSendTransferResponse;
 import jota.error.ArgumentException;
+import jota.utils.SeedRandomGenerator;
 import run.wallet.R;
+import run.wallet.common.Sf;
 import run.wallet.iota.api.requests.ApiRequest;
 import run.wallet.iota.api.requests.GetNewAddressRequest;
 import run.wallet.iota.api.requests.NudgeRequest;
@@ -51,7 +53,10 @@ public class NudgeRequestHandler extends IotaRequestHandler {
         try {
 
             List<Address> alreadyAddress = Store.getAddresses(context,request.getSeed());
-            String useAddress="RUN9IOTA9WALLET9NUDGE9PROMOTE9TRANSFER9ADDRESSRUN9IOTA9WALLET9NUDGE9PROMOTE9TRANS";
+            //String useAddress="RUN9IOTA9WALLET9NUDGE9PROMOTE9TRANSFER9ADDRESSRUN9IOTA9WALLET9NUDGE9PROMOTE9TRANS";
+
+            String random = SeedRandomGenerator.generateNewSeed();
+            String useAddress="RUN9IOTA9WALLET9NUDGE9PROMOTE9TRANSFER99"+ Sf.restrictLength(random,41);
             NudgeResponse nresp=null;
             if(useAddress!=null) {
                 List<Transfer> transfers = new ArrayList<>();
@@ -59,7 +64,7 @@ public class NudgeRequestHandler extends IotaRequestHandler {
 
                 Transfer already=Store.isAlreadyTransfer(nudgeMe.getHash(),alreadyTransfers);
                 if(already!=null) {
-                    RunSendTransferResponse rstr = apiProxy.sendNudgeTransfer(String.valueOf(request.getSeed().value),
+                    RunSendTransferResponse rstr = apiProxy.sendNudgeTransfer(String.valueOf(Store.getSeedRaw(context,request.getSeed())),
                             nudgeMe.getHash(),
                             useAddress,
                             1,

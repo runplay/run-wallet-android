@@ -414,8 +414,10 @@ public class WalletTransfersFragment extends BaseSwipeRefreshLayoutFragment impl
         }
     }
     private void setAdapter(boolean force) {
-        AsyncCall task = new AsyncCall();
-        task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, force);
+        if(getActivity()!=null && !getActivity().isDestroyed()) {
+            AsyncCall task = new AsyncCall();
+            task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, force);
+        }
     }
     private void setAdapterOld(boolean force) {
 

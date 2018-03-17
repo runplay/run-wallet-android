@@ -54,10 +54,8 @@ public class Audit {
                         && !transfer.getTransactions().isEmpty()
                         && transfer.getNudgeCount() < nudgeAttempts) {
 
-                    NodeInfoResponse nir = Store.getNodeInfo();
-                    if (nir != null) {
                         Store.addIfNoNudgeTransfer(context, seed, transfer);
-                    }
+
                 }
             } else if(transfer.isCompleted()) {
                 for(NudgeTransfer nudge: alreadyNudge) {
@@ -83,14 +81,14 @@ public class Audit {
         String hash = "";
         Boolean persistence = false;
         long value = 0;
-        String tag = "";
+        String tag = Constants.NEW_TRANSFER_TAG;
         String destinationAddress = "";
         List<TransferTransaction> transactions=new ArrayList<>();
         List<TransferTransaction> othertransactions=new ArrayList<>();
         String message = defmessage;
         for (Transaction trx : inTransactions) {
             try {
-
+                tag = trx.getTag();
                 address = trx.getAddress();
                 persistence = trx.getPersistence();
                 value = trx.getValue();
@@ -110,7 +108,7 @@ public class Audit {
                 if (trx.getCurrentIndex() == 0) {
                     message = Utils.removeTrailingNines(trx.getSignatureFragments());
                     timestamp = trx.getAttachmentTimestamp();
-                    tag = trx.getTag();
+
                     destinationAddress = address;
                     hash = trx.getHash();
                 }

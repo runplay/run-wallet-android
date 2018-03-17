@@ -85,7 +85,6 @@ public class AutoNudgeHandler extends IotaRequestHandler {
                 }
                 if (nir != null) {
                     if (nir.getLatestMilestoneIndex() == nir.getLatestSolidSubtangleMilestoneIndex()) {
-                        Log.e("SERVICE","Call nudge now - 1");
 
                         Map<String, NudgeTransfer> refreshSeedShorts = new HashMap<>();
                         List<NudgeTransfer> removeFromNudges=new ArrayList<>();
@@ -96,6 +95,7 @@ public class AutoNudgeHandler extends IotaRequestHandler {
                             NudgeTransfer ntran = nudgeTransfers.get(i);
                             if (ntran.transfer.getMilestone() < nir.getLatestMilestoneIndex()
                                     && ntran.transfer.getNudgeCount()<nudgeAttempts) {
+
                                 try {
                                     Seeds.Seed seed=null;
                                     for(Seeds.Seed tseed: Store.getSeedList()) {
@@ -110,7 +110,7 @@ public class AutoNudgeHandler extends IotaRequestHandler {
                                         for(Transfer transfer: allTransfers) {
                                             if(transfer.getValue()==ntran.transfer.getValue() && transfer.getAddress().equals(ntran.transfer.getAddress())) {
                                                 if(transfer.isCompleted()
-                                                        || transfer.isMarkDoubleSpend()) {
+                                                        ) {
                                                     hascompleted = true;
                                                 }
                                                 hashes.add(transfer.getHash());
@@ -128,35 +128,34 @@ public class AutoNudgeHandler extends IotaRequestHandler {
                                                 }
                                             }
                                         }
-                                        if (hascompleted || hashes.isEmpty() || transactions.isEmpty()) {
-                                            ntran.status = NudgeTransfer.NUDGE_CONFIRM;
-                                            removeFromNudges.add(ntran);
+                                        if(hascompleted) {
+                                            refreshSeedShorts.put(ntran.seedShort, ntran);
+                                        } else if (hascompleted || hashes.isEmpty() || transactions.isEmpty()) {
+                                            // do nothing
                                         } else {
-                                            Log.e("SERVICE","Call nudge now - 2");
                                             ApiResponse resp = NudgeRequestHandler.doNudge(api,context,new NudgeRequest(seed,ntran.transfer));
                                             if(resp instanceof NudgeResponse) {
                                                 NudgeResponse nresponse = (NudgeResponse) resp;
 
                                                 if (nresponse.getSuccessfully()) {
-                                                    ntran.status = NudgeTransfer.NUDGE_CONFIRM;
                                                     refreshSeedShorts.put(ntran.seedShort, ntran);
                                                 }
+
                                             }
-                                            removeFromNudges.add(ntran);
+
                                         }
-                                    } else {
-                                        removeFromNudges.add(ntran);
                                     }
                                 } catch (Exception e) {
-                                    removeFromNudges.add(ntran);
+                                    //removeFromNudges.add(ntran);
                                 }
                             }
+                            removeFromNudges.add(ntran);
                         }
                         if (!refreshSeedShorts.isEmpty()) {
                             List<Seeds.Seed> seeds = Store.getSeedList();
                             for (String seedShort : refreshSeedShorts.keySet()) {
                                 for (Seeds.Seed seed : seeds) {
-                                    if (String.valueOf(seed.value).startsWith(seedShort)) {
+                                    if (String.valueOf(Store.getSeedRaw(context,seed)).startsWith(seedShort)) {
                                         AppService.getAccountData(context, seed);
                                         break;
                                     }
@@ -174,6 +173,9 @@ public class AutoNudgeHandler extends IotaRequestHandler {
                 }
 
             }
+        } else {
+            Store.removeNudgeTransfer(context,nudgeTransfers);
+
         }
 
         return response;

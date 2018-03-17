@@ -34,6 +34,9 @@ import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -70,6 +73,7 @@ import butterknife.OnClick;
 import butterknife.Unbinder;
 import jota.utils.IotaToText;
 import run.wallet.iota.ui.adapter.WalletTransfersCardAdapter;
+import run.wallet.iota.ui.dialog.SwitchWalletDialog;
 
 public class WalletTabFragment extends LoggedInFragment {
 
@@ -124,6 +128,9 @@ public class WalletTabFragment extends LoggedInFragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         adapter = new WalletPagerAdapter(getActivity(), getChildFragmentManager());
+        if(Store.getSeedList()!=null && Store.getSeedList().size()>1) {
+            setHasOptionsMenu(true);
+        }
     }
 
     @Nullable
@@ -150,7 +157,24 @@ public class WalletTabFragment extends LoggedInFragment {
         goCreate();
 
     }
-
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        if(Store.getSeedList()!=null && Store.getSeedList().size()>1) {
+            inflater.inflate(R.menu.wallet, menu);
+        }
+    }
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.wallet_switcher:
+                try {
+                    SwitchWalletDialog dialog = new SwitchWalletDialog();
+                    dialog.show(getActivity().getFragmentManager(), null);
+                } catch(Exception e) {}
+                break;
+        }
+        return super.onOptionsItemSelected(item);
+    }
     private void goCreate() {
 
 
@@ -318,6 +342,8 @@ public class WalletTabFragment extends LoggedInFragment {
     @Subscribe
     public void onEvent(GetAccountDataResponse str) {
         AppService.auditAddressesWithDelay(getActivity(), Store.getCurrentSeed());
+        updateFab();
+        updateBalance();
     }
 
 
@@ -412,6 +438,7 @@ public class WalletTabFragment extends LoggedInFragment {
     }
     @Subscribe
     public void onEvent(SendTransferResponse str) {
+        updateFab();
         updateBalance();
     }
     @Subscribe
