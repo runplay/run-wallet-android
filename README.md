@@ -1,6 +1,6 @@
 # run IOTA wallet
 ![alt tag](http://iota.runplay.com/img/icon.png "run IOTA wallet Logo")
-
+  
 <b>run Iota</b> provides a fast, efficient and easy to manage Wallet for the IOTA currency
 <br/>
 
