@@ -28,14 +28,24 @@ https://github.com/iotaledger/android-wallet-app
 <br/>
 <br/>
 <h2>Updates</h2>
-
-v1.3.8100 - Used Address balance Auto & manual check added, Fast wallet Switcher, Ui tweak for large seed values, Reload Seed request (performs a first load again), Background Service performance improvements and a couple Bug fixes.
+v1.3.8150 - QR Reader improvements (accepts raw values and json), Deep linking now supported (iota://address?value=100&message=SOME9MESSAGE&tag=SOME9TAG), plus a couple bug fixes.<br/>
+v1.3.8100 - Used Address balance Auto & manual check added, Fast wallet Switcher, Ui tweak for large seed values, Reload Seed request (performs a first load again), Background Service performance improvements and a couple Bug fixes.<br/>
 v1.3.8000 - Improved Seed generator, improved Promotes, field.carriota node added to node list options, improved wallet load display, Active wallet name displayed in Toolbar, improved nudging (faster and more often)<br/>
 v1.3.7900 - Edit Wallet section created, Added one extra Theme, Rate App prompt added<br/>
 v1.3.7800 - Bug fixes identified in Google Play console<br/>
 v1.3.7700 - Welcome section added and opened the app to full app browsing without Seed<br/>
 v1.3.6600 - Colour Themes, 10 different app colours styles to choose from<br/>
 v1.3.5500 - Multi Address transfer and TOR ability<br/>
+<br/><br/>
+<h2>Deep linking</h2>
+App now supports url deep linking in the following way:<br/>
+<b>iota://</b> or <b>iota:/</b><br/><br/>
+<b>format</b>: iota://address?value=100&message=PARAM9MESSAGE&tag=PARAM9TAG<br/><br/>
+<b>value</b>: Must be in raw IOTA value (long, BigNumber)<br/>
+<b>address</b>: Valid IOTA address<br/>
+<b>message</b>: A-Za-z0-9, other characters will be removed, whitespace converted to '9'<br/>
+<b>tag</b>: A-Za-z0-9, other characters will be removed, whitespace converted to '9'<br/>
+
 <br/><br/>
 <h2>Download</h2>
 
