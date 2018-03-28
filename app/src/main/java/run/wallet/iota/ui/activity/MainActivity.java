@@ -48,6 +48,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.preference.PreferenceManager;
 
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
@@ -70,6 +71,7 @@ import run.wallet.iota.helper.Constants;
 import run.wallet.iota.helper.NotificationHelper;
 import run.wallet.iota.helper.RootDetector;
 import run.wallet.iota.helper.TorHelper;
+import run.wallet.iota.model.PayPacket;
 import run.wallet.iota.model.QRCode;
 import run.wallet.iota.model.Store;
 import run.wallet.iota.security.Validator;
@@ -173,6 +175,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         drawer.addDrawerListener(drawerListener);
         AppService.getNodeInfo(this);
+
 
     }
 

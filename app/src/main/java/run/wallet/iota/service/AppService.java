@@ -197,7 +197,7 @@ public final class AppService extends Service {
 
     	AlarmManager alarm = (AlarmManager) this.getSystemService(Service.ALARM_SERVICE);
     	// Start every 30 seconds
-    	alarm.setRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP, SystemClock.elapsedRealtime(), 30*1000, pintent);
+    	alarm.setRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP, SystemClock.elapsedRealtime(), Cal.HOURS_1_IN_MILLIS, pintent);
 
 		IntentFilter afilter = new IntentFilter(Intent.ACTION_SCREEN_ON);
 		areceiver = new OnAlarmReceiver();

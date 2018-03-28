@@ -60,12 +60,14 @@ import run.wallet.iota.helper.AESCrypt;
 import run.wallet.iota.helper.AppTheme;
 import run.wallet.iota.helper.Constants;
 import run.wallet.iota.model.Address;
+import run.wallet.iota.model.PayPacket;
 import run.wallet.iota.model.Seeds;
 import run.wallet.iota.model.Store;
 import run.wallet.iota.service.AppService;
 import run.wallet.iota.ui.activity.MainActivity;
 import run.wallet.iota.ui.activity.SettingsActivity;
 import run.wallet.iota.ui.dialog.ForgotPasswordDialog;
+import run.wallet.iota.ui.fragment.SnTrFragment;
 
 /**
  * Created by coops on 18/12/17.
@@ -91,7 +93,6 @@ public class UiManager {
     }
     public static void setActionbarColor(AppCompatActivity activity, int color) {
         activity.getSupportActionBar().setBackgroundDrawable(new ColorDrawable(color));
-        //activity.getSupportActionBar().invalidateOptionsMenu();
         activity.invalidateOptionsMenu();
     }
     private static AlertDialog dialog;
@@ -193,7 +194,6 @@ public class UiManager {
 
                 messy.setTextColor(Color.WHITE);
                 messy.setPadding(30, 30, 30, 30);
-                //messy.setText
                 messy.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -274,7 +274,6 @@ public class UiManager {
 
 
         LinearLayout layout = new LinearLayout(context);
-        //layout.setBackground(B.getDrawable(context,R.drawable.info_bar_item));
         layout.setOrientation(LinearLayout.HORIZONTAL);
         layout.setGravity(Gravity.CENTER_VERTICAL);
         layout.setLayoutParams(main);
@@ -284,7 +283,6 @@ public class UiManager {
         ImageView addId = new ImageView(context);
         addId.setLayoutParams(param);
         addId.setImageResource(Rdrawable);
-        //addId.setMa
 
         TextView addValue = new TextView(context);
         addValue.setLayoutParams(param2);
@@ -522,11 +520,8 @@ public class UiManager {
         ab.setDisplayShowHomeEnabled(false);
         ab.setDisplayHomeAsUpEnabled(true);
         apact.supportInvalidateOptionsMenu();
-        //ab.invalidateOptionsMenu();
-        //NavigationDrawerFragment.mDrawerToggle.setDrawerIndicatorEnabled(false);
 
         apact.supportInvalidateOptionsMenu();
-        //ab.invalidateOptionsMenu();
         ab.show();
 
     }
@@ -540,12 +535,18 @@ public class UiManager {
         ab.setDisplayShowHomeEnabled(true);
         ab.setDisplayHomeAsUpEnabled(false);
         apact.supportInvalidateOptionsMenu();
-        //ab.invalidateOptionsMenu();
         ab.show();
 
     }
     public static void popBackStack(Activity activity) {
         activity.getFragmentManager().popBackStack();
+    }
+    public static String makeTrytesSafe(String str) {
+        if(str!=null) {
+            str=str.replaceAll("%20"," ");
+            return str.replaceAll("[^A-Za-z0-9 ]","").replaceAll(" ","9").toUpperCase();
+        }
+        return "";
     }
     public static boolean openFragment(Activity activity, Class<? extends Fragment> fragment) {
         if(activity!=null && !activity.isDestroyed()) {
@@ -556,6 +557,18 @@ public class UiManager {
             tr.commit();
         }
         return true;
+    }
+    public static void checkGoPayIntent(Activity activity) {
+        PayPacket.PayTo pt=Store.hasIntentPayTo();
+        if(pt!=null) {
+            if(Store.getCurrentFragment()!=null) {
+                if(Store.getCurrentFragment().getCanonicalName().equals(SnTrFragment.class.getCanonicalName())) {
+                    UiManager.openFragment(activity, SnTrFragment.class);
+                } else {
+                    UiManager.openFragmentBackStack(activity, SnTrFragment.class);
+                }
+            }
+        }
     }
     public static boolean openFragmentBackStack(Activity activity,Class<? extends Fragment> fragment) {
         if(activity!=null && !activity.isDestroyed()) {

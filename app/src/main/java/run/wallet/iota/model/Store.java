@@ -61,6 +61,8 @@ public class Store {
     private int balanceDisplayType;
     private long lastUsedCheck;
 
+    private PayPacket.PayTo intentPayPacket;
+
     private String checkUsedResult=null;
 
     private int addressSecurity=Constants.PREF_ADDRESS_SECURITY_DEFAULT;
@@ -94,6 +96,52 @@ public class Store {
     private Address tmpCacheAddress;
     private Transfer tmpCacheTransfer;
     private Seeds.Seed tmpCacheSeed;
+
+    public static PayPacket.PayTo hasIntentPayTo() {
+        return store.intentPayPacket;
+    }
+    public static void clearIntentPayTo() {
+        store.intentPayPacket=null;
+    }
+    public static void setIntenetPayPacket(String data) {
+        if(data!=null && data.startsWith("iota:")) {
+            data=data.replaceFirst("iota:/","");
+            if(data.startsWith("/"))
+                data=data.replaceFirst("/","");
+
+            PayPacket pp = new PayPacket();
+            String [] sp = data.split("\\?");
+            PayPacket.clearPayTo();
+            long value=0;
+            String message="";
+            String tag="";
+            try {
+                if (sp.length > 1) {
+                    String[] params = sp[1].split("&");
+                    if (params != null && params.length > 0) {
+                        for (int i = 0; i < params.length; i++) {
+                            if (params[i].startsWith("amount=")) {
+                                value=Sf.toLong(params[i].replaceFirst("amount=", ""));
+                            } else if (params[i].startsWith("value=")) {
+                                value=Sf.toLong(params[i].replaceFirst("value=", ""));
+                            } else if (params[i].startsWith("tag=")) {
+                                tag=params[i].replaceFirst("tag=", "");
+                            } else if (params[i].startsWith("message=")) {
+                                message=params[i].replaceFirst("message=", "");
+                            }
+                        }
+                    }
+                }
+            } catch(Exception e) {
+                Log.e("OPEN","ex: "+e.getMessage());
+            }
+            PayPacket.PayTo pt = new PayPacket.PayTo(value,sp[0]);
+
+            store.intentPayPacket=pt;
+            PayPacket.setMessage(message);
+            PayPacket.setTag(tag);
+        }
+    }
 
     private Store() {}
 

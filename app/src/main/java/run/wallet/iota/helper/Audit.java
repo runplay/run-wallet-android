@@ -168,7 +168,6 @@ public class Audit {
                 if (already == null) {
                     allTransfers.add(tran);
                 } else {
-                    //already.setMarkDoubleAddress(tran.isMarkDoubleAddress());
                     already.setLastDoubleCheck(tran.getLastDoubleCheck());
                     already.setMilestone(tran.getMilestone());
                     already.setMilestoneCreated(tran.getMilestoneCreated());

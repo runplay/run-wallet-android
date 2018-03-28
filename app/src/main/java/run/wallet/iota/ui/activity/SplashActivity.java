@@ -16,6 +16,7 @@ import run.wallet.R;
 import run.wallet.common.B;
 import run.wallet.iota.helper.AppTheme;
 import run.wallet.iota.helper.TorHelper;
+import run.wallet.iota.model.Store;
 
 public class SplashActivity extends AppCompatActivity {
 
@@ -30,7 +31,7 @@ public class SplashActivity extends AppCompatActivity {
         if(!TorHelper.isForce()) {
             goStart();
         }
-
+        loadUrlFromIntent(getIntent());
     }
     private void goStart() {
         startActivity(new Intent(SplashActivity.this, MainActivity.class));
@@ -50,7 +51,21 @@ public class SplashActivity extends AppCompatActivity {
         },100);
 
     }
+    @Override
+    protected void onNewIntent(final Intent intent) {
+        super.onNewIntent(intent);
+        loadUrlFromIntent(intent);
+    }
 
+    private boolean loadUrlFromIntent(final Intent intent) {
+        if (Intent.ACTION_VIEW.equals(intent.getAction()) && intent.getData() != null) {
+            final String url = intent.getData().toString();
+            Store.setIntenetPayPacket(url);
+            return true;
+        } else {
+            return false;
+        }
+    }
     private void startLoop() {
         TorHelper.torEnable();
 

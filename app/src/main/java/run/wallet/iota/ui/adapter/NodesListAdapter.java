@@ -124,7 +124,10 @@ public class NodesListAdapter extends RecyclerView.Adapter<NodesListAdapter.Node
     }
 
     public Nodes.Node getItem(int position) {
-        return nodes.get(position);
+        try {
+            return nodes.get(position);
+        } catch(Exception e) {}
+        return null;
     }
 
     /*

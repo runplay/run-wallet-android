@@ -276,32 +276,7 @@ public class SnTrFragment extends Fragment {
         });
         initUnitsSpinner();
 
-        Bundle bundle = getArguments();
-        if (getArguments() != null) {
-            QRCode qrCode = bundle.getParcelable(Constants.QRCODE);
 
-            if (qrCode != null) {
-
-                if (qrCode.getAddress() != null)
-                    addressEditText.setText(qrCode.getAddress());
-
-
-                if (qrCode.getAmount() != null && !qrCode.getAmount().isEmpty()) {
-                    Long amount = Long.parseLong((qrCode.getAmount()));
-                    IotaUnits unit = IotaUnitConverter.findOptimalIotaUnitToDisplay(amount);
-                    String amountText = IotaUnitConverter.createAmountDisplayText(IotaUnitConverter.convertAmountTo(amount, unit), unit, false);
-                    amountEditText.setText(amountText);
-                    unitsSpinner.setSelection(toSpinnerItemIndex(unit));
-                }
-
-                if (qrCode.getMessage() != null)
-                    messageEditText.setText(qrCode.getMessage());
-
-                if (qrCode.getTag() != null)
-                    tagEditText.setText(qrCode.getTag());
-
-            }
-        }
         addMessage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -432,7 +407,34 @@ public class SnTrFragment extends Fragment {
                 }
             }
         });
+        Bundle bundle = getArguments();
+        if (getArguments() != null) {
+            QRCode qrCode = bundle.getParcelable(Constants.QRCODE);
 
+            if (qrCode != null) {
+
+                if (qrCode.getAddress() != null)
+                    addressEditText.setText(qrCode.getAddress());
+
+
+                if (qrCode.getAmount() != null && !qrCode.getAmount().isEmpty()) {
+                    Long amount = Long.parseLong((qrCode.getAmount()));
+                    IotaUnits unit = IotaUnitConverter.findOptimalIotaUnitToDisplay(amount);
+
+                    String amountText = Math.round(IotaUnitConverter.convertAmountTo(amount, unit))+"";
+                    amountEditText.setText(amountText);
+                    unitsSpinner.setSelection(toSpinnerItemIndex(unit));
+                }
+
+                if (qrCode.getMessage() != null)
+                    messageEditText.setText(qrCode.getMessage());
+
+                if (qrCode.getTag() != null)
+                    tagEditText.setText(qrCode.getTag());
+                checkContinue();
+            }
+        }
+        checkContinue();
     }
     private boolean isLongClicked=false;
     private Handler scroller = new Handler();
@@ -484,41 +486,44 @@ public class SnTrFragment extends Fragment {
             if(checkSetMultiAddressImport(s)) {
 
             } else {
-                long value=Sf.toLong(amountInSelectedUnit());
-                if(value>0 && balances.available>=value && isValidAddress()) {
-                    next.setEnabled(true);
-                    next.setAlpha(1F);
-                    addPayment.setEnabled(true);
-                    addPayment.setAlpha(1F);
-                } else {
-                    if(PayPacket.getPayTo().isEmpty()) {
-                        next.setEnabled(false);
-                        next.setAlpha(0.5F);
-                        addPayment.setEnabled(false);
-                        addPayment.setAlpha(0.5F);
-                    } else {
-                        next.setEnabled(true);
-                        next.setAlpha(1F);
-                        addPayment.setEnabled(false);
-                        addPayment.setAlpha(0.5F);
-                    }
-                }
-                if(isValidAddress()) {
-                    if(addressEditTextInputLayout.isFocused())
-                        getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
-                    checkAddress.setAlpha(1F);
-                    addressEditTextInputLayout.setError(null);
-                } else {
-                    checkAddress.setAlpha(0.2F);
-                }
-                if(value>0 && balances.available>=value) {
-                    checkValue.setAlpha(1F);
-                } else {
-                    checkValue.setAlpha(0.2F);
-                }
+                checkContinue();
             }
         }
     };
+    private void checkContinue() {
+        long value=Sf.toLong(amountInSelectedUnit());
+        if(value>0 && balances.available>=value && isValidAddress()) {
+            next.setEnabled(true);
+            next.setAlpha(1F);
+            addPayment.setEnabled(true);
+            addPayment.setAlpha(1F);
+        } else {
+            if(PayPacket.getPayTo().isEmpty()) {
+                next.setEnabled(false);
+                next.setAlpha(0.5F);
+                addPayment.setEnabled(false);
+                addPayment.setAlpha(0.5F);
+            } else {
+                next.setEnabled(true);
+                next.setAlpha(1F);
+                addPayment.setEnabled(false);
+                addPayment.setAlpha(0.5F);
+            }
+        }
+        if(isValidAddress()) {
+            if(addressEditTextInputLayout.isFocused())
+                getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
+            checkAddress.setAlpha(1F);
+            addressEditTextInputLayout.setError(null);
+        } else {
+            checkAddress.setAlpha(0.2F);
+        }
+        if(value>0 && balances.available>=value) {
+            checkValue.setAlpha(1F);
+        } else {
+            checkValue.setAlpha(0.2F);
+        }
+    }
     private boolean checkSetMultiAddressImport(Editable s) {
         String use=s.toString();
         if(use.length()>90) {
@@ -578,6 +583,30 @@ public class SnTrFragment extends Fragment {
         }
         populatePaytoAddresses(true);
         btnPayNow.setEnabled(false);
+        //UiManager.checkGoPayIntent(getActivity());
+        PayPacket.PayTo pt=Store.hasIntentPayTo();
+        if(pt!=null) {
+            PayPacket.clearPayTo();
+            PayPacket.addPayTo(pt);
+            amountEditText.setText(pt.value+"");
+            if(PayPacket.getMessage()!=null) {
+                messageEditText.setText(UiManager.makeTrytesSafe(PayPacket.getMessage()));
+            }
+            if(PayPacket.getTag()!=null) {
+                tagEditText.setText(UiManager.makeTrytesSafe(PayPacket.getTag()));
+            }
+            Store.clearIntentPayTo();
+            populatePaytoAddresses(true);
+        }
+        try {
+            if (messageEditText.getText().toString().isEmpty() && PayPacket.getMessage() != null) {
+                messageEditText.setText(UiManager.makeTrytesSafe(PayPacket.getMessage()));
+            }
+            if (tagEditText.getText().toString().isEmpty() && PayPacket.getTag() != null) {
+                tagEditText.setText(UiManager.makeTrytesSafe(PayPacket.getTag()));
+            }
+        } catch(Exception e) {}
+        checkContinue();
     }
     @Override
     public void onPause() {
@@ -772,10 +801,12 @@ public class SnTrFragment extends Fragment {
                 goBackBtn();
 
             } else {
-                btnPayNow.setEnabled(true);
-                btnPayNow.setText(getString(R.string.pay_now));
-                addressUsedMessage.setVisibility(View.GONE);
-                enableSend=true;
+                try {
+                    btnPayNow.setEnabled(true);
+                    btnPayNow.setText(getString(R.string.pay_now));
+                    addressUsedMessage.setVisibility(View.GONE);
+                    enableSend = true;
+                } catch(Exception e) {}
             }
 
         }
@@ -922,6 +953,8 @@ public class SnTrFragment extends Fragment {
         String inputAmount = amountEditText.getText().toString();
         if(inputAmount.isEmpty())
             inputAmount="0";
+        inputAmount=Long.valueOf(Math.round(Sf.toDouble(inputAmount))).toString();
+        //amountEditText.setText(inputAmount+"");
         IotaUnits unit = toIotaUnit(unitsSpinner.getSelectedItemPosition());
         Long iota = Long.parseLong(inputAmount) * (long) Math.pow(10, unit.getValue());
         return iota.toString();

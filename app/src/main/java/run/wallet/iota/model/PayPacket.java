@@ -21,10 +21,23 @@ public class PayPacket {
     private boolean breakPig=false;
     private boolean isValid=false;
 
+    private String message=null;
+    private String tag=null;
     private String error;
 
+    public static void setMessage(String message) {
+        packet.message=message;
+    }
+    public static void setTag(String tag) {
+        packet.tag=tag;
+    }
+    public static String getTag() {
+        return packet.tag;
+    }
 
-
+    public static String getMessage() {
+        return packet.message;
+    }
     public static void setErrorMessage(String error) {
         packet.error=error;
     }
@@ -44,6 +57,9 @@ public class PayPacket {
             total+=pt.value;
         }
         return total;
+    }
+    public static void clearPayTo() {
+        packet.payto.clear();
     }
     public static void removePayTo(PayTo pt) {
         packet.payto.remove(pt);

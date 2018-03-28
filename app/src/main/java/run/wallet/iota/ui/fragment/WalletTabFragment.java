@@ -59,6 +59,7 @@ import run.wallet.iota.helper.Cal;
 import run.wallet.iota.helper.Constants;
 import run.wallet.iota.helper.Utils;
 
+import run.wallet.iota.model.PayPacket;
 import run.wallet.iota.model.Store;
 import run.wallet.iota.model.Ticker;
 import run.wallet.iota.model.Wallet;
@@ -154,6 +155,7 @@ public class WalletTabFragment extends LoggedInFragment {
         ((AppCompatActivity) getActivity()).setSupportActionBar(walletToolbar);
         WalletTransfersCardAdapter.setViewPager(viewPager);
         viewPager.setAdapter(adapter);
+
         goCreate();
 
     }
@@ -435,6 +437,7 @@ public class WalletTabFragment extends LoggedInFragment {
                 AppService.getAccountData(getActivity(),Store.getCurrentSeed());
             }
         }
+        UiManager.checkGoPayIntent(getActivity());
     }
     @Subscribe
     public void onEvent(SendTransferResponse str) {

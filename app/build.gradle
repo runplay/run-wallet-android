@@ -84,7 +84,7 @@ dependencies {
     implementation 'com.github.iotaledger:iota~lib~java:0478ffb'
     implementation 'com.fasterxml.jackson.core:jackson-core:2.7.3'
     implementation 'com.fasterxml.jackson.core:jackson-databind:2.7.3'
-    compile 'info.guardianproject.netcipher:netcipher:2.0.0-alpha1'
+    compile 'info.guardianproject.netcipher:netcipher:2.0.0-alpha1' 
 
 }
 

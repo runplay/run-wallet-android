@@ -224,11 +224,13 @@ public class ChooseSeedAddFragment extends Fragment {
                 num.setOnValueChangedListener(new NumberPicker.OnValueChangeListener() {
                     @Override
                     public void onValueChange(NumberPicker picker, int oldVal, int newVal) {
-                        Integer index = (Integer) picker.getTag();
-                        char[] asArray = generatedSeed.toCharArray();
-                        asArray[index] = pickerArray[newVal].charAt(0);
-                        generatedSeed = new String(asArray);
-                        seedEditText.setText(generatedSeed);
+                        try {
+                            Integer index = (Integer) picker.getTag();
+                            char[] asArray = generatedSeed.toCharArray();
+                            asArray[index] = pickerArray[newVal].charAt(0);
+                            generatedSeed = new String(asArray);
+                            seedEditText.setText(generatedSeed);
+                        } catch(Exception e){}
                     }
                 });
                 numberPickerHolder.addView(num);
