@@ -83,6 +83,7 @@
                         android:paddingEnd="4dp"
                         android:paddingStart="4dp"
                         android:alpha="0.3"
+                        android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
                         android:gravity="center_horizontal|center_vertical"
                         />
                     <ImageView

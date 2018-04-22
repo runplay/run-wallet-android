@@ -59,11 +59,8 @@ public class IotaApiProvider implements ApiProvider {
     private final Context context;
     private Map<Class<? extends ApiRequest>, RequestHandler> requestHandlerMap;
 
-    public IotaApiProvider(String protocol, String host, int port, Context context) {
-
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context.getApplicationContext());
-
-        if (prefs.getBoolean(Constants.PREFERENCES_LOCAL_POW, false))
+    public IotaApiProvider(String protocol, String host, int port, Context context, boolean pow) {
+        if (pow)
             this.iotaApi = new RunIotaAPI.Builder().localPoW(new PearlDiverLocalPoW()).protocol(protocol).host(host).port(((Integer) port).toString()).build();
         else
             this.iotaApi = new RunIotaAPI.Builder().protocol(protocol).host(host).port(((Integer) port).toString()).build();
@@ -131,7 +128,6 @@ public class IotaApiProvider implements ApiProvider {
             error.setErrorType(NetworkErrorType.ACCESS_ERROR);
             error.setMessage(e.getMessage());
             response = error;
-            //if(error.getErrorType()==401 && e.getMessage().contains("getNeighbours"))
             Log.e("ERR-API1",""+e.getMessage());
         } catch (Exception e) {
             Log.e("ERR-API2",e.toString()+" -- "+e.getMessage());

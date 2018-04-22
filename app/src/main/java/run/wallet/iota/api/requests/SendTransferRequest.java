@@ -34,10 +34,9 @@ import run.wallet.iota.model.Store;
 
 public class SendTransferRequest extends SeedApiRequest {
 
-    private int security = 2;
+    private int security = 1;
     List<PayPacket.PayTo> payTos=new ArrayList<>();
-    //private List<String> addresses;
-    //private String value = "";
+
     private String message = "";
     private String tag = "";
     private int minWeightMagnitude = Constants.PREF_MIN_WEIGHT_DEFAULT;
@@ -45,21 +44,7 @@ public class SendTransferRequest extends SeedApiRequest {
     private List<Address> fromAddresses;
     private Address remainder;
 
-    public SendTransferRequest(Seeds.Seed seed, String address, String value
-            , List<Address> fromAddress, Address remainder
-            , String message, String tag) {
-        super(seed);
 
-        PayPacket.PayTo pt = new PayPacket.PayTo(Sf.toLong(value),address);
-        payTos.add(pt);
-        //this.value = value;
-        this.message = message;
-        this.tag = tag;
-        this.setFromAddresses(fromAddress);
-        this.setRemainder(remainder);
-        minWeightMagnitude= Store.getMinWeightDefault();
-
-    }
     public SendTransferRequest(Seeds.Seed seed, String address, String value, String message, String tag) {
         super(seed);
         PayPacket.PayTo pt = new PayPacket.PayTo(Sf.toLong(value),address);
@@ -77,15 +62,13 @@ public class SendTransferRequest extends SeedApiRequest {
         this.message = message;
         this.tag = tag;
         this.setFromAddresses(fromAddress);
-        this.setRemainder(remainder);
+        if(remainder!=null) {
+            this.setRemainder(remainder);
+            //this.security = remainder.getSecurity();
+        }
         minWeightMagnitude= Store.getMinWeightDefault();
     }
-/*
-    public Transfer prepareTransfer() {
-        return new Transfer(address, Long.valueOf(value), message, tag);
-        //return transfers;
-    }
-*/
+
     public List<Transfer> prepareTransfers() {
         List<Transfer> transfers = new ArrayList<>();
         for (PayPacket.PayTo pt: payTos) {
@@ -95,11 +78,6 @@ public class SendTransferRequest extends SeedApiRequest {
         return transfers;
     }
 
-
-
-    //public void setSeed(Seeds.Seed seed) {
-    //    this.seed = seed;
-    //}
 
     public int getSecurity() {
         return security;

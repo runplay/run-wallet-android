@@ -34,6 +34,8 @@
         <item>4</item>
         <item>6</item>
         <item>8</item>
+        <item>10</item>
+        <item>12</item>
     </string-array>
     <string-array name="autoLogout">
         <item>0</item>
@@ -107,15 +109,18 @@
         <item>@string/copy_address</item>
         <item>@string/receive_to_address</item>
         <item>@string/pig_set</item>
-        <item>@string/address_security_button</item>
+        <!-- <item>@string/address_security_button</item> -->
     </string-array>
     <string-array name="listOnWalletAddressesRecyclerViewClickDialogPig">
         <item>@string/copy_address</item>
         <item>@string/receive_to_address</item>
         <item>@string/pig_remove</item>
-        <item>@string/address_security_button</item>
+        <!-- <item>@string/address_security_button</item> -->
     </string-array>
-
+    <string-array name="listOnWalletAddressesRecyclerViewClickDialogUsed">
+        <item>@string/copy_address</item>
+        <!-- <item>@string/address_security_button</item> -->
+    </string-array>
     <string-array name="listOnSeedClickDialog">
         <item>@string/seed_use</item>
         <item>@string/seed_edit</item>

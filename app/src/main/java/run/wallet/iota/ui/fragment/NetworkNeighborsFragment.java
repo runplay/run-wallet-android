@@ -264,7 +264,7 @@ public class NetworkNeighborsFragment extends BaseSwipeRefreshLayoutFragment
         if(Store.getNeighbours()==null || force) {
             GetNeighborsRequest nar = new GetNeighborsRequest();
             TaskManager rt = new TaskManager(getActivity());
-            rt.startNewRequestTask(nar);
+            rt.startNewRequestTask(nar,false);
             if (!swipeRefreshLayout.isRefreshing()) {
                 swipeRefreshLayout.post(() -> swipeRefreshLayout.setRefreshing(true));
             }

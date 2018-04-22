@@ -115,6 +115,7 @@ public class Store {
             long value=0;
             String message="";
             String tag="";
+            String address=null;
             try {
                 if (sp.length > 1) {
                     String[] params = sp[1].split("&");
@@ -128,6 +129,8 @@ public class Store {
                                 tag=params[i].replaceFirst("tag=", "");
                             } else if (params[i].startsWith("message=")) {
                                 message=params[i].replaceFirst("message=", "");
+                            } else if (params[i].startsWith("address=")) {
+                                address=params[i].replaceFirst("address=", "");
                             }
                         }
                     }
@@ -135,7 +138,10 @@ public class Store {
             } catch(Exception e) {
                 Log.e("OPEN","ex: "+e.getMessage());
             }
-            PayPacket.PayTo pt = new PayPacket.PayTo(value,sp[0]);
+            if(address==null) {
+                address=sp[0];
+            }
+            PayPacket.PayTo pt = new PayPacket.PayTo(value,address);
 
             store.intentPayPacket=pt;
             PayPacket.setMessage(message);
@@ -1076,7 +1082,10 @@ public class Store {
             }
         }
     }
-
+    public static boolean doPow(Context context) {
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+        return prefs.getBoolean(Constants.PREFERENCES_LOCAL_POW, true);
+    }
     public static void updateAddressFromSecurity(Context context, AddressSecurityChangeRequest request, GetNewAddressResponse response) {
         List<Address> alreadyAddress = getAddresses(context,request.getSeed());
         Address oldAddress = request.getAddress();
@@ -1095,6 +1104,7 @@ public class Store {
                     //Log.e("STORE","Good upding address: "+newAddressString);
                     address.setAddress(newAddressString);
                     address.setSecurity(request.getSecurity());
+                    address.setUsed(false);
                 }
             }
             JSONArray jar = new JSONArray();

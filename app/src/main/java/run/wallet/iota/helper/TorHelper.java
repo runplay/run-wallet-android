@@ -88,8 +88,6 @@ public class TorHelper {
             tor.torNav = tor.sp.getBoolean(PREF_TOR_NAV, false);
             if (tor.force) {
                 torEnable();
-
-
             }
         }
     }
@@ -97,7 +95,7 @@ public class TorHelper {
     public static void openGooglePlayTor() {
         try {
             tor.context.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=" + ORBOT_NAME)));
-        } catch (android.content.ActivityNotFoundException anfe) {
+        } catch (Exception e) {
             tor.context.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(ORBOT_GOOGLE_PLAY)));
         }
     }

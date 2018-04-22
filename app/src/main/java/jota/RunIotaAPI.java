@@ -5,11 +5,12 @@ import android.util.Log;
 import jota.dto.response.*;
 import jota.error.ArgumentException;
 import jota.model.*;
+import jota.model.Transaction;
+import jota.model.Transfer;
 import jota.pow.ICurl;
 import jota.pow.SpongeFactory;
 import jota.utils.*;
-import run.wallet.iota.model.Store;
-import run.wallet.iota.model.SystemMessage;
+import run.wallet.iota.model.*;
 
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -105,14 +106,50 @@ public class RunIotaAPI extends RunIotaAPICore {
 
     }
     public List<Transaction> nudgeTransfer(String nudgeHash, final String[] trytes, final int depth, final int minWeightMagnitude) throws ArgumentException {
-        GetTransactionsToApproveResponse txs = getTransactionsToApprove(depth);
-        if(txs.getBranchTransaction()==null)
-            txs = getTransactionsToApprove(depth);
 
-        long now= System.currentTimeMillis();
+        GetTransactionsToApproveResponse txs1 = null;
+        GetTransactionsToApproveResponse txs2 = null;
+        txs1 = getTransactionsToApprove(3);
+        try {
+            wait(2000);
+        } catch (Exception e) {}
+        txs2=getTransactionsToApprove(3);
 
+        String useTx =null;
+        List<String> trans=new ArrayList();
+        if(txs1.getBranchTransaction()!=null) {
+            trans.add(txs1.getBranchTransaction());
+        }
+        if(txs2.getBranchTransaction()!=null) {
+            trans.add(txs2.getBranchTransaction());
+        }
+        if(txs1.getTrunkTransaction()!=null) {
+            trans.add(txs1.getTrunkTransaction());
+        }
+        if(txs2.getTrunkTransaction()!=null) {
+            trans.add(txs2.getTrunkTransaction());
+        }
+        List<Transaction> t=findTransactionsObjectsByHashes(trans.toArray(new String[trans.size()]));
+        for(Transaction tmp: t) {
+            if(tmp.getValue()!=0) {
+                useTx=tmp.getHash();
+                break;
+            }
+        }
+        if(useTx==null) {
+            for (Transaction tmp : t) {
+                // match to known good spammer addresses
+                if (tmp.getAddress().contains("BUNNY")  || tmp.getAddress().contains("EWQAUDXJGSVIN") || tmp.getAddress().contains("QPM9ZSUPIJKPYFYU")) {
+                    useTx = tmp.getHash();
+                    break;
+                }
+            }
+        }
+        if(useTx==null) {
+            useTx=trans.get(0);
+        }
 
-        final GetAttachToTangleResponse res = attachToTangle(nudgeHash,txs.getBranchTransaction() , minWeightMagnitude, trytes);
+        final GetAttachToTangleResponse res = attachToTangle(nudgeHash,useTx, minWeightMagnitude, trytes);
         try {
             broadcastAndStore(res.getTrytes());
         } catch (ArgumentException e) {
@@ -525,6 +562,7 @@ public class RunIotaAPI extends RunIotaAPICore {
                 //Log.e("PREP","inputs... OKKKKKK: "+remainder);
                 return addRemainder(seed, security, inputs, bundle, tag, totalValue, remainder, signatureFragments);
             }
+
             else {
                 //Log.e("PREP","SHOULD NOT DISPLAY THIS MESSAGE 1");
                 @SuppressWarnings("unchecked") GetBalancesAndFormatResponse newinputs = getInputs(seed, security, 0, 0, totalValue);
@@ -1148,7 +1186,8 @@ public class RunIotaAPI extends RunIotaAPICore {
             long timestamp = (long) Math.floor(Calendar.getInstance().getTimeInMillis() / 1000);
 
             // Add input as bundle entry
-            bundle.addEntry(security, inputs.get(i).getAddress(), toSubtract, tag, timestamp);
+            // changed the security input to use the correct address security value
+            bundle.addEntry(inputs.get(i).getSecurity(), inputs.get(i).getAddress(), toSubtract, tag, timestamp);
             // If there is a remainder value
             // Add extra output to send remaining funds to
             if (thisBalance >= totalTransferValue) {

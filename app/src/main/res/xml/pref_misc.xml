@@ -2,7 +2,7 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
     <ListPreference
-        android:defaultValue="6"
+        android:defaultValue="8"
         android:entries="@array/nudgeAttemptsString"
         android:entryValues="@array/nudgeAttempts"
         android:key="preference_nudge_attempts"
@@ -23,7 +23,7 @@
         android:summary="@string/settings_first_range_summary"
         android:title="@string/settings_first_range" />
     <CheckBoxPreference
-        android:defaultValue="false"
+        android:defaultValue="true"
         android:key="preference_local_pow"
         android:summary="@string/settings_local_pow_summary"
         android:title="@string/settings_local_pow_title" />

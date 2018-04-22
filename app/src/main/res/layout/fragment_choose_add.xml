@@ -19,8 +19,14 @@
             app:popupTheme="@style/AppTheme.PopupOverlay"
             app:title="@string/seed_add_wallet" />
     </android.support.design.widget.AppBarLayout>
-
+    <RelativeLayout
+        android:id="@+id/qr_screen"
+        android:visibility="gone"
+        android:layout_margin="@dimen/baseline_card"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"></RelativeLayout>
     <ScrollView
+        android:id="@+id/add_screen"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:paddingBottom="@dimen/baseline"
@@ -70,6 +76,16 @@
                     android:textAppearance="?android:attr/textAppearanceSmall"
                     style="@style/AppButtonWhite"
                     android:drawableRight="@drawable/paste"
+                    />
+                <Button
+                    android:id="@+id/btn_qr"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/qr"
+                    style="@style/AppButtonWhite"
+                    android:textAppearance="?android:attr/textAppearanceSmall"
+                    android:drawableRight="@drawable/ic_fab_qr"
+                    android:drawablePadding="6dp"
                     />
                 <Space
                     android:layout_width="0dp"

@@ -46,13 +46,15 @@ class IotaRequestTask extends AsyncTask<ApiRequest, String, ApiResponse> {
     private EventBus bus;
     private Date start;
     private String tag = "";
+    private boolean pow=false;
 
     private long taskId;
 
-    public IotaRequestTask(Context context) {
+    public IotaRequestTask(Context context, boolean pow) {
         this.context = new WeakReference<>(context);
         this.bus = EventBus.getDefault();
         taskId=System.currentTimeMillis();
+        this.pow=pow;
     }
 
     public void setTaskId(long id) {
@@ -64,28 +66,21 @@ class IotaRequestTask extends AsyncTask<ApiRequest, String, ApiResponse> {
         Context context = this.context.get();
 
         if (context != null) {
-            //SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
-            //String protocol = prefs.getString(Constants.PREFERENCE_NODE_PROTOCOL, Constants.PREFERENCE_NODE_DEFAULT_PROTOCOL);
-            //String host = prefs.getString(Constants.PREFERENCE_NODE_IP, Constants.PREFERENCE_NODE_DEFAULT_IP);
-            //int port = Integer.parseInt(prefs.getString(Constants.PREFERENCE_NODE_PORT, Constants.PREFERENCE_NODE_DEFAULT_PORT));
             Nodes.Node node = Store.getNode();
-            //Log.e("NODE ON:",node.protocol+":"+node.ip+":"+node.port);
             if(node!=null) {
 
                 String protocol = node.protocol;
                 String host = node.ip;
                 int port = node.port;
                 if (IOTA.DEBUG) {
-                    //Log.e("ApiRequest", params[0].toString());
                     start = new Date();
-                    //Log.e("started req at", start.getTime() + "");
                 }
 
                 ApiRequest apiRequest = params[0];
                 tag = apiRequest.getClass().getCanonicalName();
 
 
-                ApiProvider apiProvider = new IotaApiProvider(protocol, host, port, context);
+                ApiProvider apiProvider = new IotaApiProvider(protocol, host, port, context,pow);
 
                 ApiResponse response = apiProvider.processRequest(apiRequest);
                 return response;
@@ -93,7 +88,6 @@ class IotaRequestTask extends AsyncTask<ApiRequest, String, ApiResponse> {
 
         }
 
-        //TaskManager.removeTask(tag);
         return null;
     }
 
@@ -107,15 +101,7 @@ class IotaRequestTask extends AsyncTask<ApiRequest, String, ApiResponse> {
         AppService.markTaskFinished(taskId);
         TaskManager.removeTask(tag);
         if (this.isCancelled()) return;
-        /*
-        if (IOTA.DEBUG) {
-            if (result != null)
-                Log.e("ApiResponse", new Gson().toJson(result));
-            if (start != null) {
-                Log.e("duration", (new Date().getTime()) - start.getTime() + "");
-            }
-        }
-*/
+
         if (result != null && context!=null) {
             //Log.e("Bus",result.getClass().getCanonicalName());
             bus.post(result);

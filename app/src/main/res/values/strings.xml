@@ -47,7 +47,12 @@
     <string name="view">View</string>
     <string name="info_transfer">Transfer</string>
     <string name="info_address_already">Edit existing payment address</string>
-
+    <string name="name">Name</string>
+    <string name="print">Print</string>
+    <string name="print_trinity">Trinity wallet compatible</string>
+    <string name="print_text">Print a backup copy of the Seed for this wallet</string>
+    <string name="print_error">Problem creating Image for printing, try again</string>
+    <string name="no_seed_data">No seed data found</string>
 
     <string name="info_nudge">Nudge</string>
     <string name="info_resend">Resend</string>
@@ -173,7 +178,7 @@
     <string name="transfers_empty_settings">See the Receive area for IOTA adresseses to receive coins on</string>
     <string name="transfers_empty_create">You can control how you view Tranfers in the settings area</string>
 
-
+    <string name="print_failed">Print task failed, ensure device is connected to a printer and try again</string>
     <string name="messages_invalid_address">Address not valid</string>
 
     <!-- Menu-->
@@ -577,7 +582,7 @@
     <string name="title_edit_wallet">Edit Wallet</string>
     <string name="title_edit_default">Set this Wallet to Default</string>
     <string name="title_edit_isdefault">Wallet is Default</string>
-    <string name="title_edit_summary">Change wallet name, default, or view the Seed</string>
+    <string name="title_edit_summary">Change wallet name, default, view the Seed and other features</string>
     <string name="fragment_generate_qr_code_title">QR Code</string>
     <string name="fragment_generate_qr_code_active">Generating QR Code</string>
 

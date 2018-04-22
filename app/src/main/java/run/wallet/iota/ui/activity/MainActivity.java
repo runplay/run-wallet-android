@@ -81,6 +81,7 @@ import run.wallet.iota.ui.adapter.WalletAddressCardAdapter;
 import run.wallet.iota.ui.adapter.WalletTransfersCardAdapter;
 import run.wallet.iota.ui.dialog.RootDetectedDialog;
 import run.wallet.iota.ui.fragment.AboutFragment;
+import run.wallet.iota.ui.fragment.ChooseSeedEditFragment;
 import run.wallet.iota.ui.fragment.ChooseSeedFragment;
 import run.wallet.iota.ui.fragment.ColorFragment;
 import run.wallet.iota.ui.fragment.GenerateQRCodeFragment;
@@ -545,6 +546,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 break;
             case Constants.REQUEST_GO_COLORS:
                 UiManager.openFragmentBackStack(this, ColorFragment.class);
+                break;
+            case Constants.REQUEST_CAMERA_PERMISSION_SEED:
+                UiManager.openFragmentBackStack(this, ChooseSeedEditFragment.class);
                 break;
         }
         if (data != null) {

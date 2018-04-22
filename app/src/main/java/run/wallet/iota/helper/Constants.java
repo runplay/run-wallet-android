@@ -76,7 +76,7 @@ public class Constants {
 
     public static final int REQUEST_STORAGE_PERMISSION = 1;
     public static final int REQUEST_CAMERA_PERMISSION = 12;
-
+    public static final int REQUEST_CAMERA_PERMISSION_SEED = 14;
     public static final String QRCODE = "qrcode";
     public static final String UDP = "udp://";
     public static final String NEW_ADDRESS_TAG =  "RUN9WALLET9ADDRESS999999999";

@@ -252,9 +252,9 @@ public class WalletAddressCardAdapter extends RecyclerView.Adapter<WalletAddress
             });
 
             itemView.setOnLongClickListener(v -> {
-                if(isUsed) {
-                    Snackbar.make(context.findViewById(R.id.drawer_layout), context.getString(R.string.used_address), Snackbar.LENGTH_LONG);
-                } else {
+                //if(isUsed) {
+                //    Snackbar.make(context.findViewById(R.id.drawer_layout), context.getString(R.string.used_address), Snackbar.LENGTH_LONG);
+                //} else {
                     Bundle bundle = new Bundle();
                     bundle.putString("address", address);
                     bundle.putString("addressChecksum", addressChecksum);
@@ -270,7 +270,7 @@ public class WalletAddressCardAdapter extends RecyclerView.Adapter<WalletAddress
                         }
                     });
                     dialog.show(context.getFragmentManager(), null);
-                }
+                //}
                 return true;
             });
 

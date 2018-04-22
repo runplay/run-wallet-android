@@ -60,26 +60,13 @@ public class GetNewAddressRequestHandler extends IotaRequestHandler {
                     gnr.isChecksum(),
                     1,
                     gnr.isReturnAll());
-            /*
-            jota.dto.response.GetNewAddressResponse resp=apiProxy.getNewAddress(((GetNewAddressRequest) request).getSeedValue(),
-                    ((GetNewAddressRequest) request).getSecurity(),
-                    ((GetNewAddressRequest) request).getIndex(),
-                    ((GetNewAddressRequest) request).isChecksum(),
-                    ((GetNewAddressRequest) request).getTotal(),
-                    ((GetNewAddressRequest) request).isReturnAll());
-            */
+
             response = new GetNewAddressResponse(gnr.getSeed(),resp);
 
             Store.addAddress(context,gnr,(GetNewAddressResponse)response);
 
             AppService.auditAddresses(context, gnr.getSeed());
 
-            //SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context.getApplicationContext());
-            //if (prefs.getBoolean(Constants.PREFERENCES_LOCAL_POW, true)
-            //        && !((GetNewAddressResponse) response).getAddresses().isEmpty()) {
-
-                //AppService.attachNewAddress(context,((GetNewAddressRequest) request).getSeed(),((GetNewAddressResponse) response).getAddresses().get(0));
-            //}
         } catch (ArgumentException e) {
             response = new NetworkError();
         }

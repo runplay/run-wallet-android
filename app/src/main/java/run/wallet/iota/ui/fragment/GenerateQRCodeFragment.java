@@ -258,7 +258,7 @@ public class GenerateQRCodeFragment extends Fragment {
         super.onPause();
 
     }
-
+/*
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
@@ -268,7 +268,7 @@ public class GenerateQRCodeFragment extends Fragment {
         outState.putString(TAG, getTaG());
         outState.putInt(SPINNER_POISTION, unitsSpinner.getSelectedItemPosition());
     }
-
+*/
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);

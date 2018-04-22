@@ -82,7 +82,9 @@ public class WalletAddressesItemDialog extends DialogFragment implements DialogI
 
         //Log.e("----",bundle.getString("address")+"=="+bundle.getInt("isAddressUsed")+"=="+bundle.getInt("isAttached")+"=="+isAttached+"--"+isAddressUsed+"--"+isPig);
         int list=R.array.listOnWalletAddressesRecyclerViewClickDialogNoPig;
-        if(isPig>0) {
+        if(isAddressUsed) {
+            list=R.array.listOnWalletAddressesRecyclerViewClickDialogUsed;
+        } else if(isPig>0) {
             list=R.array.listOnWalletAddressesRecyclerViewClickDialogPig;
         } else
             list=R.array.listOnWalletAddressesRecyclerViewClickDialogNoPig;
@@ -99,7 +101,12 @@ public class WalletAddressesItemDialog extends DialogFragment implements DialogI
         Fragment fragment;
         final Bundle bundle = new Bundle();
         if(address!=null) {
-            switch (which) {
+            int useWhich=which;
+            if(isAddressUsed) {
+                if(which==1)
+                    useWhich=3;
+            }
+            switch (useWhich) {
                 case 0:
                     ClipData clipAddress = ClipData.newPlainText(getActivity().getString(R.string.address), addressChecksum);
                     clipboard.setPrimaryClip(clipAddress);

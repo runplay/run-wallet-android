@@ -936,7 +936,7 @@ public class SnTrFragment extends Fragment {
             alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, getString(R.string.buttons_ok),
                     new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int which) {
-                            AppService.sendNewTransfer(getActivity(),useSeed,PayPacket.getPayTo()
+                            AppService.sendNewTransfer(useSeed,PayPacket.getPayTo()
                                     ,PayPacket.getPayFrom(),PayPacket.getRemainder()
                                     , getMessage(), getTaG());
                             PayPacket.clear();

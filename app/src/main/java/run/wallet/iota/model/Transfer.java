@@ -52,6 +52,7 @@ public class Transfer implements Parcelable, Comparable<Transfer> {
     private String message;
     private String tag;
 
+
     private boolean markDoubleSpend=false;
     private boolean markDoubleAddress=false;
     private long lastDoubleCheck;
@@ -332,4 +333,6 @@ public class Transfer implements Parcelable, Comparable<Transfer> {
     public void setMilestoneCreated(long milestoneCreated) {
         this.milestoneCreated = milestoneCreated;
     }
+
+
 }

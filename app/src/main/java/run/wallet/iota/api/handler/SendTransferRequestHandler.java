@@ -81,45 +81,23 @@ public class SendTransferRequestHandler extends IotaRequestHandler {
                 }
                 remainder=((SendTransferRequest) request).getRemainder().getAddress();
             }
-            try {
-                response = new SendTransferResponse(context, ((SendTransferRequest) request).getSeed()
-                        , apiProxy.sendTransfer(String.valueOf(Store.getSeedRaw(context,((SendTransferRequest) request).getSeed())),
-                        ((SendTransferRequest) request).getSecurity(),
-                        ((SendTransferRequest) request).getDepth(),
-                        ((SendTransferRequest) request).getMinWeightMagnitude(),
-                        transfers,
-                        //inputs
-                        inputs,
-                        //remainder address
-                        remainder,
-                        true,
-                        false)
-                );
-            } catch (Exception e) {
-                // try again (better to analyse why and respond, also need to provide storage for offline and try agains - todo)
-                // ----reason: sometimes when quiet a Node can return null for getTruck or getBranch transactions, i.e the node has no other transactions to approve..
-                // todo more here
-                // currently this just waits 10 seconds and re-tries
-                try {
-                    wait(10000);
-                } catch (Exception ew){}
-                response = new SendTransferResponse(context, ((SendTransferRequest) request).getSeed()
-                        , apiProxy.sendTransfer(String.valueOf(Store.getSeedRaw(context,((SendTransferRequest) request).getSeed())),
-                        ((SendTransferRequest) request).getSecurity(),
-                        ((SendTransferRequest) request).getDepth(),
-                        ((SendTransferRequest) request).getMinWeightMagnitude(),
-                        transfers,
-                        //inputs
-                        inputs,
-                        //remainder address
-                        remainder,
-                        true,
-                        false)
-                );
-            }
-            AppService.setFastMode();
+
+            response = new SendTransferResponse(context, ((SendTransferRequest) request).getSeed()
+                    , apiProxy.sendTransfer(String.valueOf(Store.getSeedRaw(context,((SendTransferRequest) request).getSeed())),
+                    ((SendTransferRequest) request).getSecurity(),
+                    ((SendTransferRequest) request).getDepth(),
+                    ((SendTransferRequest) request).getMinWeightMagnitude(),
+                    transfers,
+                    //inputs
+                    inputs,
+                    //remainder address
+                    remainder,
+                    false,
+                    false)
+            );
+
+
         } catch (ArgumentException | IllegalAccessError e) {
-            //Log.e("SNT","ex: "+e.getMessage());
             NetworkError error = new NetworkError();
 
             NotificationManager mNotificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
@@ -127,25 +105,13 @@ public class SendTransferRequestHandler extends IotaRequestHandler {
                 mNotificationManager.cancel(notificationId);
             }
             if (e instanceof IllegalStateException) {
-                //if (e.getMessage().contains("Sending to a used address.") || e.getMessage().contains("Private key reuse detect!")) {
-                    final Activity activity = (Activity) context;
-                    Bundle bundle = new Bundle();
-                    bundle.putString("error", e.getMessage());
-                    KeyReuseDetectedDialog dialog = new KeyReuseDetectedDialog();
-                    dialog.setArguments(bundle);
-                    dialog.show(activity.getFragmentManager(), null);
+                if (e.getMessage().contains("Sending to a used address.") || e.getMessage().contains("Private key reuse detect!")) {
 
                     error.setErrorType(NetworkErrorType.KEY_REUSE_ERROR);
-                //}
+                }
             }
             if (e instanceof ArgumentException) {
                 if (e.getMessage().contains("Sending to a used address.") || e.getMessage().contains("Private key reuse detect!")) {
-                    final Activity activity = (Activity) context;
-                    Bundle bundle = new Bundle();
-                    bundle.putString("error", e.getMessage());
-                    KeyReuseDetectedDialog dialog = new KeyReuseDetectedDialog();
-                    dialog.setArguments(bundle);
-                    dialog.show(activity.getFragmentManager(), null);
                     error.setErrorType(NetworkErrorType.KEY_REUSE_ERROR);
                 }
             }
@@ -175,6 +141,7 @@ public class SendTransferRequestHandler extends IotaRequestHandler {
                 && ((SendTransferRequest) request).getTag().equals(Constants.NEW_ADDRESS_TAG)) {
 
         } else if (response instanceof SendTransferResponse) {
+            AppService.setFastMode();
             if (Arrays.asList(((SendTransferResponse) response).getSuccessfully()).contains(true)) {
                 if(AppService.isAppStarted()) {
                     NotificationHelper.vibrate(context);

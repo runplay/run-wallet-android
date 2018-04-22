@@ -128,8 +128,8 @@ public class TaskManager {
         AppService.dropAllTasks();
     }
 
-    public void startNewRequestTask(ApiRequest ir) {
-        iotaRequestTask = new IotaRequestTask(context);
+    public void startNewRequestTask(ApiRequest ir, boolean pow) {
+        iotaRequestTask = new IotaRequestTask(context,pow);
         iotaRequestTask.setTaskId(taskId);
         apiRequest=ir;
         TaskManager.addTask(iotaRequestTask, apiRequest);

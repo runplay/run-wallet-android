@@ -19,14 +19,22 @@
 
 package run.wallet.iota.ui.fragment;
 
+import android.Manifest;
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.Fragment;
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.content.Context;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputEditText;
 import android.support.design.widget.TextInputLayout;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.AppCompatSeekBar;
 import android.support.v7.widget.Toolbar;
@@ -48,6 +56,10 @@ import android.widget.NumberPicker;
 import android.widget.Switch;
 import android.widget.TextView;
 
+import com.google.zxing.Result;
+
+import org.json.JSONObject;
+
 import java.util.Collections;
 import java.util.List;
 
@@ -57,6 +69,7 @@ import butterknife.OnClick;
 import butterknife.OnEditorAction;
 import butterknife.Unbinder;
 import jota.utils.SeedRandomGenerator;
+import me.dm7.barcodescanner.zxing.ZXingScannerView;
 import run.wallet.R;
 import run.wallet.common.B;
 import run.wallet.iota.helper.AppTheme;
@@ -71,13 +84,14 @@ import run.wallet.iota.ui.dialog.NoDescDialog;
 public class ChooseSeedAddFragment extends Fragment {
 
     private static final String SEED = "seed";
+    private static Activity activity;
     @BindView(R.id.add_seed_toolbar)
     Toolbar addSeedToolbar;
 
     @BindView(R.id.seed_login_seed_text_input_layout)
     TextInputLayout seedEditTextLayout;
-    @BindView(R.id.seed_login_seed_input)
-    TextInputEditText seedEditText;
+
+    static TextInputEditText seedEditText;
 
     @BindView(R.id.seed_add_gen_pod)
     LinearLayout genPod;
@@ -85,6 +99,8 @@ public class ChooseSeedAddFragment extends Fragment {
     LinearLayout numberPickerHolder;
     @BindView(R.id.add_seed_copy)
     Button btnCopy;
+    @BindView(R.id.btn_qr)
+    Button btnQr;
     @BindView(R.id.seed_add_scroll_left)
     ImageButton scrollLeft;
     @BindView(R.id.seed_add_scroll_right)
@@ -92,18 +108,25 @@ public class ChooseSeedAddFragment extends Fragment {
     @BindView(R.id.seed_add_scroll_view)
     HorizontalScrollView scrollView;
 
+    static View screenQr;
+    static View screenAdd;
 
     private String generatedSeed;
 
     private Unbinder unbinder;
 
+    private static View view;
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_choose_add, container, false);
+        view = inflater.inflate(R.layout.fragment_choose_add, container, false);
         view.setBackgroundColor(B.getColor(getActivity(), AppTheme.getSecondary()));
         unbinder = ButterKnife.bind(this, view);
-
+        screenQr=view.findViewById(R.id.qr_screen);
+        screenAdd=view.findViewById(R.id.add_screen);
+        seedEditText=view.findViewById(R.id.seed_login_seed_input);
+        activity=getActivity();
         return view;
     }
 
@@ -140,6 +163,20 @@ public class ChooseSeedAddFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 CopySeed();
+            }
+        });
+        btnQr.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(hasCameraPermission(activity)) {
+                    screenQr.setVisibility(View.VISIBLE);
+                    screenAdd.setVisibility(View.GONE);
+                    openQrScanner(getActivity());
+                } else {
+                    requestPermissionCamera();
+                }
+
+
             }
         });
         seedEditText.addTextChangedListener(new TextWatcher() {
@@ -324,5 +361,100 @@ public class ChooseSeedAddFragment extends Fragment {
         if (savedInstanceState != null) {
             seedEditText.setText(savedInstanceState.getString(SEED));
         }
+    }
+
+    public static boolean hasCameraPermission(Context context) {
+        int result = activity.checkCallingOrSelfPermission(Manifest.permission.CAMERA);
+        return result == PackageManager.PERMISSION_GRANTED;
+    }
+
+    @TargetApi(Build.VERSION_CODES.M)
+    private void requestPermissionCamera() {
+        if (ContextCompat.checkSelfPermission(activity, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+            if (ActivityCompat.shouldShowRequestPermissionRationale(activity,
+                    Manifest.permission.CAMERA)) {
+
+                this.requestPermissions(new String[]{Manifest.permission.CAMERA},
+                        Constants.REQUEST_CAMERA_PERMISSION_SEED);
+
+            } else {
+
+                //Camera permissions have not been granted yet so request them directly
+                this.requestPermissions(new String[]{Manifest.permission.CAMERA},
+                        Constants.REQUEST_CAMERA_PERMISSION_SEED);
+            }
+        }
+    }
+    private static boolean openQrScanner(Activity activity) {
+        if(activity!=null) {
+            FragmentManager fm = activity.getFragmentManager();
+            FragmentTransaction tr = fm.beginTransaction();
+            tr.replace(R.id.qr_screen, Fragment.instantiate(activity, QRScannerFragment.class.getName()),QRScannerFragment.class.getClass().getCanonicalName());
+
+            tr.commit();
+        }
+        return true;
+    }
+    public static class QRScannerFragment extends Fragment implements ZXingScannerView.ResultHandler {
+
+        private ZXingScannerView scannerView;
+
+        @Override
+        public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+            scannerView = new ZXingScannerView(getActivity());
+            return scannerView;
+        }
+
+        @Override
+        public void onResume() {
+            super.onResume();
+            //Store.setCurrentFragment(this.getClass());
+            scannerView.setResultHandler(this);
+            scannerView.startCamera();
+        }
+
+        @Override
+        public void onPause() {
+            super.onPause();
+            scannerView.stopCamera();
+        }
+
+        @Override
+        public void handleResult(Result result) {
+
+            String strRes=String.valueOf(result);
+
+            if(strRes!=null && !strRes.isEmpty()) {
+                JSONObject res=null;
+                try {
+                    res=new JSONObject(strRes);
+                } catch (Exception e) {
+                    //Log.e("JSON","ex: "+e.getMessage());
+                }
+                if(res!=null) {
+                    String smsg=SeedValidator.isSeedValid(getActivity(),res.optString("seed"));
+                    if(smsg==null) {
+                        //getActivity().cameraSeed=res.optString("seed");
+                        seedEditText.setText(res.optString("seed"));
+                    } else  {
+                        Snackbar.make(view,smsg,Snackbar.LENGTH_SHORT).show();
+                    }
+                } else {
+                    if(SeedValidator.isSeedValid(getActivity(),strRes)==null) {
+                        seedEditText.setText(strRes);
+                    } else  {
+                        Snackbar.make(view,R.string.no_seed_data,Snackbar.LENGTH_SHORT).show();
+                    }
+                }
+
+            } else {
+                Snackbar.make(view,R.string.no_seed_data,Snackbar.LENGTH_SHORT).show();
+            }
+            scannerView.stopCamera();
+            scannerView.invalidate();
+            screenAdd.setVisibility(View.VISIBLE);
+            screenQr.setVisibility(View.GONE);
+        }
+
     }
 }

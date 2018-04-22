@@ -154,7 +154,8 @@ public class AddressSecurityFragment extends Fragment {
     public void onResume() {
         super.onResume();
         EventBus.getDefault().register(this);
-        if(Store.getCacheAddress()==null || Store.getCacheAddress().isUsed()
+        //|| Store.getCacheAddress().isUsed()
+        if(Store.getCacheAddress()==null
                 || Store.getCacheAddress().getValue()>0 || Store.getCacheAddress().getPendingValue()>0) {
             viewCompleted.setVisibility(View.GONE);
             viewChange.setVisibility(View.GONE);
