@@ -26,6 +26,8 @@ import android.util.Log;
 
 import java.util.List;
 
+import cfb.pearldiver.PearlDiverLocalPoW;
+import jota.IotaAPI;
 import jota.RunIotaAPI;
 import jota.error.ArgumentException;
 import run.wallet.iota.api.requests.AddressSecurityChangeRequest;
@@ -55,15 +57,13 @@ public class AddressSecurityChangeRequestHandler extends IotaRequestHandler {
         ApiResponse response;
         AddressSecurityChangeRequest gnr=((AddressSecurityChangeRequest) request);
 
-
         try {
-            jota.dto.response.GetNewAddressResponse resp=apiProxy.getNewAddress(gnr.getAddress().getAddress(),
+            jota.dto.response.GetNewAddressResponse resp=apiProxy.getNewAddress(String.valueOf(Store.getSeedRaw(context,gnr.getSeed())),
                     gnr.getSecurity(),
                     gnr.getAddress().getIndex(),
                     false,
                     1,
                     true);
-            //Log.e("ADDRES-SECURITY","has response: "+resp.getAddresses().get(0));
             response = new GetNewAddressResponse(gnr.getSeed(),resp);
 
             Store.updateAddressFromSecurity(context,gnr,(GetNewAddressResponse)response);

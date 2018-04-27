@@ -109,17 +109,17 @@
         <item>@string/copy_address</item>
         <item>@string/receive_to_address</item>
         <item>@string/pig_set</item>
-        <!-- <item>@string/address_security_button</item> -->
+        <item>@string/address_security_button</item>
     </string-array>
     <string-array name="listOnWalletAddressesRecyclerViewClickDialogPig">
         <item>@string/copy_address</item>
         <item>@string/receive_to_address</item>
         <item>@string/pig_remove</item>
-        <!-- <item>@string/address_security_button</item> -->
+        <item>@string/address_security_button</item>
     </string-array>
     <string-array name="listOnWalletAddressesRecyclerViewClickDialogUsed">
         <item>@string/copy_address</item>
-        <!-- <item>@string/address_security_button</item> -->
+        <item>@string/address_security_button</item>
     </string-array>
     <string-array name="listOnSeedClickDialog">
         <item>@string/seed_use</item>

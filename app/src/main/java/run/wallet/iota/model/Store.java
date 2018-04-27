@@ -103,12 +103,14 @@ public class Store {
     public static void clearIntentPayTo() {
         store.intentPayPacket=null;
     }
-    public static void setIntenetPayPacket(String data) {
-        if(data!=null && data.startsWith("iota:")) {
-            data=data.replaceFirst("iota:/","");
+    public static void setIntentPayPacket(String data) {
+        if(data!=null && (data.startsWith("iota:")||data.startsWith("runiota:"))) {
+            data=data.replaceFirst("runiota:","");
+            data=data.replaceFirst("iota:","");
             if(data.startsWith("/"))
                 data=data.replaceFirst("/","");
-
+            if(data.startsWith("/"))
+                data=data.replaceFirst("/","");
             PayPacket pp = new PayPacket();
             String [] sp = data.split("\\?");
             PayPacket.clearPayTo();

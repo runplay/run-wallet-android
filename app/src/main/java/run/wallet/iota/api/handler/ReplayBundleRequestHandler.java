@@ -22,6 +22,7 @@ package run.wallet.iota.api.handler;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
+import android.util.Log;
 
 import jota.dto.response.GetNodeInfoResponse;
 import jota.dto.response.RunReplayBundleResponse;
@@ -74,6 +75,7 @@ public class ReplayBundleRequestHandler extends IotaRequestHandler {
 
 
         } catch (ArgumentException e) {
+            Log.e("REP","error: "+e.getMessage());
             NetworkError error = new NetworkError();
             error.setErrorType(NetworkErrorType.INVALID_HASH_ERROR);
             response = error;

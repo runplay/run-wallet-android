@@ -115,6 +115,7 @@ public class RunIotaApiUtils {
             bundleTrytes.add(tx.toTrytes());
         }
         Collections.reverse(bundleTrytes);
+
         return bundleTrytes;
     }
 }

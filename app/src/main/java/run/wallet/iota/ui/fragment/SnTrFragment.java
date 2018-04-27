@@ -491,6 +491,7 @@ public class SnTrFragment extends Fragment {
         }
     };
     private void checkContinue() {
+
         long value=Sf.toLong(amountInSelectedUnit());
         if(value>0 && balances.available>=value && isValidAddress()) {
             next.setEnabled(true);
@@ -588,7 +589,6 @@ public class SnTrFragment extends Fragment {
         if(pt!=null) {
             PayPacket.clearPayTo();
             PayPacket.addPayTo(pt);
-            amountEditText.setText(pt.value+"");
             if(PayPacket.getMessage()!=null) {
                 messageEditText.setText(UiManager.makeTrytesSafe(PayPacket.getMessage()));
             }

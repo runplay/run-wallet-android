@@ -60,7 +60,7 @@ public class SplashActivity extends AppCompatActivity {
     private boolean loadUrlFromIntent(final Intent intent) {
         if (Intent.ACTION_VIEW.equals(intent.getAction()) && intent.getData() != null) {
             final String url = intent.getData().toString();
-            Store.setIntenetPayPacket(url);
+            Store.setIntentPayPacket(url);
             return true;
         } else {
             return false;

@@ -28,7 +28,8 @@ https://github.com/iotaledger/android-wallet-app
 <br/>
 <br/>
 <h2>Updates</h2>
-v1.3.8350 - Print paper wallet added with trinity wallet compatibility, import QR Seed & trinity wallet compatibility and some bug fixes, promte transaction improvements
+v1.3.8400 - Solutions for issues: #5 & #6<br/>
+v1.3.8350 - Print paper wallet added with trinity wallet compatibility, import QR Seed & trinity wallet compatibility and some bug fixes, promte transaction improvements<br/>
 v1.3.8150 - QR Reader improvements (accepts raw values and json), Deep linking now supported (iota://address?value=100&message=SOME9MESSAGE&tag=SOME9TAG), plus a couple bug fixes.<br/>
 v1.3.8100 - Used Address balance Auto & manual check added, Fast wallet Switcher, Ui tweak for large seed values, Reload Seed request (performs a first load again), Background Service performance improvements and a couple Bug fixes.<br/>
 v1.3.8000 - Improved Seed generator, improved Promotes, field.carriota node added to node list options, improved wallet load display, Active wallet name displayed in Toolbar, improved nudging (faster and more often)<br/>
@@ -39,8 +40,8 @@ v1.3.6600 - Colour Themes, 10 different app colours styles to choose from<br/>
 v1.3.5500 - Multi Address transfer and TOR ability<br/>
 <br/><br/>
 <h2>Deep linking</h2>
-App now supports url deep linking in the following way:<br/>
-<b>iota://</b> or <b>iota:/</b><br/><br/>
+App supports deep linking in the following way:<br/>
+<b>iota://</b> or <b>runiota://</b><br/><br/>
 <b>format</b>: iota://address?amount=100&message=PARAM9MESSAGE&tag=PARAM9TAG<br/><br/>
 <b>amount</b>: Must be in raw IOTA value (long, BigNumber)<br/>
 <b>address</b>: Valid IOTA address<br/>

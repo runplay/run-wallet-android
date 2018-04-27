@@ -93,7 +93,7 @@ public class RunIotaAPICore {
             }
             return res;
         } catch (IOException e) {
-            log.error("Execution of the API call raised exception. IOTA Node not reachable?", e);
+            Log.e("ERROR","Execution of the API call raised exception. IOTA Node not reachable?"+ e.getMessage());
             throw new IllegalStateException(e.getMessage());
         }
 
@@ -102,8 +102,8 @@ public class RunIotaAPICore {
     private static String env(String env, String def) {
         final String value = System.getenv(env);
         if (value == null) {
-            log.warn("Environment variable '{}' is not defined, and actual value has not been specified. "
-                    + "Rolling back to default value: '{}'", env, def);
+            //log.warn("Environment variable '{}' is not defined, and actual value has not been specified. "
+            //        + "Rolling back to default value: '{}'", env, def);
             return def;
         }
         return value;

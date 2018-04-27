@@ -52,7 +52,7 @@
                 <category android:name="android.intent.category.BROWSABLE" />
 
                 <data android:scheme="iota" />
-                <data android:scheme="wallet" />
+                <data android:scheme="runiota" />
             </intent-filter>
         </activity>
         <activity
