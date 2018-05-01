@@ -107,42 +107,21 @@ public class RunIotaAPI extends RunIotaAPICore {
     }
     public List<Transaction> nudgeTransfer(String nudgeHash, final String[] trytes, final int depth, final int minWeightMagnitude) throws ArgumentException {
 
-        GetTransactionsToApproveResponse txs1 = null;
-        GetTransactionsToApproveResponse txs2 = null;
-        txs1 = getTransactionsToApprove(3);
-        try {
-            wait(2000);
-        } catch (Exception e) {}
-        txs2=getTransactionsToApprove(3);
+        GetTransactionsToApproveResponse txs1 = getTransactionsToApprove(3);
 
         String useTx =null;
         List<String> trans=new ArrayList();
         if(txs1.getBranchTransaction()!=null) {
             trans.add(txs1.getBranchTransaction());
         }
-        if(txs2.getBranchTransaction()!=null) {
-            trans.add(txs2.getBranchTransaction());
-        }
         if(txs1.getTrunkTransaction()!=null) {
             trans.add(txs1.getTrunkTransaction());
-        }
-        if(txs2.getTrunkTransaction()!=null) {
-            trans.add(txs2.getTrunkTransaction());
         }
         List<Transaction> t=findTransactionsObjectsByHashes(trans.toArray(new String[trans.size()]));
         for(Transaction tmp: t) {
             if(tmp.getValue()!=0) {
                 useTx=tmp.getHash();
                 break;
-            }
-        }
-        if(useTx==null) {
-            for (Transaction tmp : t) {
-                // match to known good spammer addresses
-                if (tmp.getAddress().contains("BUNNY")  || tmp.getAddress().contains("EWQAUDXJGSVIN") || tmp.getAddress().contains("QPM9ZSUPIJKPYFYU")) {
-                    useTx = tmp.getHash();
-                    break;
-                }
             }
         }
         if(useTx==null) {
@@ -380,6 +359,22 @@ public class RunIotaAPI extends RunIotaAPICore {
         return trx;
     }
 
+    public boolean wasAddressSpentFrom(String address) {
+        final String[] str =new String[]{};
+        str[0]=address;
+
+        List<Transaction> transactions =null;
+        try {
+            transactions = findTransactionObjectsByAddresses(str);
+        } catch (Exception e) {}
+        if(transactions!=null) {
+            for(Transaction t: transactions) {
+                if(t.getValue()<0)
+                    return true;
+            }
+        }
+        return false;
+    }
     /**
      * Wrapper function for getTrytes and transactionObjects.
      * Gets the trytes and transaction object from a list of transaction hashes.
@@ -528,6 +523,7 @@ public class RunIotaAPI extends RunIotaAPICore {
                     // Pad remainder of fragment
 
                     fragment = StringUtils.rightPad(fragment, Constants.MESSAGE_LENGTH, '9');
+
                     signatureFragments.add(fragment);
                 }
             } else {
@@ -558,7 +554,7 @@ public class RunIotaAPI extends RunIotaAPICore {
         if (totalValue != 0) {
 
             if (inputs != null && !inputs.isEmpty()) {
-                //throw new ArgumentException();
+                //Log.e("PREP","inputs... OKKKKKK: "+remainder);
                 return addRemainder(seed, security, inputs, bundle, tag, totalValue, remainder, signatureFragments);
             }
 
@@ -702,13 +698,16 @@ public class RunIotaAPI extends RunIotaAPICore {
      * @throws ArgumentException is thrown when the specified input is not valid.
      */
     public GetBundleResponse getBundle(String transaction) throws ArgumentException {
+
         if (!InputValidator.isHash(transaction)) {
             throw new ArgumentException(INVALID_HASHES_INPUT_ERROR);
         }
+
         Bundle bundle = traverseBundle(transaction, null, new Bundle());
         if (bundle == null) {
             throw new ArgumentException(INVALID_BUNDLE_ERROR);
         }
+
         StopWatch stopWatch = new StopWatch();
 
         long totalSum = 0;
@@ -723,6 +722,7 @@ public class RunIotaAPI extends RunIotaAPICore {
             Transaction trx = bundle.getTransactions().get(i);
             Long bundleValue = trx.getValue();
             totalSum += bundleValue;
+
             if (i != bundle.getTransactions().get(i).getCurrentIndex()) {
                 throw new ArgumentException(INVALID_BUNDLE_ERROR);
             }
@@ -750,12 +750,14 @@ public class RunIotaAPI extends RunIotaAPICore {
                 signaturesToValidate.add(sig);
             }
         }
+
         // Check for total sum, if not equal 0 return error
         if (totalSum != 0)
             throw new ArgumentException(INVALID_BUNDLE_SUM_ERROR);
         int[] bundleFromTrxs = new int[243];
         curl.squeeze(bundleFromTrxs);
         String bundleFromTxString = Converter.trytes(bundleFromTrxs);
+
         // Check if bundle hash is the same as returned by tx object
         if (!bundleFromTxString.equals(bundleHash))
             throw new ArgumentException(INVALID_BUNDLE_HASH_ERROR);
@@ -769,9 +771,11 @@ public class RunIotaAPI extends RunIotaAPICore {
             String[] signatureFragments = aSignaturesToValidate.getSignatureFragments().toArray(new String[aSignaturesToValidate.getSignatureFragments().size()]);
             String address = aSignaturesToValidate.getAddress();
             boolean isValidSignature = new Signing(customCurl.clone()).validateSignatures(address, signatureFragments, bundleHash);
+
             if (!isValidSignature)
                 throw new ArgumentException(INVALID_SIGNATURES_ERROR);
         }
+
         return GetBundleResponse.create(bundle.getTransactions(), stopWatch.getElapsedTimeMili());
     }
 
@@ -823,6 +827,7 @@ public class RunIotaAPI extends RunIotaAPICore {
         StopWatch stopWatch = new StopWatch();
 
         List<String> bundleTrytes = new ArrayList<>();
+
         GetBundleResponse bundleResponse = getBundle(transaction);
         Bundle bundle = new Bundle(bundleResponse.getTransactions(), bundleResponse.getTransactions().size());
         for (Transaction trx : bundle.getTransactions()) {
@@ -1209,7 +1214,6 @@ public class RunIotaAPI extends RunIotaAPICore {
                 totalTransferValue -= thisBalance;
             }
         }
-
         throw new IllegalStateException(NOT_ENOUGH_BALANCE_ERROR);
     }
 
