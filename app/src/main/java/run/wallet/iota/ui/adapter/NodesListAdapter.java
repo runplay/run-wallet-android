@@ -22,6 +22,7 @@ package run.wallet.iota.ui.adapter;
 import android.app.Activity;
 import android.content.DialogInterface;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -52,8 +53,6 @@ public class NodesListAdapter extends RecyclerView.Adapter<NodesListAdapter.Node
         this.thisadapter=this;
         this.context = context;
         this.nodes = Store.getNodes();
-
-        //Log.e("NODES","count: "+nodes.size());
     }
     private void reload() {
         this.nodes = Store.getNodes();
@@ -62,7 +61,6 @@ public class NodesListAdapter extends RecyclerView.Adapter<NodesListAdapter.Node
     @Override
     public NodeViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_nodelist, parent, false);
-        //Log.e("NODESVIEW","create view holder");
         return new NodeViewHolder(v);
     }
 
@@ -70,7 +68,6 @@ public class NodesListAdapter extends RecyclerView.Adapter<NodesListAdapter.Node
     public void onBindViewHolder(NodeViewHolder holder, int position) {
         int adapterPosition = holder.getAdapterPosition();
         Nodes.Node node = getItem(adapterPosition);
-        //Log.e("NODESVIEW","pos: "+adapterPosition);
         if (node != null) {
 
 
@@ -175,6 +172,7 @@ public class NodesListAdapter extends RecyclerView.Adapter<NodesListAdapter.Node
                         public void onDismiss(DialogInterface dialog) {
                             //Log.e("DISMISS","DIALOG");
                             reload();
+                            notifyDataSetChanged();
                             AppService.refreshEvent();
                             //notifyDataSetChanged();
                         }

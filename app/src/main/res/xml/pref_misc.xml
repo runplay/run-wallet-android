@@ -9,6 +9,13 @@
         android:summary="@string/settings_auto_nudge_summary"
         android:title="@string/settings_auto_nudge" />
     <ListPreference
+        android:defaultValue="12"
+        android:entries="@array/cancelTransferString"
+        android:entryValues="@array/cancelTransfer"
+        android:key="preference_cancel_transfer"
+        android:summary="@string/settings_cancel_transfer_summary"
+        android:title="@string/settings_cancel_transfer" />
+    <ListPreference
         android:defaultValue="50"
         android:entries="@array/firstLoadAttempts"
         android:entryValues="@array/firstLoadAttempts"

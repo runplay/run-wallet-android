@@ -105,20 +105,6 @@ public class NeighborsListAdapter extends RecyclerView.Adapter<NeighborsListAdap
         //notifyDataSetChanged();
     }
 
-    public void filter(final List<Neighbor> neighbors, String searchText) {
-        final String sText = searchText.toLowerCase();
-
-        new Thread(() -> {
-            final List<Neighbor> filteredNeighborList = new ArrayList<>();
-            for (Neighbor neighbor : neighbors) {
-                final String text = neighbor.getAddress().toLowerCase();
-                if (text.contains(sText)) {
-                    filteredNeighborList.add(neighbor);
-                }
-            }
-            ((Activity) context).runOnUiThread(() -> setAdapterList(filteredNeighborList));
-        }).start();
-    }
 
     class NeighborViewHolder extends RecyclerView.ViewHolder {
         @BindView(R.id.item_neighbor_address)

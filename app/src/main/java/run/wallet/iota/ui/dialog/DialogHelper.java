@@ -117,6 +117,7 @@ public class DialogHelper {
                         break;
                 }
                 dismiss.onDismiss(dialog);
+
                 //fragment.onResume();
             }
         });

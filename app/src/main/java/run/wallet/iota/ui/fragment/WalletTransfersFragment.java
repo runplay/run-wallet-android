@@ -241,7 +241,7 @@ public class WalletTransfersFragment extends BaseSwipeRefreshLayoutFragment impl
         super.onResume();
 
         if(Store.getNodeInfo()==null)
-            AppService.getNodeInfo(getActivity());
+            AppService.getNodeInfoSilent(getActivity());
         setAdapter(true);
         attachingHandler.postDelayed(runAttaching,500);
 
@@ -339,8 +339,10 @@ public class WalletTransfersFragment extends BaseSwipeRefreshLayoutFragment impl
             //getAccountData();
 
         } else {
-            swipeRefreshLayout.setRefreshing(false);
-            Snackbar.make(getActivity().findViewById(R.id.drawer_layout), getString(R.string.messages_not_fully_synced_yet), Snackbar.LENGTH_LONG).show();
+            if(!nodeInfoResponse.isSilent()) {
+                swipeRefreshLayout.setRefreshing(false);
+                Snackbar.make(getActivity().findViewById(R.id.drawer_layout), getString(R.string.messages_not_fully_synced_yet), Snackbar.LENGTH_LONG).show();
+            }
         }
     }
     @Subscribe
@@ -363,7 +365,9 @@ public class WalletTransfersFragment extends BaseSwipeRefreshLayoutFragment impl
                 adapter = new WalletTransfersCardAdapter(getActivity(),params[0]);
             } else {
                 if(recyclerView!=null) {
-                    firstVis = recyclerView.getVerticalScrollbarPosition();
+                    try {
+                        firstVis = recyclerView.getVerticalScrollbarPosition();
+                    } catch(Exception e) {}
                 }
                 if(params[0]) {
                     WalletTransfersCardAdapter.load(getActivity(),true);
@@ -375,37 +379,39 @@ public class WalletTransfersFragment extends BaseSwipeRefreshLayoutFragment impl
         @Override
         protected void onPostExecute(Boolean result) {
             if(recyclerView!=null) {
-                transferLoading.setVisibility(View.GONE);
-                LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
-                recyclerView.setLayoutManager(layoutManager);
-                recyclerView.setAdapter(adapter);
+                try {
+                    transferLoading.setVisibility(View.GONE);
+                    LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
+                    recyclerView.setLayoutManager(layoutManager);
+                    recyclerView.setAdapter(adapter);
 
-                if (adapter.getItemCount() != 0) {
-                    emptyTransfers.setVisibility(View.GONE);
-                    firstLoadPod.setVisibility(View.GONE);
-                } else {
-                    if (Store.getCurrentWallet() != null) {
-                        emptyTransfers.setVisibility(View.VISIBLE);
+                    if (adapter.getItemCount() != 0) {
+                        emptyTransfers.setVisibility(View.GONE);
+                        firstLoadPod.setVisibility(View.GONE);
+                    } else {
+                        if (Store.getCurrentWallet() != null) {
+                            emptyTransfers.setVisibility(View.VISIBLE);
 
+                        }
                     }
-                }
-                filterBar.setVisibility(View.GONE);
-                if (WalletTransfersCardAdapter.getFilterAddress() != null) {
+                    filterBar.setVisibility(View.GONE);
+                    if (WalletTransfersCardAdapter.getFilterAddress() != null) {
 
-                    Address address = Store.isAlreadyAddress(WalletTransfersCardAdapter.getFilterAddress(),Store.getAddresses());
-                    if(address!=null) {
-                        filterBar.setVisibility(View.VISIBLE);
-                        filterBar.setBackgroundColor(AppTheme.getColorPrimaryDark(getActivity()));
-                        IotaToText.IotaDisplayData data=IotaToText.getIotaDisplayData(address.getValue());
-                        filterAddress.setText(address.getAddress());
-                        filterId.setText(WalletTransfersCardAdapter.getFilterAddressId());
-                        filterBalance.setText(data.value);
-                        filterBalanceThird.setText(data.thirdDecimal);
-                        filterBalanceUnit.setText(data.unit);
+                        Address address = Store.isAlreadyAddress(WalletTransfersCardAdapter.getFilterAddress(), Store.getAddresses());
+                        if (address != null) {
+                            filterBar.setVisibility(View.VISIBLE);
+                            filterBar.setBackgroundColor(AppTheme.getColorPrimaryDark(getActivity()));
+                            IotaToText.IotaDisplayData data = IotaToText.getIotaDisplayData(address.getValue());
+                            filterAddress.setText(address.getAddress());
+                            filterId.setText(WalletTransfersCardAdapter.getFilterAddressId());
+                            filterBalance.setText(data.value);
+                            filterBalanceThird.setText(data.thirdDecimal);
+                            filterBalanceUnit.setText(data.unit);
 
+                        }
                     }
-                }
-                recyclerView.scrollToPosition(firstVis);
+                    recyclerView.scrollToPosition(firstVis);
+                } catch(Exception e) {}
             }
         }
 
@@ -419,53 +425,7 @@ public class WalletTransfersFragment extends BaseSwipeRefreshLayoutFragment impl
             task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, force);
         }
     }
-    private void setAdapterOld(boolean force) {
 
-        if(recyclerView!=null) {
-            if(adapter==null) {
-                firstVis=0;
-                adapter = new WalletTransfersCardAdapter(getActivity(),force);
-            } else {
-                firstVis = recyclerView.getVerticalScrollbarPosition();
-                if(force) {
-                    WalletTransfersCardAdapter.load(getActivity(),true);
-                }
-            }
-
-            LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
-            recyclerView.setLayoutManager(layoutManager);
-            recyclerView.setAdapter(adapter);
-
-            if (adapter.getItemCount() != 0) {
-                emptyTransfers.setVisibility(View.GONE);
-                firstLoadPod.setVisibility(View.GONE);
-            } else {
-                if (Store.getCurrentWallet() != null) {
-                    emptyTransfers.setVisibility(View.VISIBLE);
-
-                }
-            }
-            filterBar.setVisibility(View.GONE);
-            if (WalletTransfersCardAdapter.getFilterAddress() != null) {
-
-                Address address = Store.isAlreadyAddress(WalletTransfersCardAdapter.getFilterAddress(),Store.getAddresses());
-                if(address!=null) {
-                    filterBar.setVisibility(View.VISIBLE);
-                    filterBar.setBackgroundColor(AppTheme.getColorPrimaryDark(getActivity()));
-                    IotaToText.IotaDisplayData data=IotaToText.getIotaDisplayData(address.getValue());
-                    filterAddress.setText(address.getAddress());
-                    filterId.setText(WalletTransfersCardAdapter.getFilterAddressId());
-                    filterBalance.setText(data.value);
-                    filterBalanceThird.setText(data.thirdDecimal);
-                    filterBalanceUnit.setText(data.unit);
-
-                }
-            }
-            recyclerView.scrollToPosition(firstVis);
-        }
-
-
-    }
 
 
     @Override

@@ -279,20 +279,22 @@ public class NetworkNeighborsFragment extends BaseSwipeRefreshLayoutFragment
     }
 
     private void setAdapter() {
-        if (adapter == null) {
-            adapter = new NeighborsListAdapter(getActivity());
-            recyclerView.setAdapter(adapter);
+        try {
+            if (adapter == null) {
+                adapter = new NeighborsListAdapter(getActivity());
+                recyclerView.setAdapter(adapter);
 
-        } else {
-            recyclerView.setAdapter(adapter);
-            //adapter.notifyDataSetChanged();
-        }
+            } else {
+                recyclerView.setAdapter(adapter);
+                //adapter.notifyDataSetChanged();
+            }
 
-        if(adapter.getItemCount()==0) {
-            tvEmpty.setVisibility(View.VISIBLE);
-        } else {
-            tvEmpty.setVisibility(View.GONE);
-        }
+            if (adapter.getItemCount() == 0) {
+                tvEmpty.setVisibility(View.VISIBLE);
+            } else {
+                tvEmpty.setVisibility(View.GONE);
+            }
+        } catch(Exception e) {}
         swipeRefreshLayout.setRefreshing(false);
     }
 

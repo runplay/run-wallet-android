@@ -43,7 +43,9 @@ public class RunIotaApiUtils {
         final int[] addressTrits = signing.address(digests);
         String address = Converter.trytes(addressTrits);
         if (checksum) {
-            address = Checksum.addChecksum(address);
+            try {
+                address = Checksum.addChecksum(address);
+            } catch(Exception e) {}
         }
         return address;
     }
@@ -115,7 +117,6 @@ public class RunIotaApiUtils {
             bundleTrytes.add(tx.toTrytes());
         }
         Collections.reverse(bundleTrytes);
-
         return bundleTrytes;
     }
 }

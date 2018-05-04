@@ -51,13 +51,11 @@ public class AddNodesListAdapter extends RecyclerView.Adapter<AddNodesListAdapte
         this.context = context;
         this.fragment=frag;
         this.nodes = Store.getOtherNodes(context);
-        //Log.e("NODES","count: "+nodes.size());
     }
 
     @Override
     public NodeViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_nodelist, parent, false);
-        //Log.e("NODESVIEW","create view holder");
         return new NodeViewHolder(v);
     }
 
@@ -65,7 +63,6 @@ public class AddNodesListAdapter extends RecyclerView.Adapter<AddNodesListAdapte
     public void onBindViewHolder(NodeViewHolder holder, int position) {
         int adapterPosition = holder.getAdapterPosition();
         Nodes.Node node = getItem(adapterPosition);
-        //Log.e("NODESVIEW","pos: "+adapterPosition);
         if (node != null) {
             if(node.ip.contains(".runplay.com") || node.ip.contains(".runpg.com")) {
                 holder.nodeAddress.setText(Constants.DISPLAY_RUNIOTA_NODE_NAME+position+Constants.DISPLAY_RUNIOTA_NODE_NAME_END);

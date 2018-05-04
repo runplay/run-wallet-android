@@ -27,7 +27,7 @@ import android.util.Log;
 import java.util.List;
 
 import cfb.pearldiver.PearlDiverLocalPoW;
-import jota.IotaAPI;
+
 import jota.RunIotaAPI;
 import jota.error.ArgumentException;
 import run.wallet.iota.api.requests.AddressSecurityChangeRequest;

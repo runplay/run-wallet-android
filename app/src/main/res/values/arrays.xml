@@ -37,6 +37,20 @@
         <item>10</item>
         <item>12</item>
     </string-array>
+    <string-array name="cancelTransfer">
+        <item>6</item>
+        <item>8</item>
+        <item>12</item>
+        <item>18</item>
+        <item>24</item>
+    </string-array>
+    <string-array name="cancelTransferString">
+        <item>6 hours</item>
+        <item>8 hours</item>
+        <item>12 hours</item>
+        <item>18 hours</item>
+        <item>24 hours</item>
+    </string-array>
     <string-array name="autoLogout">
         <item>0</item>
         <item>2</item>
@@ -83,7 +97,10 @@
         <item>4</item>
         <item>6</item>
         <item>8</item>
+        <item>10</item>
+        <item>12</item>
     </string-array>
+    <!--
     <string-array name="listOnWalletTransfersRecyclerViewClickDialogCompleted">
         <item>@string/copy_address</item>
         <item>@string/copy_hash</item>
@@ -104,7 +121,7 @@
         <item>@string/copy_hash</item>
         <item>@string/transfer_cancelled_why</item>
     </string-array>
-
+-->
     <string-array name="listOnWalletAddressesRecyclerViewClickDialogNoPig">
         <item>@string/copy_address</item>
         <item>@string/receive_to_address</item>
@@ -115,11 +132,9 @@
         <item>@string/copy_address</item>
         <item>@string/receive_to_address</item>
         <item>@string/pig_remove</item>
-        <item>@string/address_security_button</item>
     </string-array>
     <string-array name="listOnWalletAddressesRecyclerViewClickDialogUsed">
         <item>@string/copy_address</item>
-        <item>@string/address_security_button</item>
     </string-array>
     <string-array name="listOnSeedClickDialog">
         <item>@string/seed_use</item>

@@ -43,7 +43,7 @@ public class TaskManager {
     private long taskId;
     private IotaRequestTask iotaRequestTask;
     private BasicRequestTask basicRequestTask;
-    private MessageRequestTask messageRequestTask;
+
     private ApiRequest apiRequest;
     private String tag;
 
@@ -151,22 +151,5 @@ public class TaskManager {
         }
     }
 
-
-    public void startNewMessageTask(ApiRequest ir) {
-        messageRequestTask = new MessageRequestTask(context);
-        messageRequestTask.setTaskId(taskId);
-        apiRequest=ir;
-        TaskManager.addMessageTask(messageRequestTask, apiRequest);
-    }
-    private static synchronized void addMessageTask(MessageRequestTask requestTask, ApiRequest ir) {
-        String tag = ir.getClass().getCanonicalName();
-
-        if (!TM.runningTasks.containsKey(tag)) {
-            TM.runningTasks.put(tag, requestTask);
-            //if (IOTA.DEBUG)
-            //    Log.e("Added message Task ", tag);
-            requestTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, ir);
-        }
-    }
 
 }

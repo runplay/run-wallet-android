@@ -52,7 +52,7 @@ public class Transfer implements Parcelable, Comparable<Transfer> {
     private String message;
     private String tag;
 
-
+    private boolean ignore=false;
     private boolean markDoubleSpend=false;
     private boolean markDoubleAddress=false;
     private long lastDoubleCheck;
@@ -87,6 +87,7 @@ public class Transfer implements Parcelable, Comparable<Transfer> {
         job.put("dbl", isMarkDoubleSpend());
         job.put("dba", markDoubleAddress);
         job.put("ldb",lastDoubleCheck);
+        job.put("ign",ignore);
         job.put("tsc", getTimestampConfirmed());
         JSONArray jar = new JSONArray();
         for(TransferTransaction t: getTransactions()) {
@@ -120,6 +121,7 @@ public class Transfer implements Parcelable, Comparable<Transfer> {
         setMarkDoubleSpend(job.optBoolean("dbl"));
         markDoubleAddress=job.optBoolean("dba");
         lastDoubleCheck=job.optLong("ldb");
+        ignore=job.optBoolean("ign");
         setTimestampConfirmed(job.optLong("tsc"));
         JSONArray jar = job.optJSONArray("tra");
         for(int i=0; i<jar.length(); i++) {
@@ -335,4 +337,11 @@ public class Transfer implements Parcelable, Comparable<Transfer> {
     }
 
 
+    public boolean isIgnore() {
+        return ignore;
+    }
+
+    public void setIgnore(boolean ignore) {
+        this.ignore = ignore;
+    }
 }

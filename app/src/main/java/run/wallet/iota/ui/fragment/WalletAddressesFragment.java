@@ -192,7 +192,7 @@ public class WalletAddressesFragment extends BaseSwipeRefreshLayoutFragment  {
         super.onResume();
 
         if(Store.getNodeInfo()==null)
-            AppService.getNodeInfo(getActivity());
+            AppService.getNodeInfoSilent(getActivity());
         setAdapter(true);
         attachingHandler.postDelayed(runAttaching,500);
         if(Store.getCurrentWallet()==null) {

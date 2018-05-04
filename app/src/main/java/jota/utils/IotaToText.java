@@ -62,7 +62,6 @@ public class IotaToText {
 
         if(unit!=IotaUnits.IOTA) {
             String result=createAmountDisplayText(amountInDisplayUnit, unit, true);
-            //Log.e("RES",""+result);
             data.thirdDecimal=result.substring(result.length()-1,result.length());
         }
         data.value = createAmountDisplayText(amountInDisplayUnit, unit, false);

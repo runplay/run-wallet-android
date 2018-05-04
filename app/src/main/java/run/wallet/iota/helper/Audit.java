@@ -44,6 +44,7 @@ public class Audit {
                 completedLookup.put(transfer.getValue() + "" + transfer.getAddress(), true);
             }
         }
+
         for (Transfer transfer : transfers) {
             if (!transfer.isCompleted() && completedLookup.get(transfer.getValue() + "" + transfer.getAddress()) == null
                     ) {
@@ -53,9 +54,7 @@ public class Audit {
                         && !transfer.isMarkDoubleSpend()
                         && !transfer.getTransactions().isEmpty()
                         && transfer.getNudgeCount() < nudgeAttempts) {
-
                         Store.addIfNoNudgeTransfer(context, seed, transfer);
-
                 }
             } else if(transfer.isCompleted()) {
                 for(NudgeTransfer nudge: alreadyNudge) {
@@ -172,6 +171,7 @@ public class Audit {
                     already.setMilestone(tran.getMilestone());
                     already.setMilestoneCreated(tran.getMilestoneCreated());
                     already.setNudgeHashes(tran.getNudgeHashes());
+                    already.setIgnore(tran.isIgnore());
                 }
             }
             transfers.addAll(allTransfers);
@@ -196,6 +196,10 @@ public class Audit {
     private static ProcessResult processTransfersToAddresses(Seeds.Seed seed, List<Transfer> transfers, List<Address> allAddresses) {
         Collections.sort(transfers);
         Collections.reverse(transfers);
+
+        for(Address add: allAddresses) {
+            add.setPendingValue(0);
+        }
 
         HashMap<String,Transfer> completed=new HashMap<String,Transfer>();
         HashMap<String,Transfer> completedAddresses=new HashMap<String,Transfer>();
@@ -275,20 +279,23 @@ public class Audit {
                     }
                 }
             } else if(!transfer.isCompleted()) {
-                if(transfer.isInternal() || (!transfer.isMarkDoubleSpend() && !transfer.isMarkDoubleAddress())) {
-                    for(TransferTransaction trans: transfer.getTransactions()) {
-                        Address address = Store.isAlreadyAddress(trans.getAddress(),allAddresses);
-                        if (address!=null) {
-                            address.setPendingValue(address.getPendingValue() + trans.getValue());
-                            if (trans.getValue() < 0) {
-                                seedTotalPendingOut += trans.getValue();
-                            } else {
-                                seedTotalPendingIn += trans.getValue();
+                if(!transfer.isIgnore()) {
+                    if (transfer.isInternal() || (!transfer.isMarkDoubleSpend() && !transfer.isMarkDoubleAddress())) {
+                        for (TransferTransaction trans : transfer.getTransactions()) {
+                            Address address = Store.isAlreadyAddress(trans.getAddress(), allAddresses);
+                            if (address != null) {
+                                address.setPendingValue(address.getPendingValue() + trans.getValue());
+                                if (trans.getValue() < 0) {
+                                    seedTotalPendingOut += trans.getValue();
+                                } else {
+                                    seedTotalPendingIn += trans.getValue();
+                                }
+                                already.add(trans);
                             }
-                            already.add(trans);
-
                         }
                     }
+                } else {
+
                 }
             }
         }

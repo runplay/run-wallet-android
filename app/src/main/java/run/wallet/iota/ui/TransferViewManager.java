@@ -291,6 +291,9 @@ public class TransferViewManager {
                     }
 
                 }
+                if(transfer.isIgnore()) {
+                    holder.alternativeValueLabel.setText(context.getString(R.string.transfer_ignored));
+                }
             } else if (transfer.getValue() == 0) {
 
                 holder.alternativeValueLabel.setText(context.getString(R.string.card_label_internal));

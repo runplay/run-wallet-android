@@ -71,7 +71,7 @@ import org.apache.commons.lang3.StringUtils;
 import java.util.ArrayList;
 import java.util.List;
 
-import jota.IotaAPI;
+import jota.RunIotaAPI;
 import jota.dto.response.GetBalancesResponse;
 import jota.error.ArgumentException;
 import jota.model.Transaction;
@@ -491,7 +491,6 @@ public class SnTrFragment extends Fragment {
         }
     };
     private void checkContinue() {
-
         long value=Sf.toLong(amountInSelectedUnit());
         if(value>0 && balances.available>=value && isValidAddress()) {
             next.setEnabled(true);
@@ -528,8 +527,6 @@ public class SnTrFragment extends Fragment {
     private boolean checkSetMultiAddressImport(Editable s) {
         String use=s.toString();
         if(use.length()>90) {
-            List<PayPacket.PayTo> imported=new ArrayList<>();
-            // probably multi address paste
             use=use.replace("\r","");
             String delim=",";
             if(use.contains("|"))
@@ -765,7 +762,7 @@ public class SnTrFragment extends Fragment {
                 String protocol = node.protocol;
                 String host = node.ip;
                 int port = node.port;
-                IotaAPI api = new IotaAPI.Builder().protocol(protocol).host(host)
+                RunIotaAPI api = new RunIotaAPI.Builder().protocol(protocol).host(host)
                         .port(Integer.toString(port)).build();
 
                 List<Transaction> transactions=null;
@@ -953,11 +950,10 @@ public class SnTrFragment extends Fragment {
         String inputAmount = amountEditText.getText().toString();
         if(inputAmount.isEmpty())
             inputAmount="0";
-        inputAmount=Long.valueOf(Math.round(Sf.toDouble(inputAmount))).toString();
-        //amountEditText.setText(inputAmount+"");
+        inputAmount=Double.valueOf(inputAmount).toString();//Long.valueOf(Math.round(Sf.toDouble(inputAmount))).toString();
         IotaUnits unit = toIotaUnit(unitsSpinner.getSelectedItemPosition());
-        Long iota = Long.parseLong(inputAmount) * (long) Math.pow(10, unit.getValue());
-        return iota.toString();
+        Double iota = Double.parseDouble(inputAmount) * Math.pow(10, unit.getValue());
+        return Long.valueOf(iota.longValue()).toString();
     }
 
     private IotaUnits toIotaUnit(int unitSpinnerItemIndex) {

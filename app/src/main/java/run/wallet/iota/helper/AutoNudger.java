@@ -11,7 +11,8 @@ import java.util.Random;
 import java.util.Vector;
 import org.json.JSONException;
 import cfb.pearldiver.PearlDiverLocalPoW;
-import jota.IotaAPI;
+
+import jota.RunIotaAPI;
 import jota.dto.response.GetNodeInfoResponse;
 import jota.dto.response.SendTransferResponse;
 import jota.error.ArgumentException;
@@ -33,7 +34,7 @@ public class AutoNudger {
 			String protocol = "";
 			String host = "";
 			String port = "";
-			IotaAPI api = new IotaAPI.Builder().localPoW(new PearlDiverLocalPoW()).protocol(protocol).host(host)
+			RunIotaAPI api = new RunIotaAPI.Builder().localPoW(new PearlDiverLocalPoW()).protocol(protocol).host(host)
 					.port(port).build();
 
 

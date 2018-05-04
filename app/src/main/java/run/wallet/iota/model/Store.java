@@ -24,6 +24,7 @@ import run.wallet.iota.api.requests.GetNewAddressRequest;
 import run.wallet.iota.api.responses.GetNeighborsResponse;
 import run.wallet.iota.api.responses.GetNewAddressResponse;
 import run.wallet.iota.api.responses.NodeInfoResponse;
+import run.wallet.iota.helper.Audit;
 import run.wallet.iota.helper.Constants;
 import run.wallet.iota.helper.Utils;
 import run.wallet.iota.security.Validator;
@@ -510,8 +511,34 @@ public class Store {
             reinit(context);
         }
     }
+    public static void markCurrentTransferIgnoreFromHash(Context context,String hash,boolean ignore) {
+        for(Transfer transfer: store.transfers) {
+            if(transfer.getHash().equals(hash))
+                transfer.setIgnore(ignore);
+        }
+        SharedPreferences sp = context.getSharedPreferences(getCurrentSeed().id, Context.MODE_PRIVATE);
 
-    public static void updateAllTransfersInSeed(Context context, Seeds.Seed seed, List<Transfer> transfers) {
+        if(!store.transfers.isEmpty()) {
+            JSONArray trans = new JSONArray();
+            for (Transfer t : store.transfers) {
+                trans.put(t.toJson());
+            }
+
+
+
+            Audit.setTransfersToAddresses(getCurrentSeed(),store.transfers, store.addresses,getCurrentWallet(),null);
+
+            //Log.e("EDATETRAN",trans.toString());
+            updateAccountData(context,getCurrentSeed(),getCurrentWallet(),store.transfers, store.addresses);
+
+            WalletTransfersCardAdapter.load(context,true);
+            WalletAddressCardAdapter.load(context,true);
+            reinit(context);
+
+        }
+    }
+
+    public static synchronized void updateTransfers(Context context, Seeds.Seed seed, List<Transfer> transfers) {
         SharedPreferences sp = context.getSharedPreferences(seed.id, Context.MODE_PRIVATE);
 
         if(!transfers.isEmpty()) {
@@ -519,13 +546,13 @@ public class Store {
             for (Transfer t : transfers) {
                 trans.put(t.toJson());
             }
-            //Log.e("EDATETRAN",trans.toString());
-            SpManager.setEncryptedPreference(sp, PREF_TRANSFERS, trans.toString());
-            if(store.currentSeed!=null && seed.id.equals(store.currentSeed.id)) {
-                WalletTransfersCardAdapter.load(context,true);
-                WalletAddressCardAdapter.load(context,true);
-                reinit(context);
 
+            SpManager.setEncryptedPreference(sp, PREF_TRANSFERS, trans.toString());
+
+            if(store.currentSeed!=null && seed.id.equals(store.currentSeed.id)) {
+                reinit(context);
+                WalletAddressCardAdapter.load(context,true);
+                WalletTransfersCardAdapter.load(context,true);
             }
         }
     }
@@ -587,61 +614,6 @@ public class Store {
 
     }
 
-    @Deprecated
-    public static synchronized void updateAccountDataOld(Context context, Seeds.Seed seed, Wallet wallet, List<Transfer> transfers, List<Address> addresses) {
-        if(seed!=null) {
-
-            SharedPreferences sp = context.getSharedPreferences(seed.id, Context.MODE_PRIVATE);
-            List<Transfer> alreadyTransfers = getTransfers(context,seed);
-            //Collections.reverse(transfers);
-            for (Transfer t : transfers) {
-                Transfer already = isAlreadyTransfer(t,alreadyTransfers);
-                if(already==null) {
-                    alreadyTransfers.add(0,t);
-                } else {
-                    already.setPersistence(t.getPersistence()!=null?t.getPersistence():false);
-                    already.setMarkDoubleSpend(t.isMarkDoubleSpend());
-                    already.setTimestamp(t.getTimestamp());
-                }
-            }
-
-            JSONArray trans = new JSONArray();
-            for (Transfer t : alreadyTransfers) {
-                trans.put(t.toJson());
-            }
-            SpManager.setEncryptedPreference(sp, PREF_TRANSFERS, trans.toString());
-
-
-            List<Address> alreadyAddress = getAddresses(context,seed);
-
-            for(Address add: addresses) {
-                Address already=isAlreadyAddress(add,alreadyAddress);
-                if(already==null) {
-                    alreadyAddress.add(add);
-
-                } else {
-                    already.setAttached(add.isAttached());
-                    already.setValue(add.getValue());
-                    already.setPendingValue(add.getPendingValue());
-                    already.setUsed(add.isUsed());
-                }
-            }
-
-            JSONArray jar = new JSONArray();
-            for (Address add : alreadyAddress) {
-                jar.put(add.toJson());
-            }
-            SpManager.setEncryptedPreference(sp, PREF_ADDRESSES, jar.toString());
-
-            Store.addUpdateWallet(context,seed,wallet);
-
-            if(store.currentSeed!=null && seed.id.equals(store.currentSeed.id)) {
-                reinit(context);
-            }
-
-        }
-
-    }
 
     public static void setCurrentAddressPig(Context context, String address, boolean isPig) {
         for(Address add: getAddresses()) {
@@ -872,6 +844,7 @@ public class Store {
     }
     public static void changeNode(Nodes.Node newnode) {
         store.currentNode=newnode;
+        store.nodeInfo=null;
         store.neighbours.clear();
     }
     public static void updateNode(Context context,Nodes.Node updateNode) {

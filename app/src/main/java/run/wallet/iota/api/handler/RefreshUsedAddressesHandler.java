@@ -87,7 +87,20 @@ public class RefreshUsedAddressesHandler extends IotaRequestHandler {
         Wallet wallet = Store.getWallet(context,seed);
 
         if(wallet!=null) {
+
             List<Address> alreadyAddress = Store.getAddresses(context, seed);
+
+            String[] checkaddresses = new String[alreadyAddress.size()];
+            int index=0;
+            for(Address add: alreadyAddress) {
+                checkaddresses[index++]=add.getAddress();
+            }
+            boolean[] checkedAddresses=apiProxy.checkWereAddressSpentFrom(checkaddresses);
+            index=0;
+            for(Address add: alreadyAddress) {
+                add.setUsed(checkedAddresses[index++]);
+            }
+
             GetTransferResponse gtr=null;
             StopWatch stopWatch = new StopWatch();
             List<Address> checkAddress = new ArrayList<>();
@@ -134,7 +147,9 @@ public class RefreshUsedAddressesHandler extends IotaRequestHandler {
                         List<Transfer> alreadyTransfer=Store.getTransfers(context, seed);
                         Audit.bundlePopulateTransfers(gtr.getTransfers(),transfers,alreadyAddress);
 
+
                         Audit.setTransfersToAddresses(seed, transfers, alreadyAddress, wallet, alreadyTransfer);
+
 
 
                         Audit.processNudgeAttempts(context,seed,transfers);
@@ -148,6 +163,10 @@ public class RefreshUsedAddressesHandler extends IotaRequestHandler {
                 }
 
 
+            } else {
+                if(report) {
+                    Store.setUsedAddressCheckResult(context.getString(R.string.usedAddressOk));
+                }
             }
 
 

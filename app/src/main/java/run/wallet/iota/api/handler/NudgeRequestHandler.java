@@ -50,6 +50,7 @@ public class NudgeRequestHandler extends IotaRequestHandler {
         NudgeRequest request=(NudgeRequest) inrequest;
 
         Transfer nudgeMe= request.getTransfer();
+
         try {
 
             List<Address> alreadyAddress = Store.getAddresses(context,request.getSeed());
@@ -88,7 +89,9 @@ public class NudgeRequestHandler extends IotaRequestHandler {
                     if(gotHash!=null) {
                         Wallet wallet = Store.getWallet(context, request.getSeed());
                         Audit.setTransfersToAddresses(request.getSeed(), transfers, alreadyAddress, wallet, alreadyTransfers);
-                        Audit.processNudgeAttempts(context, request.getSeed(), transfers);
+                        if(!request.isIsquicknudge()) {
+                            Audit.processNudgeAttempts(context, request.getSeed(), transfers);
+                        }
                         Store.updateAccountData(context, request.getSeed(), wallet, transfers, alreadyAddress);
                     }
 
@@ -96,7 +99,7 @@ public class NudgeRequestHandler extends IotaRequestHandler {
                         NotificationHelper.responseNotification(context, R.drawable.nudge_orange, context.getString(R.string.notification_nudge_succeeded_title), notificationId);
 
                     } else {
-                        NotificationHelper.vibrate(context);
+                        //NotificationHelper.vibrate(context);
                     }
                     return nresp;
 
@@ -117,4 +120,5 @@ public class NudgeRequestHandler extends IotaRequestHandler {
 
         return response;
     }
+
 }

@@ -35,7 +35,7 @@ public class Constants {
     public static final String PREFERENCE_ISSUE_REPORTER = "preference_issue_reporter";
     public static final String PRICE_STORAGE_PREFIX = "exchange_rate_storage";
 
-    public static final int PREF_TRANSFER_DEPTH_DEFAULT =9;
+    public static final int PREF_TRANSFER_DEPTH_DEFAULT =6;
 
     public static final String PREF_BALANCE_DISPLAY= "pref_baland_display";
 
@@ -50,6 +50,8 @@ public class Constants {
 
     public static final int PREF_AUTO_LOGUT_DEFAULT=2;
     public static final String PREF_AUTO_LOGOUT="preference_auto_logout";
+    public static final String PREF_CANCEL_TRANSFER="preference_cancel_transfer";
+    public static final int PREF_CANCEL_TRANSFER_DEFAULT=2;
 
     public static final int PREF_MIN_WEIGHT_DEFAULT =14;
     public static final String PREF_MIN_WEIGHT="preference_min_weight";

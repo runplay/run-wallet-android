@@ -345,7 +345,7 @@
                                 android:textAppearance="@style/Base.TextAppearance.AppCompat.Headline"
                                 android:textStyle="bold"
                                 android:textColor="@color/green"
-                                android:inputType="numberSigned" />
+                                android:inputType="numberDecimal" />
 
                         </LinearLayout>
 

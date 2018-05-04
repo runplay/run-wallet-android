@@ -36,6 +36,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
+import cfb.pearldiver.PearlDiverLocalPoW;
 import jota.RunIotaAPI;
 import jota.dto.response.ReplayBundleResponse;
 import run.wallet.R;
@@ -574,14 +575,7 @@ public final class AppService extends Service {
             }
         }
     }
-    private static void runMessageTask(TaskManager taskManager, ApiRequest request) {
-        if(request!=null && taskManager !=null) {
-            taskManager.startNewMessageTask(request);
-            if(SERVICE!=null) {
-                SERVICE.tasks.put(taskManager.getTaskId(), request);
-            }
-        }
-    }
+
     public static void markTaskFinished(long taskId) {
         if(SERVICE!=null) {
             SERVICE.tasks.remove(taskId);
@@ -694,6 +688,29 @@ public final class AppService extends Service {
             runTask(rt,rtr,Store.doPow(SERVICE));
         }
     }
+    public static void nudgeTransaction(Context context, Seeds.Seed seed, Transfer transfer, boolean isquicknudge) {
+        if(Validator.isValidCaller() && Store.getCurrentSeed()!=null) {
+            NudgeRequest rtr = new NudgeRequest(seed,transfer,isquicknudge);
+            TaskManager rt = new TaskManager(SERVICE);
+            runTask(rt,rtr,Store.doPow(SERVICE));
+        }
+    }
+    public static void nudgeTransactionInstant(Context context, Seeds.Seed seed, Transfer transfer, boolean isquicknudge) {
+        if(Validator.isValidCaller() && Store.getCurrentSeed()!=null) {
+            NudgeRequest rtr = new NudgeRequest(seed,transfer,isquicknudge);
+            Nodes.Node node = Store.getNode();
+            if(node!=null) {
+
+                String protocol = node.protocol;
+                String host = node.ip;
+                int port = node.port;
+                RunIotaAPI iotaApi = new RunIotaAPI.Builder().localPoW(new PearlDiverLocalPoW()).protocol(protocol).host(host).port(((Integer) port).toString()).build();
+                NudgeRequestHandler.doNudge(iotaApi,SERVICE,rtr);
+            }
+
+
+        }
+    }
     public static void replayBundleTransaction(Context context, Seeds.Seed seed, String hash, String refreshCallAddress) {
         if(Validator.isValidCaller() && Store.getCurrentSeed()!=null) {
             ReplayBundleRequest rtr = new ReplayBundleRequest(seed,hash,refreshCallAddress);
@@ -767,6 +784,17 @@ public final class AppService extends Service {
             }
         }
     }
+    public static void getNodeInfoSilent(Context context) {
+        if(SERVICE !=null) {
+            if (SERVICE.lastNodeInfo < System.currentTimeMillis() - 3000) {
+                SERVICE.lastNodeInfo = System.currentTimeMillis();
+                TaskManager rt = new TaskManager(SERVICE);
+                NodeInfoRequest nir = new NodeInfoRequest();
+                nir.setSilent(true);
+                runTask(rt, nir,false);
+            }
+        }
+    }
     public static void getNodeInfo(Context context, boolean force) {
         if(SERVICE !=null) {
             if (force || (SERVICE.lastNodeInfo < System.currentTimeMillis() - 3000)) {
@@ -795,7 +823,7 @@ public final class AppService extends Service {
         runBasicTask(rt, nir);
     }
 
-    private static final long nudgeEvery=120000;
+    private static final long nudgeEvery=50000;
     private static long lastNudgeRun=System.currentTimeMillis()-(40000);
 
     private static void AutoNudgerGo() {

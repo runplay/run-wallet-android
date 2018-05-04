@@ -44,14 +44,16 @@ public class NodeInfoRequestHandler extends IotaRequestHandler {
 
     @Override
     public ApiResponse handle(ApiRequest request) {
-        return getNodeInfo(apiProxy,context);
+        return getNodeInfo(apiProxy,context,request);
     }
     public static NodeInfoResponse getNodeInfo(RunIotaAPI apiProxy, Context context) {
+        return getNodeInfo(apiProxy, context);
+    }
+    public static NodeInfoResponse getNodeInfo(RunIotaAPI apiProxy, Context context,ApiRequest request) {
         NodeInfoResponse info=null;
         Nodes.Node cnode=Store.getNode();
         boolean trynew=false;
         try {
-            //Log.e("GETNODE",cnode.ip);
             info=new NodeInfoResponse(apiProxy.getNodeInfo());
         } catch(Exception e) {}
         if(info==null) {
@@ -80,20 +82,19 @@ public class NodeInfoRequestHandler extends IotaRequestHandler {
                 trynew=true;
             }
             cnode.lastused=System.currentTimeMillis();
-            //Log.e("NODE","TRY SYNC: "+cnode.ip+" - "+cnode.syncVal);
             Store.updateNode(context,cnode);
         }
 
-
-        //Log.e("NODE","sync val: "+trynew+" - "+Store.getFailedNodeAttempt());
         if(trynew && Store.getFailedNodeAttempt()<5) {
             Nodes.Node trynode = Store.getNextNode();
-            //Log.e("NODE","CHECK ANOTHER: "+trynode.ip);
             if(!trynode.ip.equals(cnode.ip)) {
                 Store.changeNode(trynode);
-                //Log.e("NODE","NOT SYNCHED TRY ANOTHER: "+trynode.ip);
                 AppService.getNodeInfo(context);
             }
+        }
+        if(request!=null) {
+            NodeInfoRequest nir = (NodeInfoRequest) request;
+            info.setSilent(nir.isSilent());
         }
         return info;
     }

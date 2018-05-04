@@ -20,6 +20,8 @@
 package run.wallet.iota.api.responses;
 
 import android.content.Context;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import android.util.Log;
 
 import java.util.ArrayList;
@@ -28,7 +30,10 @@ import java.util.List;
 
 import jota.model.Bundle;
 import jota.model.Transaction;
+import run.wallet.iota.api.requests.SendTransferRequest;
 import run.wallet.iota.helper.Audit;
+import run.wallet.iota.helper.Constants;
+import run.wallet.iota.helper.Sf;
 import run.wallet.iota.helper.Utils;
 import run.wallet.iota.model.Address;
 import run.wallet.iota.model.Seeds;
@@ -36,6 +41,7 @@ import run.wallet.iota.model.Store;
 import run.wallet.iota.model.Transfer;
 import run.wallet.iota.model.TransferTransaction;
 import run.wallet.iota.model.Wallet;
+import run.wallet.iota.service.AppService;
 
 public class SendTransferResponse extends ApiResponse {
 
@@ -53,8 +59,21 @@ public class SendTransferResponse extends ApiResponse {
         Audit.populateTxToTransfers(apiResponse.getTransactions(),Store.getNodeInfo(),transfers,alreadyAddress);
         Audit.setTransfersToAddresses(seed, transfers, alreadyAddress, wallet, alreadyTransfers);
         Audit.processNudgeAttempts(context, seed, transfers);
-        Store.updateAccountData(context, seed, wallet, transfers, alreadyAddress);
 
+
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+        int nudgeAttempts = Sf.toInt(prefs.getString(Constants.PREF_TRANSFER_NUDGE_ATTEMPTS, "" + Constants.PREF_TRANSFER_NUDGE_ATTEMPTS_VALUE));
+        if(nudgeAttempts>0) {
+            String hash = apiResponse.getTransactions().get(0).getHash();
+            Transfer quicknudge = Store.isAlreadyTransfer(hash, transfers);
+            if (quicknudge != null) {
+                AppService.nudgeTransactionInstant(context,
+                        seed
+                        , quicknudge, true);
+
+            }
+        }
+        Store.updateAccountData(context, seed, wallet, transfers, alreadyAddress);
 
         /*
         for(Transfer transfer: transfers) {

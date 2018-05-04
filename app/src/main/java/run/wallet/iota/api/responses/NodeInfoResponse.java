@@ -39,7 +39,14 @@ public class NodeInfoResponse extends ApiResponse {
     private final long time;
     private final int tips;
     private final int transactionsToRequest;
+    private boolean isSilent=false;
+    public boolean isSilent() {
+        return isSilent;
+    }
 
+    public void setSilent(boolean silent) {
+        isSilent = silent;
+    }
     public boolean isSyncOk() {
         if(getLatestMilestoneIndex()==243000)
             return false;

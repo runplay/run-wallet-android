@@ -427,6 +427,11 @@
     <string name="settings_auto_nudge">Nudge attempts</string>
     <string name="settings_auto_nudge_summary">Number of times the app will Nudge (promote) a transfer before giving up</string>
 
+    <string name="transfer_include">Include Transfer</string>
+    <string name="transfer_ignored">Ignored</string>
+    <string name="settings_cancel_transfer">Ignore Transfer</string>
+    <string name="settings_cancel_transfer_summary">Time period in hours where a not completed Transfer can be marked as ignored by the wallet</string>
+
     <string name="settings_first_load">First Load Addresses</string>
     <string name="settings_first_load_summary">Number of Addresses the app will check up to when performing the First load of a seed</string>
 

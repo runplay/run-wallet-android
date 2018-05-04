@@ -9,13 +9,13 @@ import jota.model.Transaction;
 import jota.utils.Checksum;
 import jota.utils.InputValidator;
 
-import okhttp3.Credentials;
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import okio.Buffer;
 import retrofit2.Call;
 import retrofit2.Response;
 import retrofit2.Retrofit;
@@ -26,9 +26,6 @@ import run.wallet.iota.model.SubConstants;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
-import java.net.Authenticator;
-import java.net.InetAddress;
-import java.net.PasswordAuthentication;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
@@ -47,7 +44,8 @@ public class RunIotaAPICore {
     private static final String X_IOTA_API_VERSION_HEADER_NAME = "X-IOTA-API-Version";
     private static final String X_IOTA_API_VERSION_HEADER_VALUE = "1";
 
-    private static final Logger log = LoggerFactory.getLogger(IotaAPICore.class);
+
+    private static final Logger log = LoggerFactory.getLogger(RunIotaAPICore.class);
 
     private IotaAPIService service;
     private String protocol, host, port;
@@ -55,6 +53,13 @@ public class RunIotaAPICore {
 
     private static final String uname= SubConstants.nodeUser1+SubConstants.nodeUser2;
     private static final String upassword=SubConstants.nodePass1+SubConstants.nodePass2;
+
+
+    public WereAddressesSpentFromResponse wereAddressesSpentFrom(String[] addresses) {
+        final IotaWereAddressesSpentFromRequest wasSpentRequest = IotaWereAddressesSpentFromRequest.createWereAddressSpendFromRequest(addresses);
+        final Call<WereAddressesSpentFromResponse> res =  service.wereAddressesSpentFrom(wasSpentRequest);
+        return wrapCheckedException(res).body();
+    }
 
     /**
      * Build the API core.
@@ -72,7 +77,6 @@ public class RunIotaAPICore {
     protected static <T> Response<T> wrapCheckedException(final Call<T> call) {
         try {
             final Response<T> res = call.execute();
-
             String error = "";
 
             if (res.errorBody() != null) {
@@ -93,7 +97,8 @@ public class RunIotaAPICore {
             }
             return res;
         } catch (IOException e) {
-            Log.e("ERROR","Execution of the API call raised exception. IOTA Node not reachable?"+ e.getMessage());
+
+            Log.e("CheckExec","Execution "+ e.getMessage());
             throw new IllegalStateException(e.getMessage());
         }
 
@@ -102,8 +107,8 @@ public class RunIotaAPICore {
     private static String env(String env, String def) {
         final String value = System.getenv(env);
         if (value == null) {
-            //log.warn("Environment variable '{}' is not defined, and actual value has not been specified. "
-            //        + "Rolling back to default value: '{}'", env, def);
+            log.warn("Environment variable '{}' is not defined, and actual value has not been specified. "
+                    + "Rolling back to default value: '{}'", env, def);
             return def;
         }
         return value;
@@ -152,7 +157,14 @@ public class RunIotaAPICore {
             //Log.e("IRI-CONNECT","NOOTTTTT Using Auth");
             final OkHttpClient client = new OkHttpClient.Builder()
                     .readTimeout(5000, TimeUnit.SECONDS)
-
+                    .addNetworkInterceptor(new Interceptor() {
+                        @Override
+                        public okhttp3.Response intercept(Chain chain) throws IOException {
+                            final Buffer buffer = new Buffer();
+                            chain.request().body().writeTo(buffer);
+                            return chain.proceed(chain.request());
+                        }
+                    })
                     .addInterceptor(new Interceptor() {
                         @Override
                         public okhttp3.Response intercept(Chain chain) throws IOException {
@@ -162,14 +174,13 @@ public class RunIotaAPICore {
                             newRequest = request.newBuilder()
                                     .addHeader(X_IOTA_API_VERSION_HEADER_NAME, X_IOTA_API_VERSION_HEADER_VALUE)
                                     .build();
-
                             return chain.proceed(newRequest);
                         }
                     })
                     .connectTimeout(5000, TimeUnit.SECONDS)
                     .build();
-
             // use client to create Retrofit service
+
             final Retrofit retrofit = new Retrofit.Builder()
                     .baseUrl(nodeUrl)
                     .addConverterFactory(GsonConverterFactory.create())
@@ -177,6 +188,7 @@ public class RunIotaAPICore {
                     .build();
 
             service = retrofit.create(IotaAPIService.class);
+
         }
 
         // Create OkHttpBuilder
@@ -191,6 +203,8 @@ public class RunIotaAPICore {
         }
         return result;
     }
+
+
     /**
      * Get the node information.
      *
@@ -270,8 +284,10 @@ public class RunIotaAPICore {
         List<String> addressesWithoutChecksum = new ArrayList<>();
 
         for (String address : addresses) {
-            String addressO = Checksum.removeChecksum(address);
-            addressesWithoutChecksum.add(addressO);
+            try {
+                address = Checksum.removeChecksum(address);
+            } catch(Exception e) {}
+            addressesWithoutChecksum.add(address);
         }
 
         return findTransactions(addressesWithoutChecksum.toArray(new String[addressesWithoutChecksum.size()]), null, null, null);
@@ -384,8 +400,10 @@ public class RunIotaAPICore {
         List<String> addressesWithoutChecksum = new ArrayList<>();
 
         for (String address : addresses) {
-            String addressO = Checksum.removeChecksum(address);
-            addressesWithoutChecksum.add(addressO);
+            try {
+                address = Checksum.removeChecksum(address);
+            } catch(Exception e) {}
+            addressesWithoutChecksum.add(address);
         }
         return getBalances(threshold, addressesWithoutChecksum.toArray(new String[]{}));
     }

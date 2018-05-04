@@ -48,6 +48,7 @@ import run.wallet.common.Sf;
 import run.wallet.common.json.JSONArray;
 import run.wallet.common.json.JSONObject;
 import run.wallet.iota.api.responses.NodeInfoResponse;
+import run.wallet.iota.api.responses.RefreshEventResponse;
 import run.wallet.iota.helper.AppTheme;
 import run.wallet.iota.helper.Constants;
 import run.wallet.iota.helper.JSONUrlReader;
@@ -113,12 +114,16 @@ public class NetworkNodesFragment extends Fragment
     @Override
     public void onResume() {
         super.onResume();
-        //Log.e("NODES","onResume() called");
         setAdapter();
 
     }
     @Subscribe
     public void onEvent(NodeInfoResponse nir) {
+
+        setAdapter();
+    }
+    @Subscribe
+    public void onEvent(RefreshEventResponse nir) {
 
         setAdapter();
     }
@@ -133,7 +138,6 @@ public class NetworkNodesFragment extends Fragment
         recyclerView.setLayoutManager(layoutManager);
         adapter = new NodesListAdapter(getActivity());
         recyclerView.setAdapter(null);
-        //adapter.notifyDataSetChanged();
         recyclerView.setAdapter(adapter);
     }
 

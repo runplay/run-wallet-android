@@ -21,6 +21,15 @@ package run.wallet.iota.api.requests;
 
 public class NodeInfoRequest extends ApiRequest {
 
+
     public NodeInfoRequest() {
+    }
+    private boolean isSilent=false;
+    public boolean isSilent() {
+        return isSilent;
+    }
+
+    public void setSilent(boolean silent) {
+        isSilent = silent;
     }
 }

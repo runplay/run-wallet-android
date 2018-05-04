@@ -167,9 +167,10 @@ public class NetworkNodeInfoFragment extends BaseSwipeRefreshLayoutFragment impl
 
     @Subscribe
     public void onEvent(NetworkError error) {
+        swipeRefreshLayout.setRefreshing(false);
         switch (error.getErrorType()) {
             case REMOTE_NODE_ERROR:
-                swipeRefreshLayout.setRefreshing(false);
+
                 chart.setVisibility(View.INVISIBLE);
                 if(nodeInfos!=null)
                     nodeInfos.clear();
@@ -184,11 +185,11 @@ public class NetworkNodeInfoFragment extends BaseSwipeRefreshLayoutFragment impl
     }
 
     private void setAdapter() {
+        swipeRefreshLayout.setRefreshing(false);
         NodeInfoResponse nir=Store.getNodeInfo();
         Activity activity = getActivity();
 
         if(activity!=null && nir!=null) {
-            swipeRefreshLayout.setRefreshing(false);
             SimpleDateFormat df = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss", Locale.getDefault());
             nodeInfos = new ArrayList<>();
             nodeInfos.add(new NodeInfo(activity.getString(R.string.info_app_name), nir.getAppName()));

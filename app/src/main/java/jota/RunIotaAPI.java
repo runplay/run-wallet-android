@@ -38,7 +38,7 @@ public class RunIotaAPI extends RunIotaAPICore {
 
     public static final String SEND_TO_INPUTS_ERROR = "Send to inputs!";
 
-    private static final Logger log = LoggerFactory.getLogger(IotaAPI.class);
+    private static final Logger log = LoggerFactory.getLogger(RunIotaAPI.class);
     private ICurl customCurl;
 
     protected RunIotaAPI(Builder builder) {
@@ -61,7 +61,38 @@ public class RunIotaAPI extends RunIotaAPICore {
         }
 
     }
+    public boolean[] checkWereAddressSpentFrom(String[] addresses) {
+        List<String> rawAddresses=new ArrayList<>();
+        for(String address: addresses) {
+            String rawAddress=null;
+            try {
+                if (Checksum.isAddressWithChecksum(address)) {
+                    rawAddress=Checksum.removeChecksum(address);
+                }
+            } catch (ArgumentException e) {}
+            if(rawAddress==null)
+                rawAddresses.add(address);
+            else
+                rawAddresses.add(rawAddress);
+        }
+        String[] spentAddresses = new String[rawAddresses.size()];
+        spentAddresses = rawAddresses.toArray(spentAddresses);
+        WereAddressesSpentFromResponse response = wereAddressesSpentFrom(spentAddresses);
+        return response.getStates();
 
+    }
+    public Boolean checkWereAddressSpentFrom(String address) {
+        String rawAddress=address;
+        try {
+            if(Checksum.isAddressWithChecksum(address)) {
+                rawAddress=Checksum.removeChecksum(address);
+            }
+        } catch (ArgumentException e) {}
+        String[] spentAddresses =new String[1];
+        spentAddresses[0]=rawAddress;
+        WereAddressesSpentFromResponse response = wereAddressesSpentFrom(spentAddresses);
+        return response.getStates()[0];
+    }
     public void broadcastGo(final String... trytes) throws ArgumentException {
 
         if (!InputValidator.isArrayOfAttachedTrytes(trytes)) {
@@ -359,22 +390,6 @@ public class RunIotaAPI extends RunIotaAPICore {
         return trx;
     }
 
-    public boolean wasAddressSpentFrom(String address) {
-        final String[] str =new String[]{};
-        str[0]=address;
-
-        List<Transaction> transactions =null;
-        try {
-            transactions = findTransactionObjectsByAddresses(str);
-        } catch (Exception e) {}
-        if(transactions!=null) {
-            for(Transaction t: transactions) {
-                if(t.getValue()<0)
-                    return true;
-            }
-        }
-        return false;
-    }
     /**
      * Wrapper function for getTrytes and transactionObjects.
      * Gets the trytes and transaction object from a list of transaction hashes.
@@ -409,8 +424,10 @@ public class RunIotaAPI extends RunIotaAPICore {
         List<String> addressesWithoutChecksum = new ArrayList<>();
 
         for (String address : addresses) {
-            String addressO = Checksum.removeChecksum(address);
-            addressesWithoutChecksum.add(addressO);
+            try {
+                address = Checksum.removeChecksum(address);
+            } catch(Exception e) {}
+            addressesWithoutChecksum.add(address);
         }
 
         FindTransactionResponse ftr = findTransactions(addressesWithoutChecksum.toArray(new String[]{}), null, null, null);
@@ -502,9 +519,13 @@ public class RunIotaAPI extends RunIotaAPICore {
         //  and prepare the signatureFragments, message and tag
         for (final Transfer transfer : transfers) {
             // remove the checksum of the address if provided
-            if (Checksum.isValidChecksum(transfer.getAddress())) {
-                transfer.setAddress(Checksum.removeChecksum(transfer.getAddress()));
-            }
+            String address = transfer.getAddress();
+            try {
+                if (Checksum.isValidChecksum(transfer.getAddress())) {
+                    address = Checksum.removeChecksum(transfer.getAddress());
+                }
+            } catch(Exception e) {}
+            transfer.setAddress(address);
             int signatureMessageLength = 1;
 
             // If message longer than 2187 trytes, increase signatureMessageLength (add 2nd transaction)
@@ -554,12 +575,10 @@ public class RunIotaAPI extends RunIotaAPICore {
         if (totalValue != 0) {
 
             if (inputs != null && !inputs.isEmpty()) {
-                //Log.e("PREP","inputs... OKKKKKK: "+remainder);
                 return addRemainder(seed, security, inputs, bundle, tag, totalValue, remainder, signatureFragments);
             }
 
             else {
-                //Log.e("PREP","SHOULD NOT DISPLAY THIS MESSAGE 1");
                 @SuppressWarnings("unchecked") GetBalancesAndFormatResponse newinputs = getInputs(seed, security, 0, 0, totalValue);
                 // If inputs with enough balance
                 return addRemainder(seed, security, newinputs.getInputs(), bundle, tag, totalValue, remainder, signatureFragments);
@@ -992,9 +1011,13 @@ public class RunIotaAPI extends RunIotaAPICore {
         for (final Transfer transfer : transfers) {
 
             // remove the checksum of the address if provided
-            if (Checksum.isValidChecksum(transfer.getAddress())) {
-                transfer.setAddress(Checksum.removeChecksum(transfer.getAddress()));
-            }
+            String address = transfer.getAddress();
+            try {
+                if (Checksum.isValidChecksum(transfer.getAddress())) {
+                    address = Checksum.removeChecksum(transfer.getAddress());
+                }
+            } catch(Exception e) {}
+            transfer.setAddress(address);
 
             int signatureMessageLength = 1;
 

@@ -28,13 +28,17 @@ public class NudgeRequest extends SeedApiRequest {
     private Transfer transfer;
     private int minWeightMagnitude = Constants.PREF_MIN_WEIGHT_DEFAULT;
     private int depth = Constants.PREF_TRANSFER_DEPTH_DEFAULT;
-
+    private boolean isquicknudge=false;
 
     public NudgeRequest(Seeds.Seed seed, Transfer transfer) {
         super(seed);
         this.setTransfer(transfer);
     }
-
+    public NudgeRequest(Seeds.Seed seed, Transfer transfer,boolean quicknudge) {
+        super(seed);
+        this.setTransfer(transfer);
+        this.isquicknudge=quicknudge;
+    }
 
     public int getMinWeightMagnitude() {
         return minWeightMagnitude;
@@ -58,5 +62,13 @@ public class NudgeRequest extends SeedApiRequest {
 
     public void setTransfer(Transfer transfer) {
         this.transfer = transfer;
+    }
+
+    public boolean isIsquicknudge() {
+        return isquicknudge;
+    }
+
+    public void setIsquicknudge(boolean isquicknudge) {
+        this.isquicknudge = isquicknudge;
     }
 }

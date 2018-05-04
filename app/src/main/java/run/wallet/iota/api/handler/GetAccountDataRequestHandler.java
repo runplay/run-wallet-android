@@ -75,9 +75,10 @@ public class GetAccountDataRequestHandler extends IotaRequestHandler {
         GetAccountDataRequest request = (GetAccountDataRequest) inrequest;
         GetTransferResponse gtr=null;
         StopWatch stopWatch = new StopWatch();
-        NodeInfoResponse nodeInfo=Store.getNodeInfo();
+
 
         Wallet wallet = Store.getWallet(context,request.getSeed());
+        NodeInfoResponse nodeInfo=Store.getNodeInfo();
         if(wallet!=null && nodeInfo!=null) {
             List<Address> alreadyAddress = Store.getAddresses(context, request.getSeed());
             List<Address> usingAddress = Store.getDisplayAddresses(alreadyAddress);

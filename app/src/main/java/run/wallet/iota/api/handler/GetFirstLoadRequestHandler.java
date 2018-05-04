@@ -269,6 +269,18 @@ public class GetFirstLoadRequestHandler extends IotaRequestHandler {
 
             allAddresses=allAddresses.subList(0,allAddresses.size()-(stopWhenCountEmpty));
 
+            // lastly do a double check if spend from
+            String[] checkaddresses = new String[allAddresses.size()];
+            int index=0;
+            for(Address add: allAddresses) {
+                checkaddresses[index++]=add.getAddress();
+            }
+            boolean[] checkedAddresses=apiProxy.checkWereAddressSpentFrom(checkaddresses);
+            index=0;
+            for(Address add: allAddresses) {
+                add.setUsed(checkedAddresses[index++]);
+            }
+
             Audit.setTransfersToAddresses(((GetFirstLoadRequest) request).getSeed(),transfers,allAddresses,wallet,addInTransfers);
 
         }
