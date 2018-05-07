@@ -2,7 +2,7 @@ apply plugin: 'com.android.application'
 
 def versionMajor = 1
 def versionMinor = 3
-def magicNumber = 8500
+def magicNumber = 8650
 
 android {
     compileSdkVersion 27
@@ -90,7 +90,6 @@ dependencies {
     compile group: 'com.squareup.retrofit2', name: 'converter-gson', version: '2.3.0'
     compile group: 'org.apache.commons', name: 'commons-lang3', version: '3.6'
     compile group: 'org.slf4j', name: 'slf4j-api', version: '1.7.25'
-    //implementation 'com.github.iotaledger:iota~lib~java:0478ffb'
 
 
 }

@@ -28,6 +28,8 @@ https://github.com/iotaledger/android-wallet-app
 <br/>
 <br/>
 <h2>Updates</h2>
+v1.3.8650 - Security update, big issue found around using an old IOTA library, all previous release of run IOTA wallet should be discarded if you have.<br/>
+The whole release-0.9.10 of jota is included in this release, like the previous library that had the security bug in it as it is not possible to overwrite the current library to include the wereAddressSpentFrom feature which is also a security issue not being in the official GitHub JOTA library, runplay had previous provided the code for this to issue #101<br/><br/><br/>
 v1.3.8500 - Pre snaphot used address checker, decimal place on > iota values, Network area improvements<br/>
 v1.3.8400 - Solutions for issues: #5 & #6<br/>
 v1.3.8350 - Print paper wallet added with trinity wallet compatibility, import QR Seed & trinity wallet compatibility and some bug fixes, promte transaction improvements<br/>

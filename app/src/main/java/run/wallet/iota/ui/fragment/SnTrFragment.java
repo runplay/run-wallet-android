@@ -624,7 +624,7 @@ public class SnTrFragment extends Fragment {
             addressEditTextInputLayout.setError(getString(R.string.messages_invalid_address));
         } else if (getAmount().isEmpty() || getAmount().equals("0")) {
             addressEditTextInputLayout.setError(getString(R.string.messages_enter_amount));
-        } else if (balances!=null && balances.available < Long.parseLong(amountInSelectedUnit())) {
+        } else if (balances!=null && balances.available< Long.parseLong(amountInSelectedUnit())) {
             addressEditTextInputLayout.setError(getString(R.string.messages_not_enough_balance));
         } else {
             boolean has=false;
@@ -688,8 +688,8 @@ public class SnTrFragment extends Fragment {
 
     }
     private void goNext() {
-
         if(PayPacket.getPayTo().isEmpty()) {
+
             boolean validated=true;
             if (!isValidAddress()) {
                 addressEditTextInputLayout.setError(getString(R.string.messages_invalid_address));
@@ -697,7 +697,7 @@ public class SnTrFragment extends Fragment {
             } else if (getAmount().isEmpty() || getAmount().equals("0")) {
                 addressEditTextInputLayout.setError(getString(R.string.messages_enter_amount));
                 validated=false;
-            } else if (balances!=null && balances.available < Long.parseLong(amountInSelectedUnit())) {
+            } else if (balances!=null && balances.available < PayPacket.getTotalToPay()) {
                 addressEditTextInputLayout.setError(getString(R.string.messages_not_enough_balance));
                 validated=false;
             }

@@ -1,6 +1,7 @@
 <resources  xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
     <string name="app_name">run IOTA</string>
     <string name="app_settings">run IOTA</string>
+    <string name="app_email">iota@runplay.com</string>
     <string name="app_issue_reporter">Issue Reporter</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
@@ -79,6 +80,7 @@
     <string name="used_address">Used address</string>
     <string name="attached_address">Attached</string>
 
+    <string name="used_address_copy">Used addresses are finished, never use again</string>
     <string name="randomise">Randomise</string>
 
     <string name="usedAddressOk">All OK, no used addresses with &gt; Zero balances</string>
@@ -275,6 +277,7 @@
     <string name="label_cancel">Cancel</string>
     <string name="label_cancelled">Double</string>
     <string name="label_address_used">No complete</string>
+    <string name="label_transfer_completed">Transfer is now completed ✅</string>
     <string name="contacts_unknown">Unknown</string>
     <string name="sms_hint_search">Enter number or name</string>
     <string name="sms_alert_no_message">Enter a message to send</string>
@@ -629,6 +632,7 @@
 
     <string name="help">Help and FAQ</string>
     <string name="help_aw_head">Active Wallet Area</string>
+
     <string name="help_aw_actions">Actions</string>
     <string name="help_aw_actions_text">Show all actions on Addresses for the active Wallet</string>
     <string name="help_aw_nudge">Nudge Transfer</string>
@@ -656,7 +660,7 @@
     <string name="help_key_complete">Transfer completed</string>
     <string name="help_key_nudge">Nudge (promote) count</string>
     <string name="help_key_nudge_tran">Nudge transfer</string>
-    <string name="help_key_address">Address (promote) name</string>
+    <string name="help_key_address">Address (identifier) name</string>
     <string name="help_key_security">Address security value</string>
 
 
@@ -701,6 +705,6 @@
 
     <string name="help_beta">Beta 🔨🔧</string>
     <string name="help_beta_text">run IOTA is an Open Beta app.</string>
-    <string name="help_beta_contact">If you have any issues, get in contact, 🐞 bugs can be fixed 🔧</string>
+    <string name="help_beta_contact">If you have any problems, get in contact 🔧</string>
 
 </resources>

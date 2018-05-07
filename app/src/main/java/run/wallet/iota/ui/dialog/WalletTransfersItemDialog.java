@@ -73,7 +73,7 @@ public class WalletTransfersItemDialog extends DialogFragment implements DialogI
     private boolean canCancel=false;
     private List<Integer> options=new ArrayList<>();
     private List<CharSequence> items=new ArrayList<>();
-    private static final int OPT_COPY_ADD=0;
+    //private static final int OPT_COPY_ADD=0;
     private static final int OPT_COPY_HASH=1;
     private static final int OPT_NUDGE=2;
     private static final int OPT_RESEND=3;
@@ -92,7 +92,7 @@ public class WalletTransfersItemDialog extends DialogFragment implements DialogI
 
         hash = bundle.getString("hash");
 
-        final String copyAdd=getString(R.string.copy_address);
+        //final String copyAdd=getString(R.string.copy_address);
         final String copyHash=getString(R.string.copy_hash);
         final String nudge=getString(R.string.replay_bundle);
         final String resend=getString(R.string.resend_bundle);
@@ -118,9 +118,9 @@ public class WalletTransfersItemDialog extends DialogFragment implements DialogI
         maxNudgeAttempts= Sf.toInt(prefs.getString(Constants.PREF_TRANSFER_NUDGE_ATTEMPTS, ""+Constants.PREF_TRANSFER_NUDGE_ATTEMPTS_VALUE));
 
         //int useR = R.array.listOnWalletTransfersRecyclerViewClickDialog;
-        items.add(copyAdd);
+        //items.add(copyAdd);
         items.add(copyHash);
-        options.add(OPT_COPY_ADD);
+        //options.add(OPT_COPY_ADD);
         options.add(OPT_COPY_HASH);
         //if(!transfer.isIgnore()) {
             if (transfer.isMarkDoubleAddress()) {
@@ -166,6 +166,7 @@ public class WalletTransfersItemDialog extends DialogFragment implements DialogI
         final Bundle bundle = new Bundle();
         final int selected = options.get(which);
         switch(selected) {
+            /*
             case OPT_COPY_ADD:
                 String useAddress=transfer.getAddress();
                 try {
@@ -174,6 +175,7 @@ public class WalletTransfersItemDialog extends DialogFragment implements DialogI
                 ClipData clipAddress = ClipData.newPlainText(getActivity().getString(R.string.address), useAddress);
                 clipboard.setPrimaryClip(clipAddress);
                 break;
+                */
             case OPT_COPY_HASH:
                 ClipData clipHash = ClipData.newPlainText(getActivity().getString(R.string.hash), hash);
                 clipboard.setPrimaryClip(clipHash);

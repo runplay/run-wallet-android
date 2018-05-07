@@ -96,6 +96,7 @@ public class NudgeRequestHandler extends IotaRequestHandler {
                     }
 
                     if(!AppService.isAppStarted()) {
+                        NotificationHelper.clearAll(context);
                         NotificationHelper.responseNotification(context, R.drawable.nudge_orange, context.getString(R.string.notification_nudge_succeeded_title), notificationId);
 
                     } else {

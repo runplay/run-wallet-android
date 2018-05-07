@@ -82,7 +82,8 @@ public class Constants {
     public static final String QRCODE = "qrcode";
     public static final String UDP = "udp://";
     public static final String NEW_ADDRESS_TAG =  "RUN9WALLET9ADDRESS999999999";
-    public static final String NEW_TRANSFER_TAG = "RUN9WALLET9TRANSFER99999999";
+    public static final String NEW_TRANSFER_TAG = "999999999999999999999999999";
+    //public static final String NEW_TRANSFER_TAG = "RUN9WALLET9TRANSFER99999999";
     public static final String DONATION_TAG =     "RUN9WALLET9DONATE9999999999";
 
 

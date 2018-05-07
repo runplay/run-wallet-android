@@ -108,6 +108,7 @@ public class WalletAddressesItemDialog extends DialogFragment implements DialogI
             }
             switch (useWhich) {
                 case 0:
+
                     ClipData clipAddress = ClipData.newPlainText(getActivity().getString(R.string.address), addressChecksum);
                     clipboard.setPrimaryClip(clipAddress);
                     break;

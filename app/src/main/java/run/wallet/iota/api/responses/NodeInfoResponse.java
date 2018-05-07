@@ -84,7 +84,7 @@ public class NodeInfoResponse extends ApiResponse {
         time = apiResponse.getTime();
         tips = apiResponse.getTips();
         transactionsToRequest = apiResponse.getTransactionsToRequest();
-        setDuration(apiResponse.getDuration());
+        //setDuration(apiResponse.getDuration());
         Store.setNodeInfo(this);
     }
 

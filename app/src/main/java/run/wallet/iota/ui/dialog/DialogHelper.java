@@ -69,6 +69,7 @@ public class DialogHelper {
 
 
     }
+
     public static void showNodeListItemDialog(Activity activity, final NodesListAdapter adapter, int position,DialogInterface.OnDismissListener dismiss) {
         AlertDialog.Builder builderSingle = new AlertDialog.Builder(activity);
         builderSingle.setIcon(R.drawable.menu_neighbors);

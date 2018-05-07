@@ -76,7 +76,6 @@ public class GetAccountDataRequestHandler extends IotaRequestHandler {
         GetTransferResponse gtr=null;
         StopWatch stopWatch = new StopWatch();
 
-
         Wallet wallet = Store.getWallet(context,request.getSeed());
         NodeInfoResponse nodeInfo=Store.getNodeInfo();
         if(wallet!=null && nodeInfo!=null) {

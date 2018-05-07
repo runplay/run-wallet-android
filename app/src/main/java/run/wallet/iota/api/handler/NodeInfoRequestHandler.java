@@ -47,7 +47,7 @@ public class NodeInfoRequestHandler extends IotaRequestHandler {
         return getNodeInfo(apiProxy,context,request);
     }
     public static NodeInfoResponse getNodeInfo(RunIotaAPI apiProxy, Context context) {
-        return getNodeInfo(apiProxy, context);
+        return getNodeInfo(apiProxy, context,null);
     }
     public static NodeInfoResponse getNodeInfo(RunIotaAPI apiProxy, Context context,ApiRequest request) {
         NodeInfoResponse info=null;
@@ -94,7 +94,8 @@ public class NodeInfoRequestHandler extends IotaRequestHandler {
         }
         if(request!=null) {
             NodeInfoRequest nir = (NodeInfoRequest) request;
-            info.setSilent(nir.isSilent());
+            //if(nir!=null)
+                info.setSilent(nir.isSilent());
         }
         return info;
     }

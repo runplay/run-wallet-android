@@ -190,6 +190,14 @@ public class WalletTransfersFragment extends BaseSwipeRefreshLayoutFragment impl
         view.setBackgroundColor(B.getColor(getActivity(),AppTheme.getSecondary()));
         unbinder = ButterKnife.bind(this, view);
         swipeRefreshLayout = view.findViewById(R.id.wallet_transfers_swipe_container);
+        /*
+        jota.model.Bundle b = new jota.model.Bundle();
+        int[] bi=b.normalizedBundle("BRKTCAGBXOWOLIVKKAS9BGWQYJANAUJJRFSUHBEAASNKIGIGQRENVT9WEREYZPILZTLBQBIRBZJRQEGDA");
+        for(int i=0; i<bi.length; i++) {
+            if(bi[i]==13)
+                Log.e("TEST",bi[i]+" = bad transaction.."));
+        }
+*/
         return view;
     }
 

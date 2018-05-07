@@ -1,28 +1,20 @@
 package jota;
 
-import android.util.Log;
-
 import jota.dto.request.*;
 import jota.dto.response.*;
 import jota.error.ArgumentException;
 import jota.model.Transaction;
 import jota.utils.Checksum;
-import jota.utils.Constants;
 import jota.utils.InputValidator;
-
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import okio.Buffer;
 import retrofit2.Call;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
-import run.wallet.iota.helper.Base64;
-import run.wallet.iota.model.SubConstants;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -39,36 +31,24 @@ import static jota.utils.Constants.*;
  *
  * @author Adrian
  */
-public class RunIotaAPICore {
+public class IotaAPICore {
 
     // version header
     private static final String X_IOTA_API_VERSION_HEADER_NAME = "X-IOTA-API-Version";
     private static final String X_IOTA_API_VERSION_HEADER_VALUE = "1";
 
-    private static final String INVALID_HASHES_INPUT_ERROR="Invalid Hashes";
-
-    private static final Logger log = LoggerFactory.getLogger(RunIotaAPICore.class);
+    private static final Logger log = LoggerFactory.getLogger(IotaAPICore.class);
 
     private IotaAPIService service;
     private String protocol, host, port;
     private IotaLocalPoW localPoW;
-
-    private static final String uname= SubConstants.nodeUser1+SubConstants.nodeUser2;
-    private static final String upassword=SubConstants.nodePass1+SubConstants.nodePass2;
-
-
-    public WereAddressesSpentFromResponse wereAddressesSpentFrom(String[] addresses) {
-        final IotaWereAddressesSpentFromRequest wasSpentRequest = IotaWereAddressesSpentFromRequest.createWereAddressSpendFromRequest(addresses);
-        final Call<WereAddressesSpentFromResponse> res =  service.wereAddressesSpentFrom(wasSpentRequest);
-        return wrapCheckedException(res).body();
-    }
 
     /**
      * Build the API core.
      *
      * @param builder The builder.
      */
-    protected RunIotaAPICore(final Builder builder) {
+    protected IotaAPICore(final Builder builder) {
         protocol = builder.protocol;
         host = builder.host;
         port = builder.port;
@@ -79,6 +59,7 @@ public class RunIotaAPICore {
     protected static <T> Response<T> wrapCheckedException(final Call<T> call) {
         try {
             final Response<T> res = call.execute();
+
             String error = "";
 
             if (res.errorBody() != null) {
@@ -99,8 +80,7 @@ public class RunIotaAPICore {
             }
             return res;
         } catch (IOException e) {
-
-            Log.e("CheckExec","Execution "+ e.getMessage());
+            log.error("Execution of the API call raised exception. IOTA Node not reachable?", e);
             throw new IllegalStateException(e.getMessage());
         }
 
@@ -120,92 +100,39 @@ public class RunIotaAPICore {
      * added header for IRI
      */
     private void postConstruct() {
-        boolean USE_AUTH=false;
-        //if(host.contains(".runplay.com") || host.contains(".runpg.com"))
-        //    USE_AUTH=true;
-        final String nodeUrl = protocol + "://"+host + ":" + port;
-        if(USE_AUTH) {
-            //Log.e("IRI-CONNECT","Using Auth OK");
-            String creds = Base64.encodeToString((uname+":"+upassword).getBytes(),false);
-            final OkHttpClient.Builder builder = new OkHttpClient.Builder();
-            OkHttpClient client=builder.readTimeout(5000, TimeUnit.SECONDS)
 
-                    .addInterceptor(new Interceptor() {
-                        @Override
-                        public okhttp3.Response intercept(Chain chain) throws IOException {
-                            Request request = chain.request();
-                            Request newRequest;
-                            newRequest = request.newBuilder()
-                                    .addHeader(X_IOTA_API_VERSION_HEADER_NAME, X_IOTA_API_VERSION_HEADER_VALUE)
-                                    .addHeader("Authorization", "Basic "+creds)
-
-                                    .build();
-
-                            return chain.proceed(newRequest);
-                        }
-                    })
-                    .connectTimeout(5000, TimeUnit.SECONDS).build();
-
-            // use client to create Retrofit service
-            final Retrofit retrofit = new Retrofit.Builder()
-                    .baseUrl(nodeUrl)
-
-                    .addConverterFactory(GsonConverterFactory.create())
-                    .client(client)
-                    .build();
-
-            service = retrofit.create(IotaAPIService.class);
-        } else {
-            //Log.e("IRI-CONNECT","NOOTTTTT Using Auth");
-            final OkHttpClient client = new OkHttpClient.Builder()
-                    .readTimeout(5000, TimeUnit.SECONDS)
-                    .addNetworkInterceptor(new Interceptor() {
-                        @Override
-                        public okhttp3.Response intercept(Chain chain) throws IOException {
-                            final Buffer buffer = new Buffer();
-                            chain.request().body().writeTo(buffer);
-                            return chain.proceed(chain.request());
-                        }
-                    })
-                    .addInterceptor(new Interceptor() {
-                        @Override
-                        public okhttp3.Response intercept(Chain chain) throws IOException {
-                            Request request = chain.request();
-                            Request newRequest;
-
-                            newRequest = request.newBuilder()
-                                    .addHeader(X_IOTA_API_VERSION_HEADER_NAME, X_IOTA_API_VERSION_HEADER_VALUE)
-                                    .build();
-                            return chain.proceed(newRequest);
-                        }
-                    })
-                    .connectTimeout(5000, TimeUnit.SECONDS)
-                    .build();
-            // use client to create Retrofit service
-
-            final Retrofit retrofit = new Retrofit.Builder()
-                    .baseUrl(nodeUrl)
-                    .addConverterFactory(GsonConverterFactory.create())
-                    .client(client)
-                    .build();
-
-            service = retrofit.create(IotaAPIService.class);
-
-        }
+        final String nodeUrl = protocol + "://" + host + ":" + port;
 
         // Create OkHttpBuilder
+        final OkHttpClient client = new OkHttpClient.Builder()
+                .readTimeout(5000, TimeUnit.SECONDS)
+                .addInterceptor(new Interceptor() {
+                    @Override
+                    public okhttp3.Response intercept(Chain chain) throws IOException {
+                        Request request = chain.request();
+                        Request newRequest;
 
+                        newRequest = request.newBuilder()
+                                .addHeader(X_IOTA_API_VERSION_HEADER_NAME, X_IOTA_API_VERSION_HEADER_VALUE)
+                                .build();
+
+                        return chain.proceed(newRequest);
+                    }
+                })
+                .connectTimeout(5000, TimeUnit.SECONDS)
+                .build();
+
+        // use client to create Retrofit service
+        final Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(nodeUrl)
+                .addConverterFactory(GsonConverterFactory.create())
+                .client(client)
+                .build();
+
+        service = retrofit.create(IotaAPIService.class);
 
         log.debug("Jota-API Java proxy pointing to node url: '{}'", nodeUrl);
     }
-    private int responseCount(okhttp3.Response response) {
-        int result = 1;
-        while ((response = response.priorResponse()) != null) {
-            result++;
-        }
-        return result;
-    }
-
 
     /**
      * Get the node information.
@@ -286,10 +213,8 @@ public class RunIotaAPICore {
         List<String> addressesWithoutChecksum = new ArrayList<>();
 
         for (String address : addresses) {
-            try {
-                address = Checksum.removeChecksum(address);
-            } catch(Exception e) {}
-            addressesWithoutChecksum.add(address);
+            String addressO = Checksum.removeChecksum(address);
+            addressesWithoutChecksum.add(addressO);
         }
 
         return findTransactions(addressesWithoutChecksum.toArray(new String[addressesWithoutChecksum.size()]), null, null, null);
@@ -402,10 +327,8 @@ public class RunIotaAPICore {
         List<String> addressesWithoutChecksum = new ArrayList<>();
 
         for (String address : addresses) {
-            try {
-                address = Checksum.removeChecksum(address);
-            } catch(Exception e) {}
-            addressesWithoutChecksum.add(address);
+            String addressO = Checksum.removeChecksum(address);
+            addressesWithoutChecksum.add(addressO);
         }
         return getBalances(threshold, addressesWithoutChecksum.toArray(new String[]{}));
     }
@@ -521,7 +444,8 @@ public class RunIotaAPICore {
         private BufferedReader bufferedReader = null;
         private Properties nodeConfig = null;
 
-        public RunIotaAPICore build() {
+        public IotaAPICore build() {
+            // resolution order: builder value, configuration file, default value
 
             if (null == protocol) {
                 protocol = getFromConfigurationOrEnvironment("iota.node.protocol", "IOTA_NODE_PROTOCOL", "http");
@@ -535,7 +459,7 @@ public class RunIotaAPICore {
                 port = getFromConfigurationOrEnvironment("iota.node.port", "IOTA_NODE_PORT", "14265");
             }
 
-            return new RunIotaAPICore(this);
+            return new IotaAPICore(this);
         }
 
         private String getFromConfigurationOrEnvironment(String propertyKey, String envName, String defaultValue) {

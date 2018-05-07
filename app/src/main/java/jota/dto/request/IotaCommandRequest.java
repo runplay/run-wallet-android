@@ -1,7 +1,5 @@
 package jota.dto.request;
 
-import android.util.Log;
-
 import jota.IotaAPICommands;
 
 /**
@@ -53,8 +51,4 @@ public class IotaCommandRequest {
     public static IotaCommandRequest createInterruptAttachToTangleRequest() {
         return new IotaCommandRequest(IotaAPICommands.INTERRUPT_ATTACHING_TO_TANGLE);
     }
-    public static IotaCommandRequest createWereAddressSpendFromRequest() {
-        return new IotaCommandRequest(IotaAPICommands.WERE_ADDRESSES_SPENT_FROM);
-    }
-
 }

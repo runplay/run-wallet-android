@@ -89,11 +89,17 @@ public class Bundle implements Comparable<Bundle> {
      * @param customCurl The custom curl.
      */
     public void finalize(ICurl customCurl) {
+        ICurl curl;
+        int[] normalizedBundleValue;
+        int[] hash = new int[243];
+        int[] obsoleteTagTrits = new int[81];
+        String hashInTrytes;
+        boolean valid = true;
+        curl = customCurl == null ? SpongeFactory.create(SpongeFactory.Mode.KERL) : customCurl;
+        do {
+          curl.reset();
 
-        ICurl curl = customCurl == null ? SpongeFactory.create(SpongeFactory.Mode.KERL) : customCurl;
-        curl.reset();
-
-        for (int i = 0; i < this.getTransactions().size(); i++) {
+          for (int i = 0; i < this.getTransactions().size(); i++) {
 
             int[] valueTrits = Converter.trits(this.getTransactions().get(i).getValue(), 81);
 
@@ -110,11 +116,24 @@ public class Bundle implements Comparable<Bundle> {
             int[] t = Converter.trits(this.getTransactions().get(i).getAddress() + Converter.trytes(valueTrits) + this.getTransactions().get(i).getObsoleteTag() + Converter.trytes(timestampTrits) + Converter.trytes(currentIndexTrits) + Converter.trytes(lastIndexTrits));
 
             curl.absorb(t, 0, t.length);
-        }
+          }
 
-        int[] hash = new int[243];
-        curl.squeeze(hash, 0, hash.length);
-        String hashInTrytes = Converter.trytes(hash);
+          curl.squeeze(hash, 0, hash.length);
+          hashInTrytes = Converter.trytes(hash);
+          normalizedBundleValue = normalizedBundle(hashInTrytes);
+
+          boolean foundValue = false;
+            for (int aNormalizedBundleValue : normalizedBundleValue) {
+                if (aNormalizedBundleValue == 13) {
+                    foundValue = true;
+                    obsoleteTagTrits = Converter.trits(this.getTransactions().get(0).getObsoleteTag());
+                    Converter.increment(obsoleteTagTrits, 81);
+                    this.getTransactions().get(0).setObsoleteTag(Converter.trytes(obsoleteTagTrits));
+                }
+            }
+          valid = !foundValue;
+
+        } while (!valid);
 
         for (int i = 0; i < this.getTransactions().size(); i++) {
             this.getTransactions().get(i).setBundle(hashInTrytes);
@@ -129,7 +148,7 @@ public class Bundle implements Comparable<Bundle> {
     public void addTrytes(List<String> signatureFragments) {
         String emptySignatureFragment = "";
         String emptyHash = EMPTY_HASH;
-        long emptyTimestamp = 999999999l;
+        long emptyTimestamp = 999999999L;
 
         emptySignatureFragment = StringUtils.rightPad(emptySignatureFragment, 2187, '9');
 

@@ -61,7 +61,14 @@
                         android:textAppearance="@style/Base.TextAppearance.AppCompat.Body1"
                         android:layout_height="wrap_content"
                         android:paddingBottom="@dimen/baseline_card"/>
-
+                    <TextView
+                        android:id="@+id/contact_email"
+                        android:text="@string/app_email"
+                        android:gravity="center"
+                        android:layout_width="match_parent"
+                        android:textAppearance="@style/Base.TextAppearance.AppCompat.Body1"
+                        android:layout_height="wrap_content"
+                        android:paddingBottom="@dimen/baseline_card"/>
 
                 </LinearLayout>
 

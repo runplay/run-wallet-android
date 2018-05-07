@@ -72,7 +72,6 @@ public class Audit {
         Collections.reverse(transfers);
 
     }
-
     public static void populateTxToTransfers(List<Transaction> inTransactions, NodeInfoResponse nodeInfo, List<Transfer> transfers, List<Address> allAddresses) {
         long totalValueTransfer = 0;
         long timestamp = 0;
@@ -87,7 +86,7 @@ public class Audit {
         String message = defmessage;
         for (Transaction trx : inTransactions) {
             try {
-                tag = trx.getTag();
+
                 address = trx.getAddress();
                 persistence = trx.getPersistence();
                 value = trx.getValue();
@@ -107,7 +106,7 @@ public class Audit {
                 if (trx.getCurrentIndex() == 0) {
                     message = Utils.removeTrailingNines(trx.getSignatureFragments());
                     timestamp = trx.getAttachmentTimestamp();
-
+                    tag = trx.getTag();
                     destinationAddress = address;
                     hash = trx.getHash();
                 }

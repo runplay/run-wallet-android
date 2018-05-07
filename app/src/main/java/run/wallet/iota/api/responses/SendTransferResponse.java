@@ -59,12 +59,13 @@ public class SendTransferResponse extends ApiResponse {
         Audit.populateTxToTransfers(apiResponse.getTransactions(),Store.getNodeInfo(),transfers,alreadyAddress);
         Audit.setTransfersToAddresses(seed, transfers, alreadyAddress, wallet, alreadyTransfers);
         Audit.processNudgeAttempts(context, seed, transfers);
-
+        Store.updateAccountData(context, seed, wallet, transfers, alreadyAddress);
 
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
         int nudgeAttempts = Sf.toInt(prefs.getString(Constants.PREF_TRANSFER_NUDGE_ATTEMPTS, "" + Constants.PREF_TRANSFER_NUDGE_ATTEMPTS_VALUE));
         if(nudgeAttempts>0) {
             String hash = apiResponse.getTransactions().get(0).getHash();
+
             Transfer quicknudge = Store.isAlreadyTransfer(hash, transfers);
             if (quicknudge != null) {
                 AppService.nudgeTransactionInstant(context,
@@ -73,7 +74,7 @@ public class SendTransferResponse extends ApiResponse {
 
             }
         }
-        Store.updateAccountData(context, seed, wallet, transfers, alreadyAddress);
+
 
         /*
         for(Transfer transfer: transfers) {

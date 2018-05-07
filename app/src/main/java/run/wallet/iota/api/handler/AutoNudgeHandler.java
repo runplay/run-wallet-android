@@ -29,12 +29,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import jota.RunIotaAPI;
+import run.wallet.R;
 import run.wallet.iota.api.requests.ApiRequest;
 import run.wallet.iota.api.requests.AutoNudgeRequest;
 import run.wallet.iota.api.requests.NudgeRequest;
 import run.wallet.iota.api.responses.ApiResponse;
 import run.wallet.iota.api.responses.NudgeResponse;
 import run.wallet.iota.helper.Constants;
+import run.wallet.iota.helper.NotificationHelper;
 import run.wallet.iota.helper.Sf;
 import run.wallet.iota.model.Nodes;
 import run.wallet.iota.model.NudgeTransfer;
@@ -129,6 +131,11 @@ public class AutoNudgeHandler extends IotaRequestHandler {
                                             }
                                         }
                                         if(hascompleted) {
+                                            if(!AppService.isAppStarted()) {
+                                                NotificationHelper.clearAll(context);
+                                                NotificationHelper.responseNotification(context, R.drawable.node_tick_grey, context.getString(R.string.label_transfer_completed), 625373);
+
+                                            }
                                             refreshSeedShorts.put(ntran.seedShort, ntran);
                                         } else if (hascompleted || hashes.isEmpty() || transactions.isEmpty()) {
                                             // do nothing

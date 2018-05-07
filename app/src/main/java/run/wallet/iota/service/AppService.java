@@ -790,7 +790,8 @@ public final class AppService extends Service {
                 SERVICE.lastNodeInfo = System.currentTimeMillis();
                 TaskManager rt = new TaskManager(SERVICE);
                 NodeInfoRequest nir = new NodeInfoRequest();
-                nir.setSilent(true);
+                //if(nir!=null)
+                    nir.setSilent(true);
                 runTask(rt, nir,false);
             }
         }
