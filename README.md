@@ -1,7 +1,7 @@
 # run IOTA wallet
 ![alt tag](http://iota.runplay.com/img/icon.png "run IOTA wallet Logo")
   
-<b>run Iota</b> provides a fast, efficient and easy to manage Wallet for the IOTA currency
+<b>run wallet</b> provides a fast, efficient and easy to manage Wallet for the IOTA currency
 <br/>
 
 <h2>Features</h2>
@@ -28,6 +28,7 @@ https://github.com/iotaledger/android-wallet-app
 <br/>
 <br/>
 <h2>Updates</h2>
+v1.3.8750 - Rebranded to run wallet as due to Google Play terms copyright infringements on logo and name usage<br/>
 v1.3.8650 - Security update, big issue found around using an old IOTA library, all previous release of run IOTA wallet should be discarded if you have.<br/>
 The whole release-0.9.10 of jota is included in this release, like the previous library that had the security bug in it as it is not possible to overwrite the current library to include the wereAddressSpentFrom feature which is also a security issue not being in the official GitHub JOTA library, runplay had previous provided the code for this to issue #101<br/><br/><br/>
 v1.3.8500 - Pre snaphot used address checker, decimal place on > iota values, Network area improvements<br/>
@@ -54,7 +55,7 @@ App supports deep linking in the following way:<br/>
 <br/><br/>
 <h2>Download</h2>
 
-<a href="https://play.google.com/store/apps/details?id=run.wallet"><img alt="Get it on Google Play" src="https://play.google.com/intl/en_us/badges/images/generic/en_badge_web_generic.png" width="323" height="125"/></a>
+<a href="https://play.google.com/store/apps/details?id=run.wallet.android"><img alt="Get it on Google Play" src="https://play.google.com/intl/en_us/badges/images/generic/en_badge_web_generic.png" width="323" height="125"/></a>
 
 <h2>How to build</h2>
 
