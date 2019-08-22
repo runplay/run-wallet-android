@@ -1,5 +1,12 @@
 # run wallet
 ![alt tag](http://iota.runplay.com/img/icon.png "run IOTA wallet Logo")
+
+```
+
+WARNING !
+This repository is now out of date a no longer worked on, only use for reference, an update to the latest IOTA library is required for it to work
+
+```
   
 <b>run wallet</b> provides a fast, efficient and easy to manage Wallet for the IOTA currency
 <br/>
